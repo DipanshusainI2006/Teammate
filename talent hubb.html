@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ML Talent Hub | Connect with AI Professionals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1e40af;
+      --secondary: #7c3aed;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --dark: #0f172a;
+      --gray-dark: #1e293b;
+      --gray: #475569;
+      --gray-light: #f1f5f9;
+      --white: #ffffff;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+      --radius: 1rem;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    .hero {
+      background: linear-gradient(120deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      text-align: center;
+      padding: 4rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 80%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(37,99,235,0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 3.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff, #94a3b8);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: #cbd5e1;
+      margin-bottom: 2rem;
+      font-weight: 400;
+    }
+
+    .search-container {
+      max-width: 560px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 1rem 1.5rem;
+      border: none;
+      border-radius: 60px;
+      font-size: 1rem;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(8px);
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition);
+      font-weight: 500;
+    }
+
+    .search-input:focus {
+      outline: none;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
+      transform: translateY(-2px);
+    }
+
+    .filters {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      margin: 2rem 0 0;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(8px);
+      color: #e2e8f0;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 0.5rem 1.4rem;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    .candidates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .candidate-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .candidate-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: var(--success);
+      color: white;
+      padding: 0.25rem 0.9rem;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      z-index: 3;
+      backdrop-filter: blur(4px);
+      letter-spacing: 0.5px;
+    }
+
+    .card-badge.busy {
+      background: var(--warning);
+    }
+
+    .card-header {
+      padding: 2rem 1.5rem 1.5rem;
+      text-align: center;
+      background: linear-gradient(145deg, #f8fafc, #ffffff);
+      border-bottom: 1px solid #eef2ff;
+    }
+
+    .candidate-avatar {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      object-fit: cover;
+      border: 4px solid white;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
+    }
+
+    .candidate-card:hover .candidate-avatar {
+      transform: scale(1.02);
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
+    }
+
+    .candidate-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .candidate-title {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--primary);
+      background: #eff6ff;
+      display: inline-block;
+      padding: 0.2rem 1rem;
+      border-radius: 30px;
+      margin-bottom: 0.5rem;
+    }
+
+    .candidate-location {
+      font-size: 0.85rem;
+      color: var(--gray);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+
+    .card-body {
+      padding: 1.5rem;
+      flex-grow: 1;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      background: var(--gray-light);
+      padding: 0.8rem;
+      border-radius: 60px;
+      margin-bottom: 1.2rem;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      color: var(--gray);
+      font-weight: 500;
+    }
+
+    .card-body p {
+      font-size: 0.9rem;
+      color: var(--gray);
+      margin: 1rem 0;
+      line-height: 1.5;
+    }
+
+    .divider {
+      height: 1px;
+      background: #e2e8f0;
+      margin: 1rem 0;
+    }
+
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+
+    .skill {
+      background: #eef2ff;
+      color: var(--primary-dark);
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+
+    .skill:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .card-footer {
+      padding: 1rem 1.5rem 1.5rem;
+      background: var(--white);
+      border-top: 1px solid #f1f5f9;
+      display: flex;
+      gap: 0.8rem;
+    }
+
+    .view-profile-btn, .connect-btn {
+      flex: 1;
+      text-align: center;
+      padding: 0.75rem;
+      border-radius: 60px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: var(--transition);
+      cursor: pointer;
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .view-profile-btn {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+    }
+
+    .view-profile-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px -5px rgba(37,99,235,0.4);
+    }
+
+    .connect-btn {
+      background: var(--white);
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .connect-btn:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    .loading-skeleton {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 4rem;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 4rem;
+      grid-column: 1 / -1;
+      background: var(--white);
+      border-radius: var(--radius);
+      color: var(--gray);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--dark);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 50px;
+      z-index: 1000;
+      animation: slideIn 0.3s ease;
+      box-shadow: var(--shadow-lg);
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    footer {
+      background: var(--dark);
+      color: #cbd5e1;
+      text-align: center;
+      padding: 3rem 1rem;
+      margin-top: 2rem;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.8rem;
+      margin: 1.5rem 0;
+    }
+
+    .social-links a {
+      color: #94a3b8;
+      font-size: 1.5rem;
+      transition: var(--transition);
+    }
+
+    .social-links a:hover {
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 2.2rem; }
+      .candidates-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .card-footer { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="hero">
+    <div class="hero-content">
+      <h1>🤖 Machine Learning Talent Hub</h1>
+      <p class="subtitle">
+        Connect with elite AI engineers, ML researchers & data scientists — real profiles, real talent
+      </p>
+      <div class="search-container">
+        <input type="text" class="search-input" id="globalSearch" placeholder="🔍 Search by name, skill, location, or expertise..." />
+      </div>
+      <div class="filters" id="filterGroup">
+        <button class="filter-btn active" data-filter="all">🏆 All Talent</button>
+        <button class="filter-btn" data-filter="Computer Vision">👁️ Computer Vision</button>
+        <button class="filter-btn" data-filter="NLP">📖 NLP & LLMs</button>
+        <button class="filter-btn" data-filter="Reinforcement Learning">🎯 Reinforcement Learning</button>
+        <button class="filter-btn" data-filter="Generative AI">✨ Generative AI</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="candidates-grid" id="candidatesGrid">
+      <div class="loading-skeleton">
+        <div class="skeleton-card">
+          <i class="fas fa-spinner fa-pulse fa-2x" style="color: var(--primary);"></i>
+          <p style="margin-top: 1rem;">Loading top ML professionals...</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <h3 style="color: white;">🚀 Find your perfect teammate</h3>
+      <p>Real ML professionals ready to collaborate and innovate</p>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+        <a href="#"><i class="fab fa-github"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fas fa-globe"></i></a>
+      </div>
+      <p style="font-size: 0.8rem;">© 2025 ML Talent Hub — Connecting brilliant minds</p>
+    </div>
+  </footer>
+
+  <script>
+    // ==================== CONFIGURATION ====================
+    // 🔥 IMPORTANT: Replace with your DEPLOYED backend URL
+    const API_BASE_URL = 'https://your-backend.onrender.com'; // CHANGE THIS!
+    // For local testing: 'http://localhost:5000'
+    // For production: 'https://your-app.onrender.com' or 'https://your-app.railway.app'
+    
+    let allCandidates = [];
+    let currentFilter = "all";
+    
+    // ==================== SECURE ESCAPE FUNCTION ====================
+    function escapeHtml(str) {
+      if (!str) return "";
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+    
+    // ==================== SHOW TOAST NOTIFICATION ====================
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.style.background = type === 'success' ? '#10b981' : '#ef4444';
+      toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${message}`;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+    
+    // ==================== CONNECT WITH TEAMMATE ====================
+    async function connectWithTeammate(userId, userName) {
+      try {
+        // You can implement actual connection logic here
+        // Example: Send request to backend
+        // const response = await fetch(`${API_BASE_URL}/api/connect/${userId}`, {
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   credentials: 'include'
+        // });
+        
+        // For now, show a demo toast
+        showToast(`✨ Connection request sent to ${userName}!`, 'success');
+        
+        // Optional: Log to console for debugging
+        console.log(`Connect request sent to user: ${userId} (${userName})`);
+        
+      } catch (error) {
+        console.error('Connection error:', error);
+        showToast(`Failed to send request to ${userName}`, 'error');
+      }
+    }
+    
+    // ==================== SKILL FILTER LOGIC (IMPROVED) ====================
+    function matchesSkillFilter(user, filterValue) {
+      if (filterValue === "all") return true;
+      
+      const skillsStr = (user.skills ? (Array.isArray(user.skills) ? user.skills.join(" ") : user.skills) : "").toLowerCase();
+      const titleStr = (user.title || "").toLowerCase();
+      const bioStr = (user.bio || "").toLowerCase();
+      const combinedText = `${skillsStr} ${titleStr} ${bioStr}`;
+      
+      switch(filterValue) {
+        case "Computer Vision":
+          return combinedText.includes("computer vision") || 
+                 combinedText.includes("opencv") || 
+                 combinedText.includes("image processing") ||
+                 combinedText.includes("object detection");
+          
+        case "NLP":
+          return combinedText.includes("nlp") || 
+                 combinedText.includes("natural language") || 
+                 combinedText.includes("bert") || 
+                 combinedText.includes("transformer") ||
+                 combinedText.includes("gpt") ||
+                 combinedText.includes("llm");
+          
+        case "Reinforcement Learning":
+          return combinedText.includes("reinforcement") || 
+                 combinedText.includes("rl") || 
+                 combinedText.includes("deep q") ||
+                 combinedText.includes("policy gradient");
+          
+        case "Generative AI":
+          return combinedText.includes("generative") || 
+                 combinedText.includes("gpt") || 
+                 combinedText.includes("diffusion") ||
+                 combinedText.includes("llm") ||
+                 combinedText.includes("stable diffusion") ||
+                 combinedText.includes("dall-e");
+          
+        default:
+          return true;
+      }
+    }
+    
+    // ==================== RENDER CANDIDATES ====================
+    function renderCandidates(candidates) {
+      const gridContainer = document.querySelector("#candidatesGrid");
+      
+      if (!candidates || candidates.length === 0) {
+        gridContainer.innerHTML = `<div class="no-results"><i class="fas fa-search fa-3x"></i><h3>No matching professionals</h3><p>Try adjusting your search or filters</p></div>`;
+        return;
+      }
+      
+      let cardsHTML = "";
+      for (let u of candidates) {
+        // Handle avatar URL
+        let avatarUrl = "https://ui-avatars.com/api/?background=2563eb&color=fff&bold=true&size=110&name=" + encodeURIComponent(u.username || "ML");
+        if (u.avatar && u.avatar !== "") {
+          if (u.avatar.startsWith("http")) {
+            avatarUrl = u.avatar;
+          } else if (u.avatar.startsWith("/")) {
+            avatarUrl = API_BASE_URL + u.avatar;
+          } else {
+            avatarUrl = API_BASE_URL + "/" + u.avatar;
+          }
+        }
+        
+        // ✅ NO RANDOM VALUES - Use real data from backend
+        const username = u.username || "Anonymous Talent";
+        const title = u.title || "Machine Learning Engineer";
+        const location = u.location || "Remote";
+        const experience = u.experience !== undefined && u.experience !== null ? u.experience : "N/A";
+        const projects = u.projects !== undefined && u.projects !== null ? u.projects : "N/A";
+        const rating = u.rating !== undefined && u.rating !== null ? u.rating : "N/A";
+        const bio = u.bio || "Passionate about building intelligent systems with cutting-edge ML & deep learning.";
+        
+        // Skills handling
+        let skillsArray = [];
+        if (u.skills) {
+          skillsArray = Array.isArray(u.skills) ? u.skills : u.skills.split(",").map(s => s.trim()).filter(s => s);
+        } else {
+          skillsArray = ["Python", "Machine Learning"];
+        }
+        
+        const skillBadges = skillsArray.slice(0, 8).map(skill => 
+          `<span class="skill">${escapeHtml(skill)}</span>`
+        ).join("");
+        
+        // Status badge
+        const isAvailable = u.status === "available" || u.isAvailable === true;
+        const badgeClass = isAvailable ? "" : "busy";
+        const badgeIcon = isAvailable ? '<i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 4px;"></i>' : '<i class="fas fa-clock"></i> ';
+        const badgeText = isAvailable ? "Available" : (u.status === "busy" ? "Busy" : "Open");
+        
+        const showBadge = u.status ? `<div class="card-badge ${badgeClass}">${badgeIcon}${badgeText}</div>` : '';
+        
+        cardsHTML += `
+          <div class="candidate-card" data-user-id="${u._id}">
+            ${showBadge}
+            <div class="card-header">
+              <img src="${avatarUrl}" alt="${escapeHtml(username)}" class="candidate-avatar" onerror="this.src='https://ui-avatars.com/api/?background=0f172a&color=fff&size=110&name=${encodeURIComponent(username)}'">
+              <h2 class="candidate-name">${escapeHtml(username)}</h2>
+              <div class="candidate-title">${escapeHtml(title)}</div>
+              <p class="candidate-location">
+                <i class="fas fa-map-marker-alt"></i> ${escapeHtml(location)}
+              </p>
+            </div>
+            <div class="card-body">
+              <div class="stats">
+                <div class="stat">
+                  <span class="stat-value">${experience === "N/A" ? '—' : experience}${experience !== "N/A" && !isNaN(experience) ? '+' : ''}</span>
+                  <span class="stat-label">Years Exp</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-value">${projects === "N/A" ? '—' : projects}</span>
+                  <span class="stat-label">Projects</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-value">${rating === "N/A" ? '—' : rating}</span>
+                  <span class="stat-label">Rating</span>
+                </div>
+              </div>
+              <p>${escapeHtml(bio.length > 120 ? bio.substring(0, 120) + "..." : bio)}</p>
+              <div class="divider"></div>
+              <h3 style="font-size: 0.9rem; margin-bottom: 0.5rem;">🔧 Core Competencies</h3>
+              <div class="skills-list">
+                ${skillBadges || '<span class="skill">ML</span>'}
+              </div>
+            </div>
+            <div class="card-footer">
+              <a href="profile.html?id=${u._id}" class="view-profile-btn">
+                <i class="fas fa-user-circle"></i> Profile
+              </a>
+              <button class="connect-btn" onclick="connectWithTeammate('${u._id}', '${escapeHtml(username).replace(/'/g, "\\'")}')">
+                <i class="fas fa-handshake"></i> Connect
+              </button>
+            </div>
+          </div>
+        `;
+      }
+      
+      gridContainer.innerHTML = cardsHTML;
+    }
+    
+    // ==================== FILTER & SEARCH (COMBINED) ====================
+    function filterAndSearch() {
+      const searchTerm = document.getElementById("globalSearch")?.value.toLowerCase().trim() || "";
+      let filtered = [...allCandidates];
+      
+      // Apply skill filter
+      if (currentFilter !== "all") {
+        filtered = filtered.filter(user => matchesSkillFilter(user, currentFilter));
+      }
+      
+      // Apply search term
+      if (searchTerm !== "") {
+        filtered = filtered.filter(user => {
+          const nameMatch = (user.username || "").toLowerCase().includes(searchTerm);
+          const skillsStr = (user.skills ? (Array.isArray(user.skills) ? user.skills.join(" ") : user.skills) : "").toLowerCase();
+          const locationMatch = (user.location || "").toLowerCase().includes(searchTerm);
+          const titleMatch = (user.title || "").toLowerCase().includes(searchTerm);
+          const bioMatch = (user.bio || "").toLowerCase().includes(searchTerm);
+          return nameMatch || skillsStr.includes(searchTerm) || locationMatch || titleMatch || bioMatch;
+        });
+      }
+      
+      renderCandidates(filtered);
+    }
+    
+    // ==================== LOAD DATA FROM BACKEND ====================
+    async function loadTalentHub() {
+      const gridContainer = document.querySelector("#candidatesGrid");
+      gridContainer.innerHTML = `<div class="loading-skeleton"><div class="skeleton-card"><i class="fas fa-spinner fa-pulse fa-2x"></i><p>Fetching AI professionals...</p></div></div>`;
+      
+      try {
+        // 🔥 IMPORTANT: Use the configured API URL
+        const apiUrl = `${API_BASE_URL}/api/auth/talent-hub`;
+        console.log("Fetching from:", apiUrl);
+        
+        const res = await fetch(apiUrl);
+        
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+        
+        const users = await res.json();
+        allCandidates = users;
+        
+        if (!users || users.length === 0) {
+          gridContainer.innerHTML = `<div class="no-results"><i class="fas fa-users fa-3x"></i><h3>No talent profiles found</h3><p>Be the first to join the ML Talent Hub!</p></div>`;
+          return;
+        }
+        
+        renderCandidates(allCandidates);
+        console.log(`✅ Loaded ${users.length} profiles`);
+        
+      } catch (error) {
+        console.error("Talent Hub fetch error:", error);
+        gridContainer.innerHTML = `
+          <div class="no-results">
+            <i class="fas fa-exclamation-triangle fa-3x" style="color:#f59e0b;"></i>
+            <h3>⚠️ Unable to load talent pool</h3>
+            <p>Make sure your backend is running at: <strong>${API_BASE_URL}</strong></p>
+            <p style="font-size: 0.85rem; margin-top: 0.5rem;">Error: ${error.message}</p>
+            <button onclick="location.reload()" style="margin-top:1rem; padding:0.5rem 1.5rem; background:var(--primary); border:none; border-radius:30px; color:white; cursor:pointer;">
+              <i class="fas fa-sync-alt"></i> Retry
+            </button>
+          </div>
+        `;
+      }
+    }
+    
+    // ==================== BIND FILTER EVENTS (SINGLE LISTENER) ====================
+    function bindFilterEvents() {
+      const filterBtns = document.querySelectorAll(".filter-btn");
+      filterBtns.forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          filterBtns.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentFilter = btn.getAttribute("data-filter");
+          filterAndSearch();
+        });
+      });
+    }
+    
+    // ==================== INITIALIZE ====================
+    async function init() {
+      await loadTalentHub();
+      bindFilterEvents();
+      
+      // Single search event listener
+      const searchBox = document.getElementById("globalSearch");
+      if (searchBox) {
+        searchBox.addEventListener("input", filterAndSearch);
+      }
+    }
+    
+    // Start the app
+    init();
+  </script>
+</body>
+</html>

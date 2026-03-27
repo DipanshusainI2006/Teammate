@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Teammate</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Your existing CSS remains exactly the same */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #2995b0;
+            --secondary: #fec55b;
+            --accent: #ec9e00;
+            --light: #f8f9fa;
+            --dark: #1a2a3a;
+            --success: #4cc9f0;
+            --warning: #ffffff;
+            --transition: all 0.3s ease;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --ml-color: #ff6b6b;
+            --webdev-color: #4ecdc4;
+            --iot-color: #45b7d1;
+            --uiux-color: #f9c74f;
+            --text-dark: #1a2a3a;
+            --text-light: #6c757d;
+        }
+
+        body {
+            background: transparent;
+            background-image: url(f.jpg);
+            background-size: cover;
+            background-attachment: fixed;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            max-width: 1000px;
+            min-height: 600px;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .left-panel {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .left-panel::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80') center/cover;
+            opacity: 0.2;
+        }
+
+        .left-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 15px;
+            color: var(--accent);
+        }
+
+        .left-panel h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .left-panel p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .features {
+            list-style: none;
+            margin-top: 30px;
+        }
+
+        .features li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .features i {
+            margin-right: 15px;
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+
+        .right-panel {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .right-panel h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .right-panel p {
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(41, 149, 176, 0.2);
+        }
+
+        .name-fields {
+            display: flex;
+            gap: 15px;
+        }
+
+        .password-field {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .agree-terms {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+        }
+
+        .agree-terms input {
+            margin-right: 10px;
+            margin-top: 3px;
+        }
+
+        .agree-terms label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.4;
+        }
+
+        .agree-terms a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .agree-terms a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-signup {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .btn-signup:hover {
+            background: #23819a;
+            transform: translateY(-2px);
+        }
+
+        .divider {
+            text-align: center;
+            position: relative;
+            margin: 25px 0;
+            color: var(--text-light);
+        }
+
+        .divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            position: relative;
+        }
+
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .social-btn:hover {
+            background: #e9e9e9;
+            transform: translateY(-2px);
+        }
+
+        .social-btn i {
+            font-size: 1.2rem;
+        }
+
+        .google i {
+            color: #DB4437;
+        }
+
+        .linkedin i {
+            color: #0077B5;
+        }
+
+        .github i {
+            color: #333;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-light);
+        }
+
+        .login-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                max-width: 100%;
+            }
+            
+            .left-panel {
+                display: none;
+            }
+            
+            .right-panel {
+                padding: 30px 20px;
+            }
+            
+            .name-fields {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="left-content">
+                <div class="logo">
+                    <i class="fas fa-users"></i>
+                    TEAMMATE
+                </div>
+                <h2>Join our community of innovators</h2>
+                <p>Connect with skilled students and professionals to bring your project ideas to life.</p>
+                
+                <ul class="features">
+                    <li><i class="fas fa-check-circle"></i> Find the perfect teammates for your projects</li>
+                    <li><i class="fas fa-check-circle"></i> Showcase your skills and build your portfolio</li>
+                    <li><i class="fas fa-check-circle"></i> Join a network of talented students</li>
+                    <li><i class="fas fa-check-circle"></i> Access exclusive learning resources</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="right-panel">
+            <h2>Create your account</h2>
+            <p>Join Teammate today and start collaborating on amazing projects.</p>
+            
+            <form id="signupForm">
+                <div class="name-fields">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" class="form-control" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-field">
+                        <input type="password" id="password" class="form-control" required>
+                        <span class="toggle-password" id="togglePassword">
+                            <i class="far fa-eye"></i>
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="skills">Skills (comma separated)</label>
+                    <input type="text" id="skills" class="form-control" placeholder="e.g. Python, React, UI Design">
+                </div>
+                
+                <div class="agree-terms">
+                    <input type="checkbox" id="agreeTerms" required>
+                    <label for="agreeTerms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>, including the use of cookies.</label>
+                </div>
+                
+                <button type="submit" class="btn-signup">Sign Up</button>
+            </form>
+            
+            <div class="divider">
+                <span>or</span>
+            </div>
+            
+            <div class="social-login">
+                <div class="social-btn google">
+                    <i class="fab fa-google"></i>
+                </div>
+                <div class="social-btn linkedin">
+                    <i class="fab fa-linkedin-in"></i>
+                </div>
+                <div class="social-btn github">
+                    <i class="fab fa-github"></i>
+                </div>
+            </div>
+            
+            <div class="login-link">
+                Already on Teammate? <a href="li.html">Sign in</a>
+            </div>
+        </div>
+    </div>
+
+   <script>
+document.getElementById("signupForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const skills = document.getElementById("skills").value.trim();
+
+    // Validation
+    if (!username || !email || !password) {
+        alert("Please fill in all required fields");
+        return;
+    }
+
+    const submitBtn = this.querySelector('.btn-signup');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Creating account...';
+    submitBtn.disabled = true;
+
+    try {
+        console.log("Sending request to http://localhost:5000/api/auth/signup");
+        
+        const response = await fetch("http://localhost:5000/api/auth/signup", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username,
+                email,
+                password,
+                skills: skills ? skills.split(',').map(s => s.trim()) : []
+            })
+        });
+
+        // Check if response is JSON
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+            const text = await response.text();
+            console.error("Received non-JSON response:", text);
+            throw new Error(`Server returned HTML instead of JSON. Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // Save to localStorage
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("userId", data.userId);
+            localStorage.setItem("username", username);
+            localStorage.setItem("email", email);
+            localStorage.setItem("skills", skills);
+            
+            const initialProfile = {
+                fullName: username,
+                headline: "",
+                location: "",
+                bio: "",
+                skills: skills ? skills.split(',').map(s => s.trim()) : [],
+                socialLinks: { github: "", linkedin: "", portfolio: "" }
+            };
+            localStorage.setItem("userProfile", JSON.stringify(initialProfile));
+            localStorage.setItem("profileCompleted", "false");
+            
+            alert("Signup successful! Let's complete your profile.");
+            window.location.href = "complete-profile.html";
+        } else {
+            alert(data.msg || "Signup failed");
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }
+    } catch (error) {
+        console.error("Error details:", error);
+        
+        let errorMessage = "Cannot connect to server.\n\n";
+        errorMessage += "Make sure:\n";
+        errorMessage += "1. Your backend server is running (node server.js)\n";
+        errorMessage += "2. It's running on port 5000\n";
+        errorMessage += "3. You can access http://localhost:5000/ in your browser\n\n";
+        errorMessage += "Error: " + error.message;
+        
+        alert(errorMessage);
+        
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+    }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Profile - Teammates</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Poppins', sans-serif; background: #f4f4f9; margin: 0; padding: 0; }
+    .container { max-width: 800px; margin: 40px auto; background: #fff; border-radius: 12px; padding: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .profile-header { text-align: center; margin-bottom: 20px; }
+    .profile-header h2 { margin: 0; font-size: 28px; color: #333; }
+    .profile-header p { font-size: 16px; color: #666; }
+    .details { margin-top: 20px; }
+    .details p { font-size: 18px; margin: 10px 0; color: #444; }
+    .skills { margin-top: 15px; padding: 10px; background: #eef5ff; border-radius: 8px; }
+    .skills span { display: inline-block; background: #0077cc; color: white; padding: 6px 12px; margin: 5px; border-radius: 20px; font-size: 14px; }
+    .btn { display: inline-block; padding: 8px 16px; margin: 10px 0; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; }
+    .edit-btn { background: #0077cc; color: white; }
+    .save-btn { background: #28a745; color: white; display: none; }
+    textarea, input { width: 100%; padding: 8px; margin: 6px 0; border: 1px solid #ccc; border-radius: 6px; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="profile-header">
+      <img id="avatar" src="" alt="Profile Picture" style="width:120px;height:120px;border-radius:50%;object-fit:cover;" />
+      <h2 id="username">Loading...</h2>
+      <p id="email"></p>
+      <input type="file" id="avatarUpload" accept="image/*" onchange="uploadAvatar()" />
+    </div>
+    <div class="details">
+      <p><strong>Joined:</strong> <span id="joined"></span></p>
+      <div>
+        <strong>Bio:</strong>
+        <p id="bio"></p>
+        <textarea id="editBio" class="hidden"></textarea>
+      </div>
+      <div class="skills">
+        <strong>Skills:</strong>
+        <div id="skills"></div>
+        <input type="text" id="editSkills" class="hidden" />
+      </div>
+    </div>
+    <button class="btn edit-btn" onclick="enableEdit()">Edit Profile</button>
+    <button class="btn save-btn" onclick="saveProfile()">Save Changes</button>
+  </div>
+
+  <script>
+    let currentUser = null;
+    let userId = null;
+
+    async function loadProfile() {
+      const urlParams = new URLSearchParams(window.location.search);
+      userId = urlParams.get("id");
+
+      if (!userId) {
+        document.querySelector(".container").innerHTML = "<h3>No user ID provided</h3>";
+        return;
+      }
+
+      const res = await fetch(`http://localhost:5000/api/auth/profile/${userId}`);
+      const user = await res.json();
+
+      if (res.ok) {
+        currentUser = user;
+        document.getElementById("username").innerText = user.username;
+        document.getElementById("email").innerText = user.email;
+        document.getElementById("joined").innerText = new Date(user.createdAt).toDateString();
+
+        // ✅ Avatar
+        document.getElementById("avatar").src = user.avatar
+          ? "http://localhost:5000" + user.avatar
+          : "https://via.placeholder.com/120";
+
+        // ✅ Bio
+        document.getElementById("bio").innerText = user.bio || "No bio added";
+
+        // ✅ Skills
+        const skillsContainer = document.getElementById("skills");
+        skillsContainer.innerHTML = "";
+        if (user.skills) {
+          user.skills.split(",").forEach(skill => {
+            const span = document.createElement("span");
+            span.innerText = skill.trim();
+            skillsContainer.appendChild(span);
+          });
+        }
+      } else {
+        document.querySelector(".container").innerHTML = "<h3>User not found</h3>";
+      }
+    }
+
+    function enableEdit() {
+      document.querySelector(".edit-btn").style.display = "none";
+      document.querySelector(".save-btn").style.display = "inline-block";
+
+      // Show editable fields
+      document.getElementById("bio").classList.add("hidden");
+      document.getElementById("editBio").classList.remove("hidden");
+      document.getElementById("editBio").value = currentUser.bio || "";
+
+      document.getElementById("skills").classList.add("hidden");
+      document.getElementById("editSkills").classList.remove("hidden");
+      document.getElementById("editSkills").value = currentUser.skills || "";
+    }
+
+    async function saveProfile() {
+      const bio = document.getElementById("editBio").value;
+      const skills = document.getElementById("editSkills").value;
+
+      const res = await fetch(`http://localhost:5000/api/auth/profile/${userId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bio, skills })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert("Profile updated!");
+        location.reload();
+      } else {
+        alert(data.msg || "Update failed");
+      }
+    }
+
+    async function uploadAvatar() {
+      const fileInput = document.getElementById("avatarUpload");
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append("avatar", file);
+
+      const res = await fetch(`http://localhost:5000/api/auth/profile/${userId}/avatar`, {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        document.getElementById("avatar").src = "http://localhost:5000" + data.user.avatar;
+        alert("Profile picture updated!");
+      } else {
+        alert("Upload failed");
+      }
+    }
+
+    loadProfile();
+  </script>
+</body>
+</html>
