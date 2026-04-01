@@ -26,9 +26,13 @@ router.post("/signup", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // convert skills to array
-    const skillsArray = skills
-      ? skills.split(",").map(s => s.trim())
-      : [];
+    let skillsArray = [];
+
+if (typeof skills === "string") {
+  skillsArray = skills.split(",").map(s => s.trim());
+} else if (Array.isArray(skills)) {
+  skillsArray = skills;
+}
 
     // create user
     user = new User({
