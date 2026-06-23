@@ -201,21 +201,155 @@
             <a href="FINAL.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
         </div>
 
-        <div class="empty-state">
+        <div id="projectsGrid" class="projects-grid" style="display: none;"></div>
+
+        <div id="emptyState" class="empty-state">
             <i class="fas fa-project-diagram"></i>
             <h2>No Projects Yet</h2>
             <p>You haven't joined any projects yet. Explore projects and join a team to get started!</p>
-            <a href="FINAL.html#projects" class="btn-primary">Explore Projects</a>
+            <a href="FINAL.html" class="btn-primary">Explore Projects</a>
         </div>
     </div>
 
     <script>
-        // Check if user is logged in
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             const token = localStorage.getItem('token');
+            const userId = localStorage.getItem('userId');
             if (!token) {
                 window.location.href = 'li.html';
+                return;
             }
+
+            const projectsGrid = document.getElementById('projectsGrid');
+            const emptyState = document.getElementById('emptyState');
+
+            async function loadMyProjects() {
+                try {
+                    const res = await fetch('http://localhost:5000/api/projects/my-projects', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    const projects = await res.json();
+                    
+                    if (res.ok && projects.length > 0) {
+                        emptyState.style.display = 'none';
+                        projectsGrid.style.display = 'grid';
+                        renderProjects(projects);
+                    } else {
+                        emptyState.style.display = 'block';
+                        projectsGrid.style.display = 'none';
+                    }
+                } catch (error) {
+                    console.error('Error fetching my projects:', error);
+                }
+            }
+
+            function renderProjects(projects) {
+                projectsGrid.innerHTML = projects.map(proj => {
+                    const isCreator = proj.creator && proj.creator._id === userId;
+                    
+                    // Determine project status badge
+                    let roleBadge = '<span class="project-status status-completed">Collaborator</span>';
+                    if (isCreator) {
+                        roleBadge = '<span class="project-status status-active">Project Creator</span>';
+                    } else {
+                        // Find applicant status
+                        const application = proj.applicants.find(a => a.user._id === userId || a.user === userId);
+                        if (application) {
+                            if (application.status === 'pending') {
+                                roleBadge = '<span class="project-status" style="background:#fff3e0; color:#e65100;">Pending Application</span>';
+                            } else if (application.status === 'rejected') {
+                                roleBadge = '<span class="project-status" style="background:#ffebee; color:#c62828;">Application Rejected</span>';
+                            } else if (application.status === 'accepted') {
+                                roleBadge = '<span class="project-status status-completed">Member (Accepted)</span>';
+                            }
+                        }
+                    }
+
+                    // List applicants management block if creator
+                    let applicantsHtml = '';
+                    if (isCreator && proj.applicants && proj.applicants.length > 0) {
+                        const pendingApplicants = proj.applicants.filter(a => a.status === 'pending');
+                        if (pendingApplicants.length > 0) {
+                            applicantsHtml = `
+                                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color);">
+                                    <h4 style="font-size: 0.95rem; margin-bottom: 10px; color: var(--primary);">Review Applicants:</h4>
+                                    <ul style="list-style: none;">
+                                        ${pendingApplicants.map(app => `
+                                            <li style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.85rem; background: var(--light); padding: 8px; border-radius: 8px; gap: 10px;">
+                                                <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><strong>${escapeHtml(app.user.username)}</strong></span>
+                                                <div style="display: flex; gap: 5px; flex-shrink: 0;">
+                                                    <button onclick="processAction('${proj._id}', '${app.user._id}', 'accept')" style="background: #2e7d32; border: none; color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600;">Accept</button>
+                                                    <button onclick="processAction('${proj._id}', '${app.user._id}', 'reject')" style="background: #c62828; border: none; color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600;">Reject</button>
+                                                </div>
+                                            </li>
+                                        `).join('')}
+                                    </ul>
+                                </div>
+                            `;
+                        }
+                    }
+
+                    const skillsHtml = proj.skills.map(s => `<span style="background: #f1f5f9; color: var(--text-light); padding: 3px 8px; border-radius: 12px; font-size: 0.75rem;">${escapeHtml(s)}</span>`).join(' ');
+
+                    return `
+                        <div class="project-card">
+                            <div class="project-image">
+                                <i class="fas ${escapeHtml(proj.icon || 'fa-project-diagram')}"></i>
+                            </div>
+                            <div class="project-content">
+                                ${roleBadge}
+                                <h3 style="margin-top: 10px; font-size: 1.25rem;">${escapeHtml(proj.title)}</h3>
+                                <p style="font-size: 0.85rem; margin-bottom: 15px; line-height: 1.4;">${escapeHtml(proj.description)}</p>
+                                <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 15px;">
+                                    ${skillsHtml}
+                                </div>
+                                <div class="project-meta" style="margin-bottom: 0;">
+                                    <span><i class="fas fa-user"></i> By: ${escapeHtml(proj.creator.username)}</span>
+                                    <span><i class="fas fa-users"></i> Team: ${proj.members ? proj.members.length : 1}</span>
+                                </div>
+                                ${applicantsHtml}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            window.processAction = async function(projectId, applicantId, action) {
+                try {
+                    const res = await fetch(`http://localhost:5000/api/projects/${projectId}/action`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ applicantId, action })
+                    });
+                    
+                    if (res.ok) {
+                        alert(`Applicant successfully ${action}ed!`);
+                        loadMyProjects();
+                    } else {
+                        const data = await res.json();
+                        alert(data.msg || 'Action failed');
+                    }
+                } catch (error) {
+                    console.error('Error actioning applicant:', error);
+                }
+            };
+
+            function escapeHtml(str) {
+                if (!str) return "";
+                return str.toString()
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
+            }
+
+            loadMyProjects();
         });
     </script>
 </body>

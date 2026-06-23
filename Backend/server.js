@@ -7,7 +7,7 @@ const app = express();
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 
 // Test routes
 app.get("/", (req, res) => {
@@ -21,6 +21,15 @@ app.get("/api/test", (req, res) => {
 // Routes
 const authRoutes = require("./routes/auth");
 app.use("/api/auth", authRoutes);
+
+const profileRoutes = require("./routes/profile");
+app.use("/api/profile", profileRoutes);
+
+const projectsRoutes = require("./routes/projects");
+app.use("/api/projects", projectsRoutes);
+
+const path = require("path");
+app.use(express.static(path.join(__dirname, "..")));
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/teammate", {

@@ -70,9 +70,10 @@
         document.getElementById("joined").innerText = new Date(user.createdAt).toDateString();
 
         // ✅ Avatar
-        document.getElementById("avatar").src = user.avatar
-          ? "http://localhost:5000" + user.avatar
+        const avatarSrc = user.avatar
+          ? (user.avatar.startsWith("data:") || user.avatar.startsWith("http") ? user.avatar : "http://localhost:5000" + user.avatar)
           : "https://via.placeholder.com/120";
+        document.getElementById("avatar").src = avatarSrc;
 
         // ✅ Bio
         document.getElementById("bio").innerText = user.bio || "No bio added";
@@ -81,7 +82,8 @@
         const skillsContainer = document.getElementById("skills");
         skillsContainer.innerHTML = "";
         if (user.skills) {
-          user.skills.split(",").forEach(skill => {
+          const skillsArr = Array.isArray(user.skills) ? user.skills : user.skills.split(",");
+          skillsArr.forEach(skill => {
             const span = document.createElement("span");
             span.innerText = skill.trim();
             skillsContainer.appendChild(span);
@@ -130,21 +132,31 @@
       const file = fileInput.files[0];
       if (!file) return;
 
-      const formData = new FormData();
-      formData.append("avatar", file);
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        const base64 = e.target.result;
+        try {
+          const res = await fetch(`http://localhost:5000/api/auth/profile/${userId}/avatar`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ avatar: base64 })
+          });
 
-      const res = await fetch(`http://localhost:5000/api/auth/profile/${userId}/avatar`, {
-        method: "POST",
-        body: formData
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        document.getElementById("avatar").src = "http://localhost:5000" + data.user.avatar;
-        alert("Profile picture updated!");
-      } else {
-        alert("Upload failed");
-      }
+          const data = await res.json();
+          if (res.ok) {
+            document.getElementById("avatar").src = data.user.avatar;
+            alert("Profile picture updated!");
+          } else {
+            alert("Upload failed");
+          }
+        } catch (err) {
+          console.error(err);
+          alert("Upload failed");
+        }
+      };
+      reader.readAsDataURL(file);
     }
 
     loadProfile();

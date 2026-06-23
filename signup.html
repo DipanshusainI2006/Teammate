@@ -468,9 +468,9 @@ document.getElementById("signupForm").addEventListener("submit", async function(
         if (response.ok) {
             // Save to localStorage
             localStorage.setItem("token", data.token);
-            localStorage.setItem("userId", data.userId);
-            localStorage.setItem("username", username);
-            localStorage.setItem("email", email);
+            localStorage.setItem("userId", data.user._id);
+            localStorage.setItem("username", data.user.username);
+            localStorage.setItem("email", data.user.email);
             localStorage.setItem("skills", skills);
             
             const initialProfile = {

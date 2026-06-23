@@ -1324,15 +1324,20 @@
                     <button id="searchBtn">Search</button>
                 </div>
 
-                <a href="talent hubb.html">
-                    <button class="harsh" style="margin-top: 30px">
-                        Talent Hub
-                    </button>
-                </a>
+                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px; flex-wrap: wrap;">
+                    <a href="talent hubb.html" style="text-decoration: none;">
+                        <button class="harsh" style="margin-top: 0; width: 170px;">
+                            Talent Hub
+                        </button>
+                    </a>
 
-                <button class="explore-btn" style="margin-top: 30px" id="exploreBtn">
-                    Explore Projects
-                </button>
+                    <button class="explore-btn" style="margin-top: 0;" id="exploreBtn">
+                        Explore Projects
+                    </button>
+                    <button class="explore-btn" style="margin-top: 0; background: var(--secondary);" id="postProjBtn" onclick="openProjectModal()">
+                        Post a Project
+                    </button>
+                </div>
             </div>
         </div>
     </section>
@@ -1909,21 +1914,241 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    // ==================== PROJECTS DYNAMIC INTEGRATION ====================
+    let backendProjects = [];
+
+    window.openProjectModal = function() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('Please login or sign up to post a project!');
+            window.location.href = 'li.html';
+            return;
+        }
+        document.getElementById("projectModal").style.display = "flex";
+    };
+
+    window.closeProjectModal = function() {
+        document.getElementById("projectModal").style.display = "none";
+    };
+
+    window.applyToProject = async function(btn, projectId) {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('Please login or sign up to join a team!');
+            window.location.href = 'li.html';
+            return;
+        }
+        
+        btn.textContent = "Applying...";
+        btn.disabled = true;
+        
+        try {
+            const res = await fetch(`http://localhost:5000/api/projects/${projectId}/apply`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+            
+            const data = await res.json();
+            if (res.ok) {
+                btn.textContent = "Applied";
+                btn.style.background = "var(--accent)";
+                alert("Your request to join team has been submitted!");
+            } else {
+                alert(data.msg || "Application failed");
+                btn.textContent = "Join Team";
+                btn.disabled = false;
+            }
+        } catch (err) {
+            console.error("Error applying to project:", err);
+            alert("Failed to connect to server");
+            btn.textContent = "Join Team";
+            btn.disabled = false;
+        }
+    };
+
+    function escapeHtml(str) {
+        if (!str) return "";
+        return str.toString()
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function renderProjects(projects) {
+        const projectsGrid = document.querySelector(".projects-grid");
+        if (!projectsGrid) return;
+        
+        if (projects.length === 0) {
+            projectsGrid.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 40px; background: var(--card-bg); border-radius: 15px;">
+                    <i class="fas fa-folder-open" style="font-size: 3rem; color: var(--primary); margin-bottom: 15px;"></i>
+                    <h3>No matching projects found</h3>
+                    <p>Try searching for a different skill or post a project yourself!</p>
+                </div>
+            `;
+            return;
+        }
+        
+        const userId = localStorage.getItem("userId");
+        
+        projectsGrid.innerHTML = projects.map(proj => {
+            const isCreator = proj.creator && (proj.creator === userId || proj.creator._id === userId);
+            const isMember = proj.members && proj.members.some(m => m === userId || (m && m._id === userId));
+            const hasApplied = proj.applicants && proj.applicants.some(app => app.user === userId || (app.user && app.user._id === userId));
+            
+            let buttonText = "Join Team";
+            let buttonDisabled = false;
+            let buttonBg = "";
+            
+            if (isCreator) {
+                buttonText = "Your Project";
+                buttonDisabled = true;
+                buttonBg = "var(--primary)";
+            } else if (isMember) {
+                buttonText = "Member";
+                buttonDisabled = true;
+                buttonBg = "#4CAF50";
+            } else if (hasApplied) {
+                buttonText = "Applied";
+                buttonDisabled = true;
+                buttonBg = "var(--accent)";
+            }
+            
+            const skillsBadges = proj.skills.map(skill => `<span class="project-skill">${escapeHtml(skill)}</span>`).join("");
+            
+            return `
+                <div class="project-card" style="opacity: 1; transform: translateY(0);">
+                    <div class="project-img">
+                        <i class="fas ${escapeHtml(proj.icon || 'fa-project-diagram')}"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3>${escapeHtml(proj.title)}</h3>
+                        <p>${escapeHtml(proj.description)}</p>
+                        <div class="project-skills">
+                            ${skillsBadges}
+                        </div>
+                        <div class="project-meta">
+                            <span><i class="fas fa-users"></i> ${proj.membersNeeded} members needed</span>
+                            <button class="btn-team" style="background: ${buttonBg}; border: none; border-radius: 20px; padding: 8px 16px; transition: all 0.3s ease; font-weight: 600; cursor: pointer; color: white;" ${buttonDisabled ? 'disabled' : ''}>${buttonText}</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join("");
+
+        // Add event listeners to the generated buttons
+        projectsGrid.querySelectorAll(".project-card").forEach((card, index) => {
+            const btn = card.querySelector(".btn-team");
+            if (btn && !btn.disabled) {
+                btn.addEventListener("click", () => {
+                    applyToProject(btn, projects[index]._id);
+                });
+            }
+        });
+    }
+
+    async function loadProjects() {
+        try {
+            const res = await fetch("http://localhost:5000/api/projects");
+            if (res.ok) {
+                backendProjects = await res.json();
+                renderProjects(backendProjects);
+            }
+        } catch (err) {
+            console.error("Failed to connect to backend for projects:", err);
+        }
+    }
+
+    // Load dynamic projects
+    loadProjects();
+
+    // Close modal when clicking outside
+    window.addEventListener("click", function(event) {
+        const modal = document.getElementById("projectModal");
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+
+    // Post Project Form Submit
+    const projForm = document.getElementById("createProjectForm");
+    if (projForm) {
+        projForm.addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert("Please log in to perform this action.");
+                window.location.href = "li.html";
+                return;
+            }
+            
+            const projectData = {
+                title: document.getElementById("projTitle").value.trim(),
+                description: document.getElementById("projDesc").value.trim(),
+                skills: document.getElementById("projSkills").value.trim(),
+                membersNeeded: parseInt(document.getElementById("projMembers").value) || 3,
+                icon: document.getElementById("projIcon").value
+            };
+            
+            try {
+                const res = await fetch("http://localhost:5000/api/projects", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify(projectData)
+                });
+                
+                if (res.ok) {
+                    alert("Project posted successfully!");
+                    closeProjectModal();
+                    projForm.reset();
+                    loadProjects();
+                } else {
+                    const data = await res.json();
+                    alert(data.msg || "Failed to post project");
+                }
+            } catch (err) {
+                console.error("Error posting project:", err);
+                alert("Failed to connect to server");
+            }
+        });
+    }
+
     // Search functionality
     const searchBtn = document.getElementById("searchBtn");
     const searchInput = document.getElementById("skillSearch");
 
-    if (searchBtn) {
+    if (searchBtn && searchInput) {
         searchBtn.addEventListener("click", function () {
-            const searchTerm = searchInput.value.trim();
+            const searchTerm = searchInput.value.trim().toLowerCase();
             if (searchTerm) {
                 this.textContent = "Searching...";
                 this.style.opacity = "0.8";
                 setTimeout(() => {
-                    alert(`Searching for: ${searchTerm}`);
+                    const filtered = backendProjects.filter(p => 
+                        p.title.toLowerCase().includes(searchTerm) || 
+                        p.description.toLowerCase().includes(searchTerm) || 
+                        p.skills.some(s => s.toLowerCase().includes(searchTerm))
+                    );
+                    renderProjects(filtered);
                     this.textContent = "Search";
                     this.style.opacity = "1";
-                }, 800);
+                }, 400);
+            } else {
+                renderProjects(backendProjects);
+            }
+        });
+
+        searchInput.addEventListener("input", function() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            if (!searchTerm) {
+                renderProjects(backendProjects);
             }
         });
     }
@@ -1938,36 +2163,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     behavior: "smooth",
                 });
                 this.textContent = "Explore Projects";
-            }, 1000);
-        });
-    }
-
-    // Join team buttons - Updated to check authentication
-    const joinButtons = document.querySelectorAll(".btn-team");
-    joinButtons.forEach((button) => {
-        button.addEventListener("click", function () {
-            const token = localStorage.getItem('token');
-            
-            if (!token) {
-                alert('Please login or sign up to join a team!');
-                window.location.href = 'li.html';
-                return;
-            }
-
-            const projectTitle = this.closest(".project-card").querySelector("h3").textContent;
-            const originalText = this.textContent;
-            const originalBg = this.style.background;
-            
-            this.textContent = "Request Sent!";
-            this.style.background = "#4CAF50";
-
-            setTimeout(() => {
-                alert(`Your request to join "${projectTitle}" has been sent!`);
-                this.textContent = originalText;
-                this.style.background = originalBg;
             }, 500);
         });
-    });
+    }
 
     // Animate elements when they come into view
     const observerOptions = {
@@ -1994,5 +2192,51 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script>
+    <!-- Create Project Modal -->
+    <div id="projectModal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(5px); align-items: center; justify-content: center;">
+        <div style="background-color: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); position: relative; animation: modalFadeIn 0.3s ease;">
+            <span style="position: absolute; right: 20px; top: 15px; font-size: 28px; font-weight: bold; cursor: pointer; color: var(--text-light); transition: var(--transition);" onclick="closeProjectModal()">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 20px; font-size: 1.8rem; font-weight: 600;">Post a New Project</h2>
+            <form id="createProjectForm">
+                <div style="margin-bottom: 15px;">
+                    <label for="projTitle" style="display: block; margin-bottom: 5px; font-weight: 500;">Project Title *</label>
+                    <input type="text" id="projTitle" required style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 5px;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label for="projDesc" style="display: block; margin-bottom: 5px; font-weight: 500;">Description *</label>
+                    <textarea id="projDesc" rows="4" required style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 5px; resize: none;"></textarea>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label for="projSkills" style="display: block; margin-bottom: 5px; font-weight: 500;">Skills Needed (comma-separated)</label>
+                    <input type="text" id="projSkills" placeholder="e.g. React, Python, OpenCV" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 5px;">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                    <div>
+                        <label for="projMembers" style="display: block; margin-bottom: 5px; font-weight: 500;">Members Needed</label>
+                        <input type="number" id="projMembers" value="3" min="1" max="10" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 5px;">
+                    </div>
+                    <div>
+                        <label for="projIcon" style="display: block; margin-bottom: 5px; font-weight: 500;">Project Icon</label>
+                        <select id="projIcon" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 5px; background: white;">
+                            <option value="fa-robot">🤖 AI / Robotics</option>
+                            <option value="fa-shopping-cart">🛒 E-Commerce</option>
+                            <option value="fa-leaf">🍃 Eco / IoT</option>
+                            <option value="fa-mobile-alt">📱 Mobile App</option>
+                            <option value="fa-laptop-code">💻 Web Development</option>
+                            <option value="fa-gamepad">🎮 Game Development</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; border-radius: 50px;">Post Project</button>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </body>
 </html>

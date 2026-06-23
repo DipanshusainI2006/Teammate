@@ -474,8 +474,10 @@
 
   <script>
     // ==================== CONFIGURATION ====================
-    // 🔥 IMPORTANT: Replace with your DEPLOYED backend URL
-    const API_BASE_URL = 'https://your-backend.onrender.com'; // CHANGE THIS!
+    // 🔥 IMPORTANT: Fallback to localhost for local development
+    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:5000'
+      : 'https://your-backend.onrender.com';
     // For local testing: 'http://localhost:5000'
     // For production: 'https://your-app.onrender.com' or 'https://your-app.railway.app'
     
