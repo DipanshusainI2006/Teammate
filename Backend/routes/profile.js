@@ -29,6 +29,9 @@ const saveProfile = async (req, res) => {
         if (req.body.location) userUpdate.location = req.body.location;
         if (req.body.headline) userUpdate.title = req.body.headline;
         if (req.body.profilePic) userUpdate.avatar = req.body.profilePic;
+        if (req.body.experience !== undefined) userUpdate.experience = req.body.experience;
+        if (req.body.status) userUpdate.status = req.body.status;
+        if (req.body.fullName) userUpdate.username = req.body.fullName;
 
         if (Object.keys(userUpdate).length > 0) {
             await User.findByIdAndUpdate(req.user.id, userUpdate);

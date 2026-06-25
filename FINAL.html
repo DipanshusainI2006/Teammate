@@ -1292,6 +1292,7 @@
 
                 <div class="nav-links">
                     <a href="#">Home</a>
+                    <a href="messages.html">Messages</a>
                     <a href="learner.html">E-Learn</a>
                     <a href="#Events">Events</a>
                     <a href="#htw">How it Works</a>
@@ -1750,12 +1751,18 @@
     </footer>
 
     <script>
+// Dynamic host URL resolution
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:5000'
+    : window.location.origin;
+
 // ==================== PROFILE FUNCTIONALITY ====================
 
 // Check if user is logged in and update UI
 function checkAuth() {
     const token = localStorage.getItem('token');
     const username = localStorage.getItem('username');
+    const userId = localStorage.getItem('userId');
     const profileCompleted = localStorage.getItem('profileCompleted');
     const userProfile = localStorage.getItem('userProfile');
     
@@ -1786,9 +1793,10 @@ function checkAuth() {
                     <span class="username">${username}</span>
                 </div>
                 <div class="dropdown-content" id="profileDropdown">
-                    <a href="profile-view.html"><i class="fas fa-user"></i> View Profile</a>
+                    <a href="profile.html?id=${userId}"><i class="fas fa-user"></i> View Profile</a>
                     <a href="complete-profile.html"><i class="fas fa-edit"></i> ${profileCompleted === 'true' ? 'Edit Profile' : 'Complete Profile'}</a>
                     <a href="my-projects.html"><i class="fas fa-project-diagram"></i> My Projects</a>
+                    <a href="messages.html"><i class="fas fa-comments"></i> Messages</a>
                     <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
                 </div>
             </div>
@@ -1943,7 +1951,7 @@ document.addEventListener("DOMContentLoaded", function () {
         btn.disabled = true;
         
         try {
-            const res = await fetch(`http://localhost:5000/api/projects/${projectId}/apply`, {
+            const res = await fetch(`${API_BASE_URL}/api/projects/${projectId}/apply`, {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -2053,7 +2061,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     async function loadProjects() {
         try {
-            const res = await fetch("http://localhost:5000/api/projects");
+            const res = await fetch(`${API_BASE_URL}/api/projects`);
             if (res.ok) {
                 backendProjects = await res.json();
                 renderProjects(backendProjects);
@@ -2095,7 +2103,7 @@ document.addEventListener("DOMContentLoaded", function () {
             };
             
             try {
-                const res = await fetch("http://localhost:5000/api/projects", {
+                const res = await fetch(`${API_BASE_URL}/api/projects`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

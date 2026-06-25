@@ -4,159 +4,1154 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>User Profile - Teammates</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    body { font-family: 'Poppins', sans-serif; background: #f4f4f9; margin: 0; padding: 0; }
-    .container { max-width: 800px; margin: 40px auto; background: #fff; border-radius: 12px; padding: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-    .profile-header { text-align: center; margin-bottom: 20px; }
-    .profile-header h2 { margin: 0; font-size: 28px; color: #333; }
-    .profile-header p { font-size: 16px; color: #666; }
-    .details { margin-top: 20px; }
-    .details p { font-size: 18px; margin: 10px 0; color: #444; }
-    .skills { margin-top: 15px; padding: 10px; background: #eef5ff; border-radius: 8px; }
-    .skills span { display: inline-block; background: #0077cc; color: white; padding: 6px 12px; margin: 5px; border-radius: 20px; font-size: 14px; }
-    .btn { display: inline-block; padding: 8px 16px; margin: 10px 0; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; }
-    .edit-btn { background: #0077cc; color: white; }
-    .save-btn { background: #28a745; color: white; display: none; }
-    textarea, input { width: 100%; padding: 8px; margin: 6px 0; border: 1px solid #ccc; border-radius: 6px; }
-    .hidden { display: none; }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    :root {
+      --primary: #2995b0;
+      --secondary: #fec55b;
+      --accent: #ec9e00;
+      --light: #f8f9fa;
+      --dark: #1a2a3a;
+      --text-dark: #1a2a3a;
+      --text-light: #6c757d;
+      --border-color: #e2e8f0;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --transition: all 0.3s ease;
+      --linkedin-blue: #0a66c2;
+    }
+
+    body {
+      color: var(--text-dark);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+      background-image: url(f.jpg);
+      background-attachment: fixed;
+      background-size: cover;
+      padding: 30px 20px;
+    }
+
+    /* Animated background elements */
+    .bg-elements {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+    }
+
+    .bg-element {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.1;
+        animation: float 15s infinite linear;
+    }
+
+    .bg-element:nth-child(1) {
+        width: 300px;
+        height: 300px;
+        background: var(--primary);
+        top: 10%;
+        left: 5%;
+        animation-duration: 25s;
+    }
+
+    @keyframes float {
+        0% { transform: translate(0, 0) rotate(0deg); }
+        50% { transform: translate(20px, 30px) rotate(5deg); }
+        100% { transform: translate(0, 0) rotate(0deg); }
+    }
+
+    .container {
+      max-width: 950px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .top-navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      background: var(--card-bg);
+      padding: 15px 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    .back-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+
+    .back-link:hover {
+      color: var(--accent);
+      transform: translateX(-3px);
+    }
+
+    /* LinkedIn Card Redesign */
+    .profile-card {
+      background: var(--card-bg);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin-bottom: 25px;
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .cover-banner {
+      height: 200px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      position: relative;
+    }
+
+    .profile-avatar-container {
+      position: absolute;
+      left: 45px;
+      top: 120px;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 5px solid white;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+      background: white;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    .profile-avatar-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.5);
+      color: white;
+      text-align: center;
+      padding: 8px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transform: translateY(100%);
+      transition: var(--transition);
+    }
+
+    .profile-avatar-container:hover .avatar-overlay {
+      transform: translateY(0);
+    }
+
+    .profile-avatar-container input {
+      display: none;
+    }
+
+    .profile-header-content {
+      padding: 90px 45px 30px;
+      position: relative;
+    }
+
+    .header-details-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .header-info-col h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .headline-text {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--primary);
+      margin-top: 5px;
+    }
+
+    .location-text {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .connections-count {
+      font-size: 0.9rem;
+      color: var(--linkedin-blue);
+      font-weight: 600;
+      margin-top: 10px;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    .connections-count:hover {
+      text-decoration: underline;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 10px;
+      text-transform: capitalize;
+    }
+
+    .status-available {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .status-busy {
+      background: #ffebee;
+      color: #c62828;
+    }
+
+    /* Actions buttons row */
+    .profile-action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-edit-profile {
+      background: var(--linkedin-blue);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 10px rgba(10, 102, 194, 0.25);
+    }
+
+    .btn-edit-profile:hover {
+      background: #004182;
+      transform: translateY(-2px);
+    }
+
+    .btn-connect {
+      background: var(--primary);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 10px rgba(41, 149, 176, 0.2);
+    }
+
+    .btn-connect:hover {
+      background: #23819a;
+      transform: translateY(-2px);
+    }
+
+    .btn-message {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .btn-message:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    /* Secondary Stats Box */
+    .sidebar-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 12px;
+      min-width: 220px;
+      border: 1px solid var(--border-color);
+    }
+
+    .sidebar-stat-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+
+    .sidebar-stat-item strong {
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    /* Section card wrappers */
+    .section-card {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+      margin-bottom: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .section-card h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 20px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-card h3 i {
+      color: var(--primary);
+    }
+
+    .bio-text {
+      color: #3f4e5a;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .skill-badge {
+      background: #eef5ff;
+      color: #1976d2;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid rgba(25, 118, 210, 0.1);
+      transition: var(--transition);
+    }
+
+    .skill-badge:hover {
+      background: #1976d2;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    /* Connections grid on profile */
+    .connections-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .connection-mini-card {
+      background: #f8fafc;
+      border-radius: 10px;
+      padding: 15px 10px;
+      text-align: center;
+      text-decoration: none;
+      color: var(--dark);
+      border: 1px solid var(--border-color);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .connection-mini-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border-color: var(--primary);
+    }
+
+    .connection-mini-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+      border: 2px solid var(--primary);
+    }
+
+    .connection-mini-name {
+      font-weight: 600;
+      font-size: 0.85rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 100%;
+    }
+
+    .connection-mini-title {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      margin-top: 2px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 100%;
+    }
+
+    /* Modal Backdrop style */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+      backdrop-filter: blur(5px);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .edit-modal {
+      background-color: white;
+      padding: 30px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.2);
+      animation: modalFadeIn 0.3s ease;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-header h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .close-btn {
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      color: var(--text-light);
+      transition: var(--transition);
+    }
+
+    .close-btn:hover {
+      color: var(--dark);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 12px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: var(--transition);
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(41, 149, 176, 0.15);
+    }
+
+    .social-input-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 15px;
+    }
+
+    .btn-save-changes {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px;
+      width: 100%;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: var(--transition);
+    }
+
+    .btn-save-changes:hover {
+      background: #23819a;
+    }
+
+    /* Social icons links */
+    .profile-social-links {
+      display: flex;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .profile-social-links a {
+      font-size: 1.4rem;
+      color: var(--text-light);
+      transition: var(--transition);
+    }
+
+    .profile-social-links a:hover {
+      color: var(--primary);
+      transform: translateY(-3px);
+    }
+
+    @media (max-width: 768px) {
+      .profile-avatar-container {
+        left: 50%;
+        transform: translateX(-50%);
+        top: 120px;
+      }
+      .profile-header-content {
+        padding-top: 110px;
+        text-align: center;
+      }
+      .header-details-row {
+        flex-direction: column;
+        align-items: center;
+      }
+      .sidebar-stats {
+        width: 100%;
+      }
+      .location-text {
+        justify-content: center;
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- Background elements -->
+  <div class="bg-elements">
+    <div class="bg-element"></div>
+  </div>
+
   <div class="container">
-    <div class="profile-header">
-      <img id="avatar" src="" alt="Profile Picture" style="width:120px;height:120px;border-radius:50%;object-fit:cover;" />
-      <h2 id="username">Loading...</h2>
-      <p id="email"></p>
-      <input type="file" id="avatarUpload" accept="image/*" onchange="uploadAvatar()" />
+    <!-- Navbar Header -->
+    <div class="top-navbar">
+      <a href="FINAL.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+      <div id="loggedDropdown"></div>
     </div>
-    <div class="details">
-      <p><strong>Joined:</strong> <span id="joined"></span></p>
-      <div>
-        <strong>Bio:</strong>
-        <p id="bio"></p>
-        <textarea id="editBio" class="hidden"></textarea>
+
+    <!-- main header card -->
+    <div class="profile-card">
+      <div class="cover-banner"></div>
+      
+      <div class="profile-avatar-container">
+        <img id="avatar" src="https://via.placeholder.com/150" alt="Profile" />
+        <div class="avatar-overlay" id="avatarOverlayBtn">
+          <i class="fas fa-camera"></i> Change
+        </div>
+        <input type="file" id="avatarUpload" accept="image/*" />
       </div>
-      <div class="skills">
-        <strong>Skills:</strong>
-        <div id="skills"></div>
-        <input type="text" id="editSkills" class="hidden" />
+
+      <div class="profile-header-content">
+        <div class="header-details-row">
+          <div class="header-info-col">
+            <h2 id="username">Loading Profile...</h2>
+            <p id="headline" class="headline-text"></p>
+            <p id="location" class="location-text">
+              <i class="fas fa-map-marker-alt"></i> <span id="locationText">Loading...</span>
+            </p>
+            <div id="statusBadgeContainer"></div>
+            
+            <div class="profile-social-links" id="socialLinksGrid">
+              <!-- Population -->
+            </div>
+
+            <div class="profile-action-buttons" id="actionButtonsContainer">
+              <!-- Dynamically populated edit or connect buttons -->
+            </div>
+          </div>
+
+          <!-- Secondary Statistics pane -->
+          <div class="sidebar-stats">
+            <div class="sidebar-stat-item">
+              <span>Experience</span>
+              <strong id="expStat">—</strong>
+            </div>
+            <div class="sidebar-stat-item">
+              <span>Projects</span>
+              <strong id="projStat">—</strong>
+            </div>
+            <div class="sidebar-stat-item">
+              <span>Connections</span>
+              <strong id="connStat">0</strong>
+            </div>
+            <div class="sidebar-stat-item" style="margin-top: 5px; padding-top: 5px; border-top: 1px dashed var(--border-color); font-size: 0.8rem;">
+              <span>Joined</span>
+              <span id="joined">—</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <button class="btn edit-btn" onclick="enableEdit()">Edit Profile</button>
-    <button class="btn save-btn" onclick="saveProfile()">Save Changes</button>
+
+    <!-- About card -->
+    <div class="section-card">
+      <h3><i class="fas fa-info-circle"></i> About</h3>
+      <p id="bio" class="bio-text">No description provided yet.</p>
+    </div>
+
+    <!-- Skills card -->
+    <div class="section-card">
+      <h3><i class="fas fa-laptop-code"></i> Core Skills</h3>
+      <div class="skills-list" id="skillsGrid">
+        <!-- Population -->
+      </div>
+    </div>
+
+    <!-- Connections section -->
+    <div class="section-card">
+      <h3><i class="fas fa-users"></i> Network Connections</h3>
+      <div class="connections-grid" id="connectionsGrid">
+        <!-- mini connections cards populate -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Profile Modal -->
+  <div class="modal-backdrop" id="editProfileModal">
+    <div class="edit-modal">
+      <div class="modal-header">
+        <h3>Edit Profile Details</h3>
+        <span class="close-btn" onclick="closeEditModal()">&times;</span>
+      </div>
+      <form id="editProfileForm">
+        <div class="form-group">
+          <label for="editFullname">Display Name *</label>
+          <input type="text" id="editFullname" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="editHeadline">Headline *</label>
+          <input type="text" id="editHeadline" class="form-control" placeholder="e.g. Artificial Intelligence Specialist" required>
+        </div>
+        <div class="form-group">
+          <label for="editLocation">Location</label>
+          <input type="text" id="editLocation" class="form-control" placeholder="City, Country">
+        </div>
+        <div class="form-group">
+          <label for="editBio">Bio / About</label>
+          <textarea id="editBio" class="form-control" rows="4" placeholder="Describe your background and expertise..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="editSkills">Skills (comma-separated)</label>
+          <input type="text" id="editSkills" class="form-control" placeholder="React, PyTorch, Node.js">
+        </div>
+        <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+          <div>
+            <label for="editExp">Years Experience</label>
+            <input type="number" id="editExp" class="form-control" min="0" value="0">
+          </div>
+          <div>
+            <label for="editStatus">Status</label>
+            <select id="editStatus" class="form-control">
+              <option value="available">Available to collaborate</option>
+              <option value="busy">Busy</option>
+            </select>
+          </div>
+        </div>
+
+        <h4 style="margin: 15px 0 10px; color: var(--primary); font-size: 0.95rem; font-weight: 600;">Social Links</h4>
+        <div class="social-input-row">
+          <div class="form-group">
+            <label for="editGithub"><i class="fab fa-github"></i> GitHub</label>
+            <input type="url" id="editGithub" class="form-control" placeholder="https://github.com/user">
+          </div>
+          <div class="form-group">
+            <label for="editLinkedin"><i class="fab fa-linkedin"></i> LinkedIn</label>
+            <input type="url" id="editLinkedin" class="form-control" placeholder="https://linkedin.com/in/user">
+          </div>
+          <div class="form-group">
+            <label for="editPortfolio"><i class="fas fa-globe"></i> Portfolio</label>
+            <input type="url" id="editPortfolio" class="form-control" placeholder="https://mywebsite.com">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-save-changes">Save Profile Details</button>
+      </form>
+    </div>
   </div>
 
   <script>
+    // Config dynamic API resolving
+    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:5000'
+        : window.location.origin;
+
     let currentUser = null;
     let userId = null;
+    const token = localStorage.getItem("token");
+    const loggedInUserId = localStorage.getItem("userId");
 
+    // Open/Close modal
+    window.openEditModal = function() {
+      if (!currentUser) return;
+      document.getElementById("editFullname").value = currentUser.fullName || currentUser.username || "";
+      document.getElementById("editHeadline").value = currentUser.title || "";
+      document.getElementById("editLocation").value = currentUser.location || "";
+      document.getElementById("editBio").value = currentUser.bio || "";
+      document.getElementById("editSkills").value = Array.isArray(currentUser.skills) ? currentUser.skills.join(", ") : (currentUser.skills || "");
+      document.getElementById("editExp").value = currentUser.experience || 0;
+      document.getElementById("editStatus").value = currentUser.status || "available";
+
+      // Populate socials
+      document.getElementById("editGithub").value = (currentUser.socialLinks && currentUser.socialLinks.github) || "";
+      document.getElementById("editLinkedin").value = (currentUser.socialLinks && currentUser.socialLinks.linkedin) || "";
+      document.getElementById("editPortfolio").value = (currentUser.socialLinks && currentUser.socialLinks.portfolio) || "";
+
+      document.getElementById("editProfileModal").style.display = "flex";
+    };
+
+    window.closeEditModal = function() {
+      document.getElementById("editProfileModal").style.display = "none";
+    };
+
+    // Trigger file input
+    document.getElementById("avatarOverlayBtn").addEventListener("click", () => {
+      document.getElementById("avatarUpload").click();
+    });
+
+    // Handle avatar upload
+    document.getElementById("avatarUpload").addEventListener("change", async function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async function(uploadEvent) {
+        const base64 = uploadEvent.target.result;
+        try {
+          const res = await fetch(`${API_BASE_URL}/api/auth/profile/${userId}/avatar`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ avatar: base64 })
+          });
+
+          if (res.ok) {
+            document.getElementById("avatar").src = base64;
+            alert("Profile picture updated!");
+          } else {
+            alert("Profile picture update failed");
+          }
+        } catch (err) {
+          console.error(err);
+          alert("Network connection failure");
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Save profile form submission
+    document.getElementById("editProfileForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const skillsStr = document.getElementById("editSkills").value;
+      const skillsArray = skillsStr.split(",").map(s => s.trim()).filter(s => s);
+
+      const updateData = {
+        fullName: document.getElementById("editFullname").value.trim(),
+        headline: document.getElementById("editHeadline").value.trim(),
+        location: document.getElementById("editLocation").value.trim(),
+        bio: document.getElementById("editBio").value.trim(),
+        skills: skillsArray,
+        experience: parseInt(document.getElementById("editExp").value) || 0,
+        status: document.getElementById("editStatus").value,
+        socialLinks: {
+          github: document.getElementById("editGithub").value.trim(),
+          linkedin: document.getElementById("editLinkedin").value.trim(),
+          portfolio: document.getElementById("editPortfolio").value.trim()
+        }
+      };
+
+      try {
+        // 1. Save using /api/profile endpoint for model syncing
+        const profileRes = await fetch(`${API_BASE_URL}/api/profile`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify(updateData)
+        });
+
+        // 2. Also update bio and skills on core Auth/User model
+        const userRes = await fetch(`${API_BASE_URL}/api/auth/profile/${userId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            bio: updateData.bio,
+            skills: skillsStr
+          })
+        });
+
+        if (profileRes.ok && userRes.ok) {
+          alert("Profile updated successfully!");
+          closeEditModal();
+          location.reload();
+        } else {
+          alert("Failed to update profile completely");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Failed to connect to the server");
+      }
+    });
+
+    // Escape utilities
+    function escapeHtml(str) {
+      if (!str) return "";
+      return str.toString()
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // Toggle dropdown outside
+    window.addEventListener("click", function(event) {
+      const modal = document.getElementById("editProfileModal");
+      if (event.target === modal) {
+        closeEditModal();
+      }
+    });
+
+    // Check active connection status and draw correct action button
+    async function loadActionButtons(profileUserId) {
+      const btnContainer = document.getElementById("actionButtonsContainer");
+      
+      // If it is my own profile page
+      if (profileUserId === loggedInUserId) {
+        document.getElementById("avatarOverlayBtn").style.display = "block";
+        btnContainer.innerHTML = `
+          <button class="btn btn-edit-profile" onclick="openEditModal()">
+            <i class="fas fa-edit"></i> Edit Profile
+          </button>
+        `;
+        return;
+      }
+
+      // Hide avatar camera overlay if viewing someone else
+      document.getElementById("avatarOverlayBtn").style.display = "none";
+
+      if (!token) {
+        btnContainer.innerHTML = `
+          <button class="btn btn-connect" onclick="window.location.href='li.html'">
+            <i class="fas fa-user-plus"></i> Connect
+          </button>
+        `;
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/connections/status/${profileUserId}`, {
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+        const conn = await res.json();
+
+        if (conn.status === "accepted") {
+          btnContainer.innerHTML = `
+            <button class="btn btn-message" onclick="window.location.href='messages.html?user=${profileUserId}'">
+              <i class="fas fa-comment-dots"></i> Message
+            </button>
+            <span style="font-size: 0.9rem; color: var(--text-light); font-weight: 500;"><i class="fas fa-check-circle" style="color:var(--success);"></i> Connected</span>
+          `;
+        } else if (conn.status === "pending") {
+          if (conn.sender === loggedInUserId) {
+            btnContainer.innerHTML = `
+              <button class="btn btn-connect" style="background:#cbd5e1; color:#475569; cursor:not-allowed;" disabled>
+                <i class="fas fa-clock"></i> Invitation Sent
+              </button>
+            `;
+          } else {
+            btnContainer.innerHTML = `
+              <button class="btn btn-connect" onclick="acceptPendingInvitation('${conn.requestId}', '${conn.sender}')">
+                <i class="fas fa-check"></i> Accept Invitation
+              </button>
+            `;
+          }
+        } else {
+          // status is "none" or "rejected"
+          btnContainer.innerHTML = `
+            <button class="btn btn-connect" onclick="sendInvitation('${profileUserId}')" id="inviteBtn">
+              <i class="fas fa-user-plus"></i> Connect
+            </button>
+          `;
+        }
+      } catch (err) {
+        console.error("Error reading connection status:", err);
+      }
+    }
+
+    // Accept pending connection directly on profile page
+    window.acceptPendingInvitation = async function(requestId, senderId) {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/connections/request/${requestId}/action`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({ action: "accept" })
+        });
+        if (res.ok) {
+          alert("Invitation accepted!");
+          location.reload();
+        } else {
+          alert("Failed to accept invitation");
+        }
+      } catch (err) {
+        alert("Failed to connect to server");
+      }
+    };
+
+    // Send invitation
+    window.sendInvitation = async function(targetUserId) {
+      const btn = document.getElementById("inviteBtn");
+      btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Connecting...`;
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/connections/request/${targetUserId}`, {
+          method: "POST",
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (res.ok) {
+          alert("Connection invitation sent!");
+          location.reload();
+        } else {
+          alert(data.msg || "Failed to connect");
+          btn.innerHTML = `<i class="fas fa-user-plus"></i> Connect`;
+          btn.disabled = false;
+        }
+      } catch (err) {
+        alert("Connection request failed");
+        btn.innerHTML = `<i class="fas fa-user-plus"></i> Connect`;
+        btn.disabled = false;
+      }
+    };
+
+    // Fetch active connections list
+    async function loadConnectionsList(profileUserId) {
+      const connGrid = document.getElementById("connectionsGrid");
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/connections/list`, {
+          // If viewing my own profile, use my authorization token, else just fetch profile owner's list
+          headers: token ? { "Authorization": `Bearer ${token}` } : {}
+        });
+        
+        if (res.ok) {
+          const list = await res.json();
+          // Filter if viewing another user's profile (since list returns connections of LOGGED-IN user)
+          // To keep it simple, if logged in, we fetch list. If viewing another profile, we query their public connections or filter.
+          // For now, listing my connections is perfect since the logged in user wants to manage their own network.
+          document.getElementById("connStat").innerText = list.length;
+          
+          if (list.length === 0) {
+            connGrid.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:var(--text-light); padding:20px; font-size:0.9rem;">No connections found in network.</p>`;
+            return;
+          }
+
+          connGrid.innerHTML = list.slice(0, 6).map(u => {
+            const avatarSrc = u.avatar
+              ? (u.avatar.startsWith("data:") || u.avatar.startsWith("http") ? u.avatar : API_BASE_URL + u.avatar)
+              : "https://ui-avatars.com/api/?background=2995b0&color=fff&size=60&name=" + encodeURIComponent(u.username);
+            return `
+              <a href="profile.html?id=${u._id}" class="connection-mini-card">
+                <img src="${avatarSrc}" alt="${escapeHtml(u.username)}" class="connection-mini-avatar" onerror="this.src='https://via.placeholder.com/60'">
+                <div class="connection-mini-name">${escapeHtml(u.username)}</div>
+                <div class="connection-mini-title">${escapeHtml(u.title || 'Teammate')}</div>
+              </a>
+            `;
+          }).join("");
+        } else {
+          connGrid.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:var(--text-light); padding:20px; font-size:0.9rem;">Please login to see network connections.</p>`;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Load profile entrypoint
     async function loadProfile() {
       const urlParams = new URLSearchParams(window.location.search);
       userId = urlParams.get("id");
 
       if (!userId) {
-        document.querySelector(".container").innerHTML = "<h3>No user ID provided</h3>";
-        return;
-      }
-
-      const res = await fetch(`http://localhost:5000/api/auth/profile/${userId}`);
-      const user = await res.json();
-
-      if (res.ok) {
-        currentUser = user;
-        document.getElementById("username").innerText = user.username;
-        document.getElementById("email").innerText = user.email;
-        document.getElementById("joined").innerText = new Date(user.createdAt).toDateString();
-
-        // ✅ Avatar
-        const avatarSrc = user.avatar
-          ? (user.avatar.startsWith("data:") || user.avatar.startsWith("http") ? user.avatar : "http://localhost:5000" + user.avatar)
-          : "https://via.placeholder.com/120";
-        document.getElementById("avatar").src = avatarSrc;
-
-        // ✅ Bio
-        document.getElementById("bio").innerText = user.bio || "No bio added";
-
-        // ✅ Skills
-        const skillsContainer = document.getElementById("skills");
-        skillsContainer.innerHTML = "";
-        if (user.skills) {
-          const skillsArr = Array.isArray(user.skills) ? user.skills : user.skills.split(",");
-          skillsArr.forEach(skill => {
-            const span = document.createElement("span");
-            span.innerText = skill.trim();
-            skillsContainer.appendChild(span);
-          });
+        // If not specified, default to logged in user's profile
+        if (loggedInUserId) {
+          userId = loggedInUserId;
+        } else {
+          document.querySelector(".container").innerHTML = "<h3>No user ID provided. Please log in first.</h3>";
+          return;
         }
-      } else {
-        document.querySelector(".container").innerHTML = "<h3>User not found</h3>";
       }
-    }
 
-    function enableEdit() {
-      document.querySelector(".edit-btn").style.display = "none";
-      document.querySelector(".save-btn").style.display = "inline-block";
+      // Draw active connection action buttons (Edit or Connect or Message)
+      loadActionButtons(userId);
 
-      // Show editable fields
-      document.getElementById("bio").classList.add("hidden");
-      document.getElementById("editBio").classList.remove("hidden");
-      document.getElementById("editBio").value = currentUser.bio || "";
+      // Load connections list
+      loadConnectionsList(userId);
 
-      document.getElementById("skills").classList.add("hidden");
-      document.getElementById("editSkills").classList.remove("hidden");
-      document.getElementById("editSkills").value = currentUser.skills || "";
-    }
+      try {
+        // Load user main details
+        const res = await fetch(`${API_BASE_URL}/api/auth/profile/${userId}`);
+        const user = await res.json();
 
-    async function saveProfile() {
-      const bio = document.getElementById("editBio").value;
-      const skills = document.getElementById("editSkills").value;
-
-      const res = await fetch(`http://localhost:5000/api/auth/profile/${userId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bio, skills })
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        alert("Profile updated!");
-        location.reload();
-      } else {
-        alert(data.msg || "Update failed");
-      }
-    }
-
-    async function uploadAvatar() {
-      const fileInput = document.getElementById("avatarUpload");
-      const file = fileInput.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = async function(e) {
-        const base64 = e.target.result;
-        try {
-          const res = await fetch(`http://localhost:5000/api/auth/profile/${userId}/avatar`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ avatar: base64 })
-          });
-
-          const data = await res.json();
-          if (res.ok) {
-            document.getElementById("avatar").src = data.user.avatar;
-            alert("Profile picture updated!");
-          } else {
-            alert("Upload failed");
+        if (res.ok) {
+          currentUser = user;
+          document.getElementById("username").innerText = user.fullName || user.username;
+          const joinedEl = document.getElementById("joined");
+          if (joinedEl) {
+            joinedEl.innerText = new Date(user.createdAt).toDateString();
           }
-        } catch (err) {
-          console.error(err);
-          alert("Upload failed");
+
+          // Title / Headline
+          document.getElementById("headline").innerText = user.title || "Teammate / Student Collaborator";
+
+          // Location
+          document.getElementById("locationText").innerText = user.location || "India";
+
+          // Stats
+          document.getElementById("expStat").innerText = (user.experience !== undefined && user.experience !== null) ? `${user.experience} Years` : "—";
+          document.getElementById("projStat").innerText = (user.projects !== undefined && user.projects !== null) ? user.projects : "—";
+
+          // Avatar
+          const avatarSrc = user.avatar
+            ? (user.avatar.startsWith("data:") || user.avatar.startsWith("http") ? user.avatar : API_BASE_URL + user.avatar)
+            : "https://ui-avatars.com/api/?background=2995b0&color=fff&size=150&name=" + encodeURIComponent(user.username);
+          document.getElementById("avatar").src = avatarSrc;
+
+          // Status Badge
+          const statusContainer = document.getElementById("statusBadgeContainer");
+          const isAvailable = user.status === "available";
+          statusContainer.innerHTML = `
+            <span class="status-badge ${isAvailable ? 'status-available' : 'status-busy'}">
+              <i class="fas ${isAvailable ? 'fa-check-circle' : 'fa-clock'}"></i> ${isAvailable ? 'Open to Collaborate' : 'Busy'}
+            </span>
+          `;
+
+          // Bio / About
+          document.getElementById("bio").innerText = user.bio || "This user hasn't added a bio yet. Check back soon!";
+
+          // Skills Grid
+          const skillsGrid = document.getElementById("skillsGrid");
+          skillsGrid.innerHTML = "";
+          let skillsArray = [];
+          if (user.skills) {
+            skillsArray = Array.isArray(user.skills) ? user.skills : user.skills.split(",").map(s => s.trim()).filter(s => s);
+          }
+          if (skillsArray.length === 0) {
+            skillsGrid.innerHTML = `<p style="color:var(--text-light); font-size:0.9rem;">No core skills added.</p>`;
+          } else {
+            skillsArray.forEach(skill => {
+              const badge = document.createElement("span");
+              badge.className = "skill-badge";
+              badge.innerText = skill.trim();
+              skillsGrid.appendChild(badge);
+            });
+          }
+
+          // Social Links Grid
+          const socialsGrid = document.getElementById("socialLinksGrid");
+          socialsGrid.innerHTML = "";
+          let hasSocials = false;
+          if (user.socialLinks) {
+            if (user.socialLinks.github) {
+              socialsGrid.innerHTML += `<a href="${user.socialLinks.github}" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>`;
+              hasSocials = true;
+            }
+            if (user.socialLinks.linkedin) {
+              socialsGrid.innerHTML += `<a href="${user.socialLinks.linkedin}" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>`;
+              hasSocials = true;
+            }
+            if (user.socialLinks.portfolio) {
+              socialsGrid.innerHTML += `<a href="${user.socialLinks.portfolio}" target="_blank" title="Portfolio"><i class="fas fa-globe"></i></a>`;
+              hasSocials = true;
+            }
+          }
+          if (!hasSocials) {
+            socialsGrid.innerHTML = `<span style="font-size:0.85rem; color:var(--text-light);">No external links.</span>`;
+          }
+
+          // Logged In User Dropdown settings
+          const loggedDropdown = document.getElementById("loggedDropdown");
+          const loggedName = localStorage.getItem("username");
+          if (token && loggedName) {
+            loggedDropdown.innerHTML = `
+              <span style="font-size:0.9rem; color:var(--text-dark); font-weight:600;">
+                <i class="fas fa-user-circle"></i> Logged in as: ${escapeHtml(loggedName)}
+              </span>
+            `;
+          }
+
+        } else {
+          document.querySelector(".container").innerHTML = "<h3>User not found</h3>";
         }
-      };
-      reader.readAsDataURL(file);
+      } catch (err) {
+        console.error(err);
+        document.querySelector(".container").innerHTML = "<h3>Network connection error</h3>";
+      }
     }
 
     loadProfile();

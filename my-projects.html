@@ -11,7 +11,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: "Poppins", sans-serif;
+            font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         }
 
         :root {
@@ -20,19 +20,72 @@
             --accent: #ec9e00;
             --light: #f8f9fa;
             --dark: #1a2a3a;
+            --text-dark: #1a2a3a;
             --text-light: #6c757d;
             --border-color: #e0e0e0;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --transition: all 0.3s ease;
         }
 
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text-dark);
             min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            background-image: url(f.jpg);
+            background-attachment: fixed;
+            background-size: cover;
             padding: 40px 20px;
+        }
+
+        /* Animated background elements */
+        .bg-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-element {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 15s infinite linear;
+        }
+
+        .bg-element:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            top: 10%;
+            left: 5%;
+            animation-duration: 25s;
+        }
+
+        .bg-element:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            background: var(--secondary);
+            top: 70%;
+            left: 80%;
+            animation-delay: -5s;
+            animation-duration: 20s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(20px, 30px) rotate(5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
         .header {
@@ -42,68 +95,86 @@
             margin-bottom: 30px;
             flex-wrap: wrap;
             gap: 20px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
         .header h1 {
             color: var(--primary);
             font-size: 2rem;
+            font-weight: 700;
         }
 
         .back-link {
             color: var(--primary);
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            transition: var(--transition);
         }
 
         .back-link:hover {
             color: var(--accent);
+            transform: translateX(-3px);
         }
 
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 25px;
             margin-top: 30px;
         }
 
         .project-card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.8);
         }
 
         .project-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
         }
 
         .project-image {
             height: 150px;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 2rem;
+            font-size: 2.5rem;
         }
 
         .project-content {
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
 
         .project-content h3 {
             color: var(--dark);
             margin-bottom: 10px;
+            font-size: 1.25rem;
+            font-weight: 600;
         }
 
         .project-content p {
             color: var(--text-light);
             margin-bottom: 15px;
             font-size: 0.9rem;
+            line-height: 1.5;
+            flex-grow: 1;
         }
 
         .project-status {
@@ -111,8 +182,9 @@
             padding: 5px 12px;
             border-radius: 20px;
             font-size: 0.8rem;
-            font-weight: 500;
+            font-weight: 600;
             margin-bottom: 15px;
+            align-self: flex-start;
         }
 
         .status-active {
@@ -130,7 +202,9 @@
             justify-content: space-between;
             color: var(--text-light);
             font-size: 0.9rem;
-            margin-bottom: 15px;
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
         }
 
         .project-meta i {
@@ -138,27 +212,13 @@
             margin-right: 5px;
         }
 
-        .btn-view {
-            display: inline-block;
-            padding: 8px 16px;
-            background: var(--primary);
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            transition: background 0.3s ease;
-        }
-
-        .btn-view:hover {
-            background: var(--accent);
-        }
-
         .empty-state {
             text-align: center;
             padding: 60px 20px;
-            background: white;
+            background: var(--card-bg);
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255, 255, 255, 0.8);
         }
 
         .empty-state i {
@@ -170,6 +230,7 @@
         .empty-state h2 {
             color: var(--dark);
             margin-bottom: 10px;
+            font-weight: 600;
         }
 
         .empty-state p {
@@ -179,22 +240,30 @@
 
         .btn-primary {
             display: inline-block;
-            padding: 12px 25px;
+            padding: 12px 30px;
             background: var(--primary);
             color: white;
             text-decoration: none;
             border-radius: 50px;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(41, 149, 176, 0.2);
         }
 
         .btn-primary:hover {
             background: var(--accent);
             transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(236, 158, 0, 0.3);
         }
     </style>
 </head>
 <body>
+    <!-- Background elements -->
+    <div class="bg-elements">
+        <div class="bg-element"></div>
+        <div class="bg-element"></div>
+    </div>
+
     <div class="container">
         <div class="header">
             <h1>My Projects</h1>
@@ -206,13 +275,18 @@
         <div id="emptyState" class="empty-state">
             <i class="fas fa-project-diagram"></i>
             <h2>No Projects Yet</h2>
-            <p>You haven't joined any projects yet. Explore projects and join a team to get started!</p>
+            <p>You haven't joined or created any projects yet. Explore available teams to get started!</p>
             <a href="FINAL.html" class="btn-primary">Explore Projects</a>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', async function() {
+            // Dynamic host URL resolution
+            const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                ? 'http://localhost:5000'
+                : window.location.origin;
+
             const token = localStorage.getItem('token');
             const userId = localStorage.getItem('userId');
             if (!token) {
@@ -225,7 +299,7 @@
 
             async function loadMyProjects() {
                 try {
-                    const res = await fetch('http://localhost:5000/api/projects/my-projects', {
+                    const res = await fetch(`${API_BASE_URL}/api/projects/my-projects`, {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }
@@ -318,7 +392,7 @@
 
             window.processAction = async function(projectId, applicantId, action) {
                 try {
-                    const res = await fetch(`http://localhost:5000/api/projects/${projectId}/action`, {
+                    const res = await fetch(`${API_BASE_URL}/api/projects/${projectId}/action`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

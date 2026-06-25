@@ -125,7 +125,21 @@ router.get("/profile/:userId", async (req, res) => {
   try {
     const user = await User.findById(req.params.userId).select("-password");
     if (!user) return res.status(404).json({ msg: "User not found" });
-    res.json(user);
+    
+    // Convert to plain JS object to add extra fields
+    const userObj = user.toObject();
+    
+    // Find matching Profile document
+    const profile = await Profile.findOne({ user: req.params.userId });
+    if (profile) {
+      userObj.fullName = profile.fullName;
+      userObj.socialLinks = profile.socialLinks;
+    } else {
+      userObj.fullName = user.username;
+      userObj.socialLinks = { github: "", linkedin: "", portfolio: "" };
+    }
+    
+    res.json(userObj);
   } catch (err) {
     console.error(err);
     res.status(500).json({ msg: "Server error" });

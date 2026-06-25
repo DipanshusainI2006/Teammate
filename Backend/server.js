@@ -28,6 +28,9 @@ app.use("/api/profile", profileRoutes);
 const projectsRoutes = require("./routes/projects");
 app.use("/api/projects", projectsRoutes);
 
+const connectionsRoutes = require("./routes/connections");
+app.use("/api/connections", connectionsRoutes);
+
 const path = require("path");
 app.use(express.static(path.join(__dirname, "..")));
 

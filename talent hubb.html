@@ -430,6 +430,11 @@
 
   <header class="hero">
     <div class="hero-content">
+      <div style="text-align: left; margin-bottom: 20px;">
+        <a href="FINAL.html" style="color: #cbd5e1; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; font-size: 0.95rem; transition: var(--transition);">
+          <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+      </div>
       <h1>🤖 Machine Learning Talent Hub</h1>
       <p class="subtitle">
         Connect with elite AI engineers, ML researchers & data scientists — real profiles, real talent
@@ -477,7 +482,7 @@
     // 🔥 IMPORTANT: Fallback to localhost for local development
     const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
       ? 'http://localhost:5000'
-      : 'https://your-backend.onrender.com';
+      : window.location.origin;
     // For local testing: 'http://localhost:5000'
     // For production: 'https://your-app.onrender.com' or 'https://your-app.railway.app'
     
@@ -507,21 +512,28 @@
     
     // ==================== CONNECT WITH TEAMMATE ====================
     async function connectWithTeammate(userId, userName) {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        showToast("Please login to connect with teammates", "error");
+        setTimeout(() => { window.location.href = "li.html"; }, 1500);
+        return;
+      }
+
       try {
-        // You can implement actual connection logic here
-        // Example: Send request to backend
-        // const response = await fetch(`${API_BASE_URL}/api/connect/${userId}`, {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   credentials: 'include'
-        // });
+        const response = await fetch(`${API_BASE_URL}/api/connections/request/${userId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
         
-        // For now, show a demo toast
-        showToast(`✨ Connection request sent to ${userName}!`, 'success');
-        
-        // Optional: Log to console for debugging
-        console.log(`Connect request sent to user: ${userId} (${userName})`);
-        
+        const data = await response.json();
+        if (response.ok) {
+          showToast(`✨ Connection invitation sent to ${userName}!`, 'success');
+        } else {
+          showToast(data.msg || `Could not connect with ${userName}`, 'error');
+        }
       } catch (error) {
         console.error('Connection error:', error);
         showToast(`Failed to send request to ${userName}`, 'error');

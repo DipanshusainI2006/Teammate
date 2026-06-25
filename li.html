@@ -167,16 +167,23 @@
       .form-control {
         width: 100%;
         padding: 15px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
         font-size: 1rem;
-        transition: var(--transition);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background-color: #f8fafc;
       }
 
       .form-control:focus {
         border-color: var(--primary);
+        background-color: #ffffff;
         outline: none;
-        box-shadow: 0 0 0 2px rgba(41, 149, 176, 0.2);
+        box-shadow: 0 0 0 4px rgba(41, 149, 176, 0.15);
+      }
+
+      .form-control:invalid:not(:placeholder-shown) {
+        border-color: #ef4444;
+        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
       }
 
       .password-field {
@@ -224,7 +231,7 @@
       }
 
       .btn-login {
-        background: var(--primary);
+        background: linear-gradient(135deg, var(--primary), #23819a);
         color: white;
         border: none;
         padding: 15px;
@@ -235,11 +242,13 @@
         transition: var(--transition);
         width: 100%;
         margin-bottom: 20px;
+        box-shadow: 0 4px 12px rgba(41, 149, 176, 0.2);
       }
 
       .btn-login:hover {
-        background: #23819a;
+        background: linear-gradient(135deg, #23819a, var(--primary));
         transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(41, 149, 176, 0.3);
       }
 
       .divider {
@@ -456,6 +465,11 @@ document.addEventListener("DOMContentLoaded", function () {
         passwordInput.type = passwordInput.type === "password" ? "text" : "password";
     });
 
+    // Dynamic host URL resolution
+    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:5000'
+        : window.location.origin;
+
     // 🚀 LOGIN
     form.addEventListener("submit", async function (e) {
         e.preventDefault();
@@ -473,7 +487,7 @@ document.addEventListener("DOMContentLoaded", function () {
         btn.disabled = true;
 
         try {
-            const res = await fetch("http://localhost:5000/api/auth/login", {
+            const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
