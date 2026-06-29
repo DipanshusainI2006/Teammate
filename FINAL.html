@@ -1217,8 +1217,20 @@
         }
 
         @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
             .nav-links {
-                display: none;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+                font-size: 0.95rem;
+            }
+            .auth-buttons {
+                justify-content: center;
             }
 
             .hero h1 {
@@ -1288,15 +1300,13 @@
                 <div class="logo">
                     <i class="fas fa-users"></i>
                     <span>TEAMMATE</span>
-                </div>                <div class="nav-links">
+                </div>
+                <div class="nav-links">
                     <a href="#">Home</a>
                     <a href="messages.html">Messages</a>
                     <a href="learner.html">E-Learn</a>
                     <a href="certification.html">Certifications</a>
                     <a href="talent hubb.html">Talent Hub</a>
-                    <a href="#Events">Events</a>
-                    <a href="#htw">How it Works</a>
-                    <a href="#about">About</a>
                 </div>
                 <div class="auth-buttons" id="authButtons">
                     <!-- Dynamically populated by JavaScript -->

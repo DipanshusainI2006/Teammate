@@ -845,13 +845,84 @@
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
             .nav-links {
-                display: none; /* simple burger menu can be handled by framework, but keeping it basic */
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+                font-size: 0.95rem;
+            }
+            .auth-buttons {
+                justify-content: center;
             }
             .cert-footer-info {
                 flex-direction: column;
                 align-items: center;
                 gap: 25px;
+                padding: 0 10px;
+            }
+            .certificate-wrapper {
+                padding: 20px;
+                border-width: 8px;
+            }
+            .cert-recipient {
+                font-size: 1.6rem;
+                margin: 10px 0;
+            }
+            .cert-badge-gold {
+                width: 60px;
+                height: 60px;
+                font-size: 1.8rem;
+                margin-bottom: 10px;
+            }
+            .cert-badge-gold::after {
+                width: 70px;
+                height: 70px;
+            }
+            .cert-text {
+                font-size: 0.9rem;
+                margin-bottom: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .quiz-body {
+                padding: 20px 15px;
+            }
+            .quiz-question-text {
+                font-size: 1.1rem;
+                margin-bottom: 15px;
+            }
+            .quiz-option {
+                padding: 12px 15px;
+                font-size: 0.95rem;
+            }
+            .quiz-header {
+                padding: 15px 20px;
+            }
+            .quiz-footer {
+                padding: 15px 20px;
+            }
+            .certificate-wrapper {
+                padding: 15px;
+                border-width: 5px;
+            }
+            .cert-recipient {
+                font-size: 1.3rem;
+            }
+            .cert-subtitle {
+                font-size: 0.9rem;
+            }
+            .cert-text {
+                font-size: 0.8rem;
+            }
+            .cert-sign-font {
+                font-size: 1.4rem;
             }
         }
     </style>
