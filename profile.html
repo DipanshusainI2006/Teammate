@@ -571,6 +571,159 @@
         justify-content: center;
       }
     }
+
+    /* Premium Certificate Layout */
+    .cert-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(26, 42, 58, 0.85);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .cert-modal-content {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      width: 100%;
+      max-width: 800px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    .cert-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 1.8rem;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: var(--transition);
+      z-index: 10;
+    }
+
+    .cert-close:hover {
+      color: var(--accent);
+    }
+
+    .certificate-wrapper {
+      border: 15px double var(--primary);
+      padding: 40px;
+      background: radial-gradient(circle, #fff 70%, #fafafa 100%);
+      text-align: center;
+      position: relative;
+      box-shadow: inset 0 0 40px rgba(41, 149, 176, 0.05);
+    }
+
+    .certificate-wrapper::after {
+      content: "";
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      right: 5px;
+      bottom: 5px;
+      border: 2px solid var(--secondary);
+      pointer-events: none;
+    }
+
+    .cert-badge-gold {
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle, #ffe066 0%, #f59e0b 100%);
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2.2rem;
+      border: 4px solid #fff;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+      position: relative;
+    }
+
+    .cert-subtitle {
+      font-family: 'Georgia', serif;
+      font-style: italic;
+      font-size: 1.2rem;
+      color: var(--text-light);
+      margin-bottom: 20px;
+    }
+
+    .cert-recipient {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin: 20px 0;
+      border-bottom: 2px solid #eee;
+      display: inline-block;
+      padding-bottom: 5px;
+      letter-spacing: 1px;
+    }
+
+    .cert-text {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      line-height: 1.6;
+      margin-bottom: 30px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cert-skill-highlight {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 1.3rem;
+      display: block;
+      margin-top: 10px;
+    }
+
+    .cert-footer-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 40px;
+      padding: 0 40px;
+    }
+
+    .cert-sign {
+      text-align: center;
+      width: 150px;
+    }
+
+    .cert-sign-line {
+      border-top: 1px solid #ccc;
+      margin-top: 5px;
+      padding-top: 5px;
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    .cert-sign-font {
+      font-family: 'Brush Script MT', cursive, sans-serif;
+      font-size: 1.8rem;
+      color: var(--primary);
+    }
+
+    .cert-date-val {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .cert-btn-container {
+      margin-top: 25px;
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
   </style>
 </head>
 <body>
@@ -582,7 +735,10 @@
   <div class="container">
     <!-- Navbar Header -->
     <div class="top-navbar">
-      <a href="FINAL.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+      <div style="display: flex; gap: 20px; align-items: center;">
+        <a href="FINAL.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        <a href="certification.html" class="back-link" style="color: var(--text-light);"><i class="fas fa-certificate"></i> Certifications</a>
+      </div>
       <div id="loggedDropdown"></div>
     </div>
 
@@ -650,6 +806,14 @@
     <div class="section-card">
       <h3><i class="fas fa-laptop-code"></i> Core Skills</h3>
       <div class="skills-list" id="skillsGrid">
+        <!-- Population -->
+      </div>
+    </div>
+
+    <!-- Certifications card -->
+    <div class="section-card" id="certificationsSection" style="display: none;">
+      <h3><i class="fas fa-certificate"></i> Verified Certifications</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; margin-top: 15px;" id="certificationsGrid">
         <!-- Population -->
       </div>
     </div>
@@ -1107,9 +1271,49 @@
             skillsArray.forEach(skill => {
               const badge = document.createElement("span");
               badge.className = "skill-badge";
-              badge.innerText = skill.trim();
+              
+              const isVerified = user.verifiedSkills && user.verifiedSkills.some(vs => vs.toLowerCase() === skill.toLowerCase().trim());
+              if (isVerified) {
+                badge.className = "skill-badge verified";
+                badge.style.background = "#e0f2fe";
+                badge.style.borderColor = "#bae6fd";
+                badge.style.color = "#0369a1";
+                badge.style.cursor = "pointer";
+                badge.title = "Verified Skill! Click to view certificate.";
+                badge.innerHTML = `<i class="fas fa-check-circle" style="color: #0284c7; margin-right: 6px;"></i>${skill.trim()}`;
+                
+                const cert = user.certifications ? user.certifications.find(c => c.skill.toLowerCase() === skill.toLowerCase().trim()) : null;
+                badge.onclick = () => showCertificate(skill.trim(), cert ? cert.score : 80, cert ? cert.passedAt : new Date());
+              } else {
+                badge.innerText = skill.trim();
+              }
               skillsGrid.appendChild(badge);
             });
+          }
+
+          // Certifications Grid
+          const certSection = document.getElementById("certificationsSection");
+          const certGrid = document.getElementById("certificationsGrid");
+          certGrid.innerHTML = "";
+          
+          if (user.certifications && user.certifications.length > 0) {
+            certSection.style.display = "block";
+            user.certifications.forEach(cert => {
+              const date = new Date(cert.passedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+              certGrid.innerHTML += `
+                <div class="cert-item-card" style="background: rgba(41, 149, 176, 0.04); border: 1px solid rgba(41, 149, 176, 0.15); border-radius: 10px; padding: 15px; display: flex; align-items: center; justify-content: space-between;">
+                  <div>
+                    <div style="font-weight: 700; color: var(--text-dark);">${escapeHtml(cert.skill)}</div>
+                    <div style="font-size: 0.8rem; color: var(--text-light); margin-top: 4px;">Score: ${cert.score}% | Passed on ${date}</div>
+                  </div>
+                  <button onclick="showCertificate('${escapeHtml(cert.skill)}', ${cert.score}, '${cert.passedAt}')" style="background: var(--primary); border: none; color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: var(--transition);">
+                    View
+                  </button>
+                </div>
+              `;
+            });
+          } else {
+            certSection.style.display = "none";
           }
 
           // Social Links Grid
@@ -1154,7 +1358,57 @@
       }
     }
 
+    // Show/Close verified skill certificates
+    window.showCertificate = function(skillName, score, dateStr) {
+      const username = document.getElementById("username").innerText || 'Teammate Member';
+      document.getElementById('certRecipient').textContent = username;
+      document.getElementById('certSkillName').textContent = skillName;
+      
+      const date = new Date(dateStr);
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById('certDate').textContent = date.toLocaleDateString('en-US', options);
+      
+      document.getElementById('certModal').style.display = 'flex';
+    };
+
+    window.closeCertificateModal = function() {
+      document.getElementById('certModal').style.display = 'none';
+    };
+
     loadProfile();
   </script>
+
+  <!-- Certificate Modal -->
+  <div class="cert-modal" id="certModal">
+    <div class="cert-modal-content">
+      <span class="cert-close" onclick="closeCertificateModal()">&times;</span>
+      <div class="certificate-wrapper" id="printArea">
+        <div class="cert-badge-gold">
+          <i class="fas fa-award"></i>
+        </div>
+        <h1 style="color: var(--primary); font-size: 2.5rem; margin-bottom: 5px;">CERTIFICATE OF COMPLETION</h1>
+        <div class="cert-subtitle">This document proudly certifies that</div>
+        <div class="cert-recipient" id="certRecipient">Jane Doe</div>
+        <div class="cert-text">
+          has successfully completed the online exam and proved their advanced core competency in the skill of:
+          <span class="cert-skill-highlight" id="certSkillName">Python Programming</span>
+        </div>
+        <div class="cert-footer-info">
+          <div style="text-align: left;">
+            <span class="cert-sign-line">DATE OF ISSUANCE</span>
+            <div class="cert-date-val" id="certDate">June 29, 2026</div>
+          </div>
+          <div class="cert-sign">
+            <div class="cert-sign-font">Teammate</div>
+            <span class="cert-sign-line">AUTHORIZED SIGNATURE</span>
+          </div>
+        </div>
+      </div>
+      <div class="cert-btn-container">
+        <button class="btn-save-changes" style="width: auto; padding: 10px 25px; margin-top: 0;" onclick="window.print()"><i class="fas fa-print"></i> Print Certificate</button>
+        <button class="btn-save-changes" style="width: auto; padding: 10px 25px; margin-top: 0; background: #cbd5e1; color: var(--text-dark);" onclick="closeCertificateModal()">Close</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

@@ -242,27 +242,71 @@
     }
 
     @media (max-width: 600px) {
-        h1 {
-            font-size: 1.75rem;
-        }
-        p.lead {
-            font-size: 1rem;
-        }
-        .cert-item {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 1rem;
-        }
-        .cert-item a.btn-primary {
-            margin-left: 0;
-            width: 100%;
-        }
+        h1 { font-size: 1.75rem; }
+        p.lead { font-size: 1rem; }
+        .cert-item { flex-direction: column; align-items: flex-start; gap: 1rem; }
+        .cert-item a.btn-primary { margin-left: 0; width: 100%; }
     }
-    
+
+    /* Top Nav Styling */
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    .top-nav .logo-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+    .top-nav .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent), #6366f1);
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--bg);
+      font-weight: 700;
+    }
+    .top-nav .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    .top-nav .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .top-nav .nav-links a:hover, .top-nav .nav-links a.active {
+      color: var(--accent);
+    }
   </style>
 </head>
 <body>
   <div class="container">
+    <nav class="top-nav">
+      <a href="FINAL.html" class="logo-link">
+        <div class="logo-icon">T</div>
+        <span>TEAMMATE</span>
+      </a>
+      <div class="nav-links">
+        <a href="FINAL.html">Home</a>
+        <a href="messages.html">Messages</a>
+        <a href="learner.html" class="active">E-Learn</a>
+        <a href="certification.html">Certifications</a>
+        <a href="talent hubb.html">Talent Hub</a>
+      </div>
+    </nav>
     <header>
       <div>
         <h1>E‑Learner</h1>

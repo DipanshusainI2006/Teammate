@@ -430,9 +430,12 @@
 
   <header class="hero">
     <div class="hero-content">
-      <div style="text-align: left; margin-bottom: 20px;">
+      <div style="text-align: left; margin-bottom: 20px; display: flex; gap: 20px;">
         <a href="FINAL.html" style="color: #cbd5e1; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; font-size: 0.95rem; transition: var(--transition);">
           <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+        <a href="certification.html" style="color: #cbd5e1; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; font-size: 0.95rem; transition: var(--transition);">
+          <i class="fas fa-certificate"></i> Certifications
         </a>
       </div>
       <h1>🤖 Machine Learning Talent Hub</h1>
@@ -441,6 +444,10 @@
       </p>
       <div class="search-container">
         <input type="text" class="search-input" id="globalSearch" placeholder="🔍 Search by name, skill, location, or expertise..." />
+      </div>
+      <div style="margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; color: #cbd5e1; font-weight: 500;">
+        <input type="checkbox" id="verifiedOnlyCheckbox" style="width: 18px; height: 18px; cursor: pointer;" onchange="filterAndSearch()" />
+        <label for="verifiedOnlyCheckbox" style="cursor: pointer; user-select: none;">🛡️ Show Candidates with Verified Skills Only</label>
       </div>
       <div class="filters" id="filterGroup">
         <button class="filter-btn active" data-filter="all">🏆 All Talent</button>
@@ -623,9 +630,13 @@
           skillsArray = ["Python", "Machine Learning"];
         }
         
-        const skillBadges = skillsArray.slice(0, 8).map(skill => 
-          `<span class="skill">${escapeHtml(skill)}</span>`
-        ).join("");
+        const skillBadges = skillsArray.slice(0, 8).map(skill => {
+          const isVerified = u.verifiedSkills && u.verifiedSkills.some(vs => vs.toLowerCase() === skill.toLowerCase());
+          if (isVerified) {
+            return `<span class="skill" style="background: #e0f2fe; border: 1px solid #bae6fd; color: #0369a1;"><i class="fas fa-check-circle" style="color: #0284c7; margin-right: 4px;"></i>${escapeHtml(skill)}</span>`;
+          }
+          return `<span class="skill">${escapeHtml(skill)}</span>`;
+        }).join("");
         
         // Status badge
         const isAvailable = u.status === "available" || u.isAvailable === true;
@@ -686,11 +697,17 @@
     // ==================== FILTER & SEARCH (COMBINED) ====================
     function filterAndSearch() {
       const searchTerm = document.getElementById("globalSearch")?.value.toLowerCase().trim() || "";
+      const verifiedOnly = document.getElementById("verifiedOnlyCheckbox")?.checked || false;
       let filtered = [...allCandidates];
       
       // Apply skill filter
       if (currentFilter !== "all") {
         filtered = filtered.filter(user => matchesSkillFilter(user, currentFilter));
+      }
+
+      // Apply verified filter
+      if (verifiedOnly) {
+        filtered = filtered.filter(user => user.verifiedSkills && user.verifiedSkills.length > 0);
       }
       
       // Apply search term

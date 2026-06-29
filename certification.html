@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Skill Certification & Assessment - Teammate</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #2995b0;
+            --secondary: #fec55b;
+            --accent: #ec9e00;
+            --light: #f8f9fa;
+            --dark: #1a2a3a;
+            --success: #10b981;
+            --danger: #ef4444;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-dark: #1a2a3a;
+            --text-light: #6c757d;
+        }
+
+        body {
+            color: var(--text-dark);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            background-image: url(f.jpg);
+            background-attachment: fixed;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Animated background elements */
+        .bg-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-element {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 15s infinite linear;
+        }
+
+        .bg-element:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            top: 10%;
+            left: 5%;
+            animation-duration: 25s;
+        }
+
+        .bg-element:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            background: var(--secondary);
+            top: 70%;
+            left: 80%;
+            animation-delay: -5s;
+            animation-duration: 20s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(20px, 30px) rotate(5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--accent);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--accent);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: #35aeb7;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary:hover {
+            background: #ec9e00;
+            transform: translateY(-2px);
+        }
+
+        /* Profile Dropdown Styles */
+        .profile-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-icon {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 8px 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50px;
+            transition: var(--transition);
+        }
+
+        .profile-icon:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .profile-icon i {
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+
+        .profile-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            border-radius: 12px;
+            z-index: 1000;
+            margin-top: 10px;
+            overflow: hidden;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .dropdown-content.show {
+            display: block;
+        }
+
+        .dropdown-content a {
+            color: var(--text-dark);
+            padding: 12px 20px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .dropdown-content a:hover {
+            background-color: rgba(41, 149, 176, 0.08);
+            color: var(--primary);
+        }
+
+        .dropdown-content a i {
+            margin-right: 10px;
+            width: 16px;
+            text-align: center;
+        }
+
+        /* Main Section Content */
+        main {
+            flex-grow: 1;
+            padding: 50px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-header h1 {
+            font-size: 2.5rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .section-header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Dashboard Grid Layout */
+        .exams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .exam-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .exam-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .exam-card.certified::before {
+            content: "CERTIFIED";
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 35px;
+            transform: rotate(45deg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .exam-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: rgba(41, 149, 176, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .exam-card.certified .exam-icon {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .exam-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        .exam-description {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .exam-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .exam-meta span i {
+            margin-right: 6px;
+            color: var(--primary);
+        }
+
+        .exam-action-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .exam-action-btn.start {
+            background: var(--primary);
+            color: white;
+        }
+
+        .exam-action-btn.start:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .exam-action-btn.view-cert {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .exam-action-btn.view-cert:hover {
+            background: #bae6fd;
+            transform: translateY(-2px);
+        }
+
+        /* Quiz Container Overlay */
+        .quiz-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 42, 58, 0.95);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 700px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+        }
+
+        .quiz-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quiz-header-info h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .quiz-timer {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(5px);
+        }
+
+        .quiz-progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: #e2e8f0;
+        }
+
+        .quiz-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .quiz-body {
+            padding: 40px 30px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .quiz-question-num {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .quiz-question-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .quiz-option {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px 20px;
+            font-size: 1.05rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--text-dark);
+            text-align: left;
+        }
+
+        .quiz-option:hover {
+            background: #f0fdfa;
+            border-color: var(--primary);
+        }
+
+        .quiz-option.selected {
+            background: #e0f2fe;
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 4px 10px rgba(41, 149, 176, 0.1);
+        }
+
+        .option-marker {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            background: white;
+            transition: var(--transition);
+        }
+
+        .quiz-option.selected .option-marker {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .quiz-footer {
+            padding: 25px 30px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .quiz-btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+        }
+
+        .quiz-btn.prev {
+            background: #f1f5f9;
+            color: var(--text-light);
+        }
+
+        .quiz-btn.prev:hover {
+            background: #e2e8f0;
+        }
+
+        .quiz-btn.next {
+            background: var(--primary);
+            color: white;
+        }
+
+        .quiz-btn.next:hover {
+            background: var(--accent);
+        }
+
+        /* Results Screen */
+        .results-container {
+            display: none;
+            text-align: center;
+            padding: 50px 30px;
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            animation: scaleIn 0.3s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .results-icon {
+            font-size: 4.5rem;
+            margin-bottom: 25px;
+        }
+
+        .results-icon.pass {
+            color: var(--success);
+            animation: pulse 1s infinite alternate;
+        }
+
+        .results-icon.fail {
+            color: var(--danger);
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.08); }
+        }
+
+        .results-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .results-score {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--text-light);
+        }
+
+        .results-score span {
+            color: var(--primary);
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .results-description {
+            font-size: 1rem;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 35px;
+        }
+
+        .results-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .results-btn {
+            padding: 14px 28px;
+            border-radius: 30px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .results-btn.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .results-btn.primary:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .results-btn.secondary {
+            background: #f1f5f9;
+            color: var(--text-dark);
+        }
+
+        .results-btn.secondary:hover {
+            background: #e2e8f0;
+        }
+
+        /* Certificate Modal Styles */
+        .cert-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 42, 58, 0.85);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .cert-modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            width: 100%;
+            max-width: 800px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .cert-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.8rem;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 10;
+        }
+
+        .cert-close:hover {
+            color: var(--danger);
+        }
+
+        /* Premium Certificate Layout */
+        .certificate-wrapper {
+            border: 15px double var(--primary);
+            padding: 40px;
+            background: radial-gradient(circle, #fff 70%, #fafafa 100%);
+            text-align: center;
+            position: relative;
+            box-shadow: inset 0 0 40px rgba(41, 149, 176, 0.05);
+        }
+
+        .certificate-wrapper::after {
+            content: "";
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: 2px solid var(--secondary);
+            pointer-events: none;
+        }
+
+        .cert-badge-gold {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, #ffe066 0%, #f59e0b 100%);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.2rem;
+            border: 4px solid #fff;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+            position: relative;
+        }
+
+        .cert-badge-gold::after {
+            content: "";
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            border: 1px dashed #f59e0b;
+            border-radius: 50%;
+        }
+
+        .cert-subtitle {
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .cert-recipient {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin: 20px 0;
+            border-bottom: 2px solid #eee;
+            display: inline-block;
+            padding-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .cert-text {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cert-skill-highlight {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.3rem;
+            display: block;
+            margin-top: 10px;
+        }
+
+        .cert-footer-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 40px;
+            padding: 0 40px;
+        }
+
+        .cert-sign {
+            text-align: center;
+            width: 150px;
+        }
+
+        .cert-sign-line {
+            border-top: 1px solid #ccc;
+            margin-top: 5px;
+            padding-top: 5px;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .cert-sign-font {
+            font-family: 'Brush Script MT', cursive, sans-serif;
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .cert-date-val {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .cert-btn-container {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none; /* simple burger menu can be handled by framework, but keeping it basic */
+            }
+            .cert-footer-info {
+                flex-direction: column;
+                align-items: center;
+                gap: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background elements -->
+    <div class="bg-elements">
+        <div class="bg-element"></div>
+        <div class="bg-element"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="FINAL.html" class="logo">
+                    <i class="fas fa-users"></i>
+                    <span>TEAMMATE</span>
+                </a>
+
+                <div class="nav-links">
+                    <a href="FINAL.html">Home</a>
+                    <a href="messages.html">Messages</a>
+                    <a href="learner.html">E-Learn</a>
+                    <a href="certification.html" class="active">Certifications</a>
+                    <a href="talent hubb.html">Talent Hub</a>
+                </div>
+
+                <div class="auth-buttons" id="authButtons">
+                    <!-- Dynamically populated by JS -->
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <div class="section-header">
+                <h1>Skill Assessments & Certifications</h1>
+                <p>Test your competencies, earn industry-recognized digital badges, and verify your skills to project team creators.</p>
+            </div>
+
+            <!-- Quiz List Dashboard -->
+            <div class="exams-grid" id="examsGrid">
+                <!-- Loaded Dynamically -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Quiz Overlay -->
+    <div class="quiz-overlay" id="quizOverlay">
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <div class="quiz-header-info">
+                    <h2 id="activeQuizName">Python Programming Exam</h2>
+                </div>
+                <div class="quiz-timer" id="quizTimer">
+                    <i class="far fa-clock"></i>
+                    <span id="timerVal">03:00</span>
+                </div>
+            </div>
+            <div class="quiz-progress-bar-container">
+                <div class="quiz-progress-bar" id="quizProgressBar"></div>
+            </div>
+            <div class="quiz-body">
+                <div class="quiz-question-num" id="questionNum">Question 1 of 5</div>
+                <div class="quiz-question-text" id="questionText">What is the correct syntax to output "Hello World" in Python?</div>
+                <div class="quiz-options" id="quizOptions">
+                    <!-- Question options -->
+                </div>
+            </div>
+            <div class="quiz-footer">
+                <button class="quiz-btn prev" id="quizPrevBtn" onclick="prevQuestion()" disabled>Previous</button>
+                <button class="quiz-btn next" id="quizNextBtn" onclick="nextQuestion()">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Container Overlay -->
+    <div class="quiz-overlay" id="resultsOverlay">
+        <div class="results-container" id="resultsContainer">
+            <div class="results-icon" id="resultsIcon">🏆</div>
+            <h2 class="results-title" id="resultsTitle">Congratulations!</h2>
+            <div class="results-score" id="resultsScore">You scored: <span id="resultsScoreVal">80%</span></div>
+            <p class="results-description" id="resultsDescription">You have successfully passed the Python Programming exam. The skill is now marked as verified on your profile and Talent Hub cards.</p>
+            <div class="results-actions">
+                <button class="results-btn primary" id="viewCertificateBtn" onclick="showEarnedCertificate()">View Certificate</button>
+                <button class="results-btn secondary" onclick="closeResults()">Back to Dashboard</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Certificate Modal -->
+    <div class="cert-modal" id="certModal">
+        <div class="cert-modal-content">
+            <span class="cert-close" onclick="closeCertificateModal()">&times;</span>
+            <div class="certificate-wrapper" id="printArea">
+                <div class="cert-badge-gold">
+                    <i class="fas fa-award"></i>
+                </div>
+                <h1 style="color: var(--primary); font-size: 2.5rem; margin-bottom: 5px;">CERTIFICATE OF COMPLETION</h1>
+                <div class="cert-subtitle">This document proudly certifies that</div>
+                <div class="cert-recipient" id="certRecipient">Jane Doe</div>
+                <div class="cert-text">
+                    has successfully completed the online exam and proved their advanced core competency in the skill of:
+                    <span class="cert-skill-highlight" id="certSkillName">Python Programming</span>
+                </div>
+                <div class="cert-footer-info">
+                    <div style="text-align: left;">
+                        <span class="cert-sign-line">DATE OF ISSUANCE</span>
+                        <div class="cert-date-val" id="certDate">June 29, 2026</div>
+                    </div>
+                    <div class="cert-sign">
+                        <div class="cert-sign-font">Teammate</div>
+                        <span class="cert-sign-line">AUTHORIZED SIGNATURE</span>
+                    </div>
+                </div>
+            </div>
+            <div class="cert-btn-container">
+                <button class="results-btn primary" onclick="window.print()"><i class="fas fa-print"></i> Print Certificate</button>
+                <button class="results-btn secondary" onclick="closeCertificateModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // API Base URL config
+        const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:5000'
+            : window.location.origin;
+
+        // Check authentication
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const username = localStorage.getItem('username');
+            const userId = localStorage.getItem('userId');
+            const userProfile = localStorage.getItem('userProfile');
+            
+            const authButtons = document.getElementById('authButtons');
+            
+            if (token && username) {
+                let profilePicHtml = '<i class="fa-solid fa-user"></i>';
+                let profilePic = '';
+                
+                if (userProfile) {
+                    try {
+                        const profile = JSON.parse(userProfile);
+                        if (profile.profilePic) {
+                            profilePic = profile.profilePic;
+                            profilePicHtml = `<img src="${profile.profilePic}" class="profile-img" alt="Profile">`;
+                        }
+                    } catch (e) {
+                        console.error('Error parsing profile:', e);
+                    }
+                }
+                
+                authButtons.innerHTML = `
+                    <div class="profile-dropdown">
+                        <div class="profile-icon" onclick="toggleDropdown()">
+                            ${profilePicHtml}
+                            <span class="username" style="color:white; font-weight:500;">${username}</span>
+                        </div>
+                        <div class="dropdown-content" id="profileDropdown">
+                            <a href="profile.html?id=${userId}"><i class="fas fa-user"></i> View Profile</a>
+                            <a href="complete-profile.html"><i class="fas fa-edit"></i> Edit Profile</a>
+                            <a href="my-projects.html"><i class="fas fa-project-diagram"></i> My Projects</a>
+                            <a href="messages.html"><i class="fas fa-comments"></i> Messages</a>
+                            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // If not logged in, redirect to login page
+                alert("Please log in to take certifications!");
+                window.location.href = 'li.html';
+            }
+        }
+
+        function toggleDropdown() {
+            const dropdown = document.getElementById('profileDropdown');
+            if (dropdown) dropdown.classList.toggle('show');
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'FINAL.html';
+        }
+
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.profile-dropdown')) {
+                const dropdown = document.getElementById('profileDropdown');
+                if (dropdown) dropdown.classList.remove('show');
+            }
+        });
+
+        // Global Exam States
+        let availableExams = [];
+        let activeExamData = null;
+        let activeQuestionIndex = 0;
+        let selectedAnswers = {}; // Format: { questionId: selectedOptionIndex }
+        let timerInterval = null;
+        let timeRemaining = 180; // 3 minutes total
+        let lastResult = null;
+
+        // Fetch Exam Catalog
+        async function fetchExams() {
+            const token = localStorage.getItem('token');
+            const grid = document.getElementById('examsGrid');
+            grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 50px;"><i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary);"></i><p style="margin-top: 15px;">Loading skill exams...</p></div>';
+            
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/exams`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!res.ok) {
+                    if (res.status === 401) {
+                        logout();
+                        return;
+                    }
+                    throw new Error('Failed to load exams');
+                }
+                
+                availableExams = await res.json();
+                renderExams(availableExams);
+            } catch (err) {
+                console.error(err);
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 50px; background: white; border-radius: 15px;"><i class="fas fa-exclamation-triangle fa-3x" style="color: var(--danger);"></i><p style="margin-top: 15px; font-weight:600;">Error: Unable to connect to server. Ensure your backend server is running.</p></div>`;
+            }
+        }
+
+        // Render exam cards
+        function renderExams(examsList) {
+            const grid = document.getElementById('examsGrid');
+            grid.innerHTML = '';
+            
+            examsList.forEach(exam => {
+                const card = document.createElement('div');
+                card.className = `exam-card ${exam.certified ? 'certified' : ''}`;
+                
+                let iconClass = 'fa-code';
+                if (exam.id === 'python') iconClass = 'fa-brands fa-python';
+                if (exam.id === 'ml') iconClass = 'fa-brain';
+                if (exam.id === 'webdev') iconClass = 'fa-laptop-code';
+                if (exam.id === 'uiux') iconClass = 'fa-palette';
+                
+                card.innerHTML = `
+                    <div class="exam-icon">
+                        <i class="${iconClass}"></i>
+                    </div>
+                    <h3 class="exam-title">${exam.name}</h3>
+                    <p class="exam-description">${exam.description}</p>
+                    <div class="exam-meta">
+                        <span><i class="far fa-question-circle"></i> ${exam.questionsCount} Questions</span>
+                        <span><i class="far fa-clock"></i> 3 Mins Duration</span>
+                    </div>
+                    ${
+                        exam.certified 
+                            ? `<div style="display:flex; gap:10px;">
+                                <button class="exam-action-btn view-cert" onclick="showCertificate('${exam.name}', ${exam.score}, '${exam.passedAt}')">
+                                    <i class="fas fa-certificate"></i> View Certificate
+                                </button>
+                                <button class="exam-action-btn start" style="width: 50px; padding: 12px 0;" title="Retake Exam" onclick="startExam('${exam.id}')">
+                                    <i class="fas fa-rotate"></i>
+                                </button>
+                               </div>`
+                            : `<button class="exam-action-btn start" onclick="startExam('${exam.id}')">
+                                <i class="fas fa-play"></i> Start Exam
+                               </button>`
+                    }
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Start Quiz Session
+        async function startExam(examId) {
+            const token = localStorage.getItem('token');
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/exams/${examId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!res.ok) throw new Error('Could not fetch exam questions');
+                
+                activeExamData = await res.json();
+                activeQuestionIndex = 0;
+                selectedAnswers = {};
+                
+                // Show quiz UI
+                document.getElementById('activeQuizName').textContent = activeExamData.name + " Exam";
+                document.getElementById('quizOverlay').style.display = 'flex';
+                
+                // Set Question
+                displayQuestion();
+                
+                // Start Timer
+                timeRemaining = 180; // 3 minutes
+                updateTimerDisplay();
+                
+                clearInterval(timerInterval);
+                timerInterval = setInterval(() => {
+                    timeRemaining--;
+                    updateTimerDisplay();
+                    if (timeRemaining <= 0) {
+                        clearInterval(timerInterval);
+                        alert("Time's up! Submitting exam.");
+                        submitExam();
+                    }
+                }, 1000);
+                
+            } catch (err) {
+                console.error(err);
+                alert("Failed to load exam. Please try again.");
+            }
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+            const secs = (timeRemaining % 60).toString().padStart(2, '0');
+            const display = document.getElementById('timerVal');
+            display.textContent = `${mins}:${secs}`;
+            
+            // Turn timer red when < 30 seconds
+            if (timeRemaining < 30) {
+                document.getElementById('quizTimer').style.background = 'rgba(239, 68, 68, 0.4)';
+            } else {
+                document.getElementById('quizTimer').style.background = 'rgba(255, 255, 255, 0.2)';
+            }
+        }
+
+        // Display current question details
+        function displayQuestion() {
+            if (!activeExamData) return;
+            
+            const q = activeExamData.questions[activeQuestionIndex];
+            const progressPercent = ((activeQuestionIndex + 1) / activeExamData.questions.length) * 100;
+            
+            document.getElementById('quizProgressBar').style.width = `${progressPercent}%`;
+            document.getElementById('questionNum').textContent = `Question ${activeQuestionIndex + 1} of ${activeExamData.questions.length}`;
+            document.getElementById('questionText').textContent = q.text;
+            
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+            
+            const optionLetters = ['A', 'B', 'C', 'D'];
+            q.options.forEach((opt, idx) => {
+                const optEl = document.createElement('button');
+                optEl.className = `quiz-option ${selectedAnswers[q.id] === idx ? 'selected' : ''}`;
+                optEl.onclick = () => selectOption(q.id, idx);
+                
+                optEl.innerHTML = `
+                    <div class="option-marker">${optionLetters[idx]}</div>
+                    <div>${opt}</div>
+                `;
+                optionsContainer.appendChild(optEl);
+            });
+            
+            // Buttons state
+            document.getElementById('quizPrevBtn').disabled = activeQuestionIndex === 0;
+            
+            const nextBtn = document.getElementById('quizNextBtn');
+            if (activeQuestionIndex === activeExamData.questions.length - 1) {
+                nextBtn.textContent = 'Submit';
+                nextBtn.style.background = 'var(--success)';
+            } else {
+                nextBtn.textContent = 'Next';
+                nextBtn.style.background = 'var(--primary)';
+            }
+        }
+
+        function selectOption(qId, idx) {
+            selectedAnswers[qId] = idx;
+            displayQuestion();
+        }
+
+        function prevQuestion() {
+            if (activeQuestionIndex > 0) {
+                activeQuestionIndex--;
+                displayQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (!activeExamData) return;
+            
+            const q = activeExamData.questions[activeQuestionIndex];
+            if (selectedAnswers[q.id] === undefined) {
+                alert("Please select an answer before proceeding.");
+                return;
+            }
+            
+            if (activeQuestionIndex < activeExamData.questions.length - 1) {
+                activeQuestionIndex++;
+                displayQuestion();
+            } else {
+                // Submit
+                submitExam();
+            }
+        }
+
+        // Submit Answers to Backend
+        async function submitExam() {
+            clearInterval(timerInterval);
+            document.getElementById('quizOverlay').style.display = 'none';
+            
+            const token = localStorage.getItem('token');
+            const examId = activeExamData.id;
+            
+            // Show loading overlay
+            const grid = document.getElementById('examsGrid');
+            grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 50px;"><i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary);"></i><p style="margin-top: 15px;">Grading assessment...</p></div>';
+            
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/exams/${examId}/submit`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ answers: selectedAnswers })
+                });
+                
+                if (!res.ok) throw new Error('Evaluation submission failed');
+                
+                const result = await res.json();
+                lastResult = {
+                    skillName: activeExamData.name,
+                    score: result.score,
+                    passed: result.passed,
+                    date: new Date()
+                };
+                
+                // Show result overlay
+                displayResult(result);
+                
+            } catch (err) {
+                console.error(err);
+                alert("Error submitting answers. Please try again.");
+                fetchExams();
+            }
+        }
+
+        function displayResult(result) {
+            document.getElementById('resultsOverlay').style.display = 'flex';
+            const icon = document.getElementById('resultsIcon');
+            const title = document.getElementById('resultsTitle');
+            const scoreVal = document.getElementById('resultsScoreVal');
+            const desc = document.getElementById('resultsDescription');
+            const viewCertBtn = document.getElementById('viewCertificateBtn');
+            
+            scoreVal.textContent = `${result.score}%`;
+            
+            if (result.passed) {
+                icon.className = 'results-icon pass';
+                icon.textContent = '🏆';
+                title.textContent = 'Congratulations!';
+                title.style.color = 'var(--success)';
+                desc.textContent = `You scored ${result.score}% (${result.correctCount}/${result.totalQuestions}). You have successfully passed the exam. A verification badge has been added to this skill on your profile.`;
+                viewCertBtn.style.display = 'inline-block';
+                
+                // Confetti Explosion!
+                triggerConfetti();
+            } else {
+                icon.className = 'results-icon fail';
+                icon.textContent = '❌';
+                title.textContent = 'Quiz Not Passed';
+                title.style.color = 'var(--danger)';
+                desc.textContent = `You scored ${result.score}% (${result.correctCount}/${result.totalQuestions}). You need at least 80% to pass the assessment. Take some time to review and try again!`;
+                viewCertBtn.style.display = 'none';
+            }
+        }
+
+        function triggerConfetti() {
+            var duration = 3 * 1000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 }
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 }
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        function closeResults() {
+            document.getElementById('resultsOverlay').style.display = 'none';
+            fetchExams();
+        }
+
+        // Show certificate modal
+        function showEarnedCertificate() {
+            if (!lastResult) return;
+            document.getElementById('resultsOverlay').style.display = 'none';
+            showCertificate(lastResult.skillName, lastResult.score, lastResult.date);
+        }
+
+        function showCertificate(skillName, score, dateStr) {
+            const username = localStorage.getItem('username') || 'Teammate Member';
+            document.getElementById('certRecipient').textContent = username;
+            document.getElementById('certSkillName').textContent = skillName;
+            
+            const date = new Date(dateStr);
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('certDate').textContent = date.toLocaleDateString('en-US', options);
+            
+            document.getElementById('certModal').style.display = 'flex';
+        }
+
+        function closeCertificateModal() {
+            document.getElementById('certModal').style.display = 'none';
+            fetchExams();
+        }
+
+        // Init page
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            fetchExams();
+        });
+    </script>
+</body>
+</html>

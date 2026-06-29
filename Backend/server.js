@@ -31,6 +31,9 @@ app.use("/api/projects", projectsRoutes);
 const connectionsRoutes = require("./routes/connections");
 app.use("/api/connections", connectionsRoutes);
 
+const examsRoutes = require("./routes/exams");
+app.use("/api/exams", examsRoutes);
+
 const path = require("path");
 app.use(express.static(path.join(__dirname, "..")));
 

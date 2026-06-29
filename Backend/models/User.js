@@ -13,7 +13,18 @@ const UserSchema = new mongoose.Schema({
   experience: { type: Number, default: 0 },
   projects: { type: Number, default: 0 },
   avatar: { type: String, default: "" },
-  status: { type: String, default: "available" }
+  status: { type: String, default: "available" },
+  verifiedSkills: { type: [String], default: [] },
+  certifications: {
+    type: [
+      {
+        skill: { type: String, required: true },
+        score: { type: Number, required: true },
+        passedAt: { type: Date, default: Date.now }
+      }
+    ],
+    default: []
+  }
 
 }, { timestamps: true });
 
