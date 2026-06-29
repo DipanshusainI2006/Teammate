@@ -1,0 +1,7 @@
+runtime: nodejs20
+
+instance_class: F1
+
+env_variables:
+  MONGO_URI: "mongodb+srv://dipanshusaini204_db_user:dipanshusaini12345678@cluster0.bib7jjo.mongodb.net/teammate?retryWrites=true&w=majority&appName=Cluster0"
+  JWT_SECRET: "mysecretkey123"
