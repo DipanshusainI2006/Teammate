@@ -545,6 +545,7 @@
     // For production: 'https://your-app.onrender.com' or 'https://your-app.railway.app'
     
     let allCandidates = [];
+    let myConnections = new Set();
     let currentFilter = "all";
     
     // ==================== SECURE ESCAPE FUNCTION ====================
@@ -737,9 +738,15 @@
               <a href="profile.html?id=${u._id}" class="view-profile-btn">
                 <i class="fas fa-user-circle"></i> Profile
               </a>
-              <button class="connect-btn" onclick="connectWithTeammate('${u._id}', '${escapeHtml(username).replace(/'/g, "\\'")}')">
-                <i class="fas fa-handshake"></i> Connect
-              </button>
+              ${
+                myConnections.has(u._id)
+                  ? `<a href="messages.html?user=${u._id}" class="connect-btn" style="text-decoration:none; background:var(--primary); color:white; border-color:var(--primary); text-align:center; display:inline-flex; align-items:center; justify-content:center; gap:0.5rem;">
+                      <i class="fas fa-comment-dots"></i> Message
+                     </a>`
+                  : `<button class="connect-btn" onclick="connectWithTeammate('${u._id}', '${escapeHtml(username).replace(/'/g, "\\'")}')">
+                      <i class="fas fa-handshake"></i> Connect
+                     </button>`
+              }
             </div>
           </div>
         `;
@@ -782,10 +789,25 @@
     // ==================== LOAD DATA FROM BACKEND ====================
     async function loadTalentHub() {
       const gridContainer = document.querySelector("#candidatesGrid");
-      gridContainer.innerHTML = `<div class="loading-skeleton"><div class="skeleton-card"><i class="fas fa-spinner fa-pulse fa-2x"></i><p>Fetching AI professionals...</p></div></div>`;
+      gridContainer.innerHTML = `<div class="loading-skeleton"><div class="skeleton-card"><i class="fas fa-spinner fa-pulse fa-2x" style="color:var(--primary)"></i><p>Fetching professionals...</p></div></div>`;
       
       try {
-        // 🔥 IMPORTANT: Use the configured API URL
+        // Load connection list if logged in
+        const token = localStorage.getItem("token");
+        if (token) {
+          try {
+            const connRes = await fetch(`${API_BASE_URL}/api/connections/list`, {
+              headers: { "Authorization": `Bearer ${token}` }
+            });
+            if (connRes.ok) {
+              const conns = await connRes.json();
+              myConnections = new Set(conns.map(c => c._id));
+            }
+          } catch (connErr) {
+            console.error("Error loading connections list:", connErr);
+          }
+        }
+
         const apiUrl = `${API_BASE_URL}/api/auth/talent-hub`;
         console.log("Fetching from:", apiUrl);
         
