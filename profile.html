@@ -1333,7 +1333,7 @@
                 badge.innerHTML = `<i class="fas fa-check-circle" style="color: #0284c7; margin-right: 6px;"></i>${skill.trim()}`;
                 
                 const cert = user.certifications ? user.certifications.find(c => c.skill.toLowerCase() === skill.toLowerCase().trim()) : null;
-                badge.onclick = () => showCertificate(skill.trim(), cert ? cert.score : 80, cert ? cert.passedAt : new Date());
+                badge.onclick = () => showCertificate(skill.trim(), cert ? cert.score : 75, cert ? cert.passedAt : new Date());
               } else {
                 badge.innerText = skill.trim();
               }

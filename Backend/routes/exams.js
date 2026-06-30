@@ -241,7 +241,7 @@ router.post("/:examId/submit", auth, async (req, res) => {
     });
 
     const scorePercent = Math.round((correctCount / totalQuestions) * 100);
-    const passed = scorePercent >= 80;
+    const passed = scorePercent >= 75;
 
     if (passed) {
       const user = await User.findById(req.user.id);
