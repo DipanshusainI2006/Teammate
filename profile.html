@@ -570,6 +570,56 @@
       .location-text {
         justify-content: center;
       }
+      .cert-footer-info {
+        flex-direction: column;
+        align-items: center;
+        gap: 25px;
+        padding: 0 10px;
+      }
+      .certificate-wrapper {
+        padding: 20px;
+        border-width: 8px;
+      }
+      .cert-recipient {
+        font-size: 1.6rem;
+        margin: 10px 0;
+      }
+      .cert-badge-gold {
+        width: 60px;
+        height: 60px;
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+      }
+      .cert-badge-gold::after {
+        width: 70px;
+        height: 70px;
+      }
+      .cert-text {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .certificate-wrapper {
+        padding: 15px;
+        border-width: 5px;
+      }
+      .cert-recipient {
+        font-size: 1.3rem;
+      }
+      .cert-subtitle {
+        font-size: 0.9rem;
+      }
+      .cert-text {
+        font-size: 0.8rem;
+      }
+      .cert-sign-font {
+        font-size: 1.4rem;
+      }
+      .edit-modal div[style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+      }
     }
 
     /* Premium Certificate Layout */

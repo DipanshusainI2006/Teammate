@@ -470,14 +470,40 @@
       transform: scale(1.05);
     }
 
+    .back-to-list-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      color: var(--primary);
+      cursor: pointer;
+      margin-right: 15px;
+      align-items: center;
+      justify-content: center;
+      padding: 5px;
+      border-radius: 50%;
+      transition: var(--transition);
+    }
+    .back-to-list-btn:hover {
+      background: #f1f5f9;
+    }
     @media (max-width: 768px) {
       .chat-layout {
         grid-template-columns: 1fr;
       }
-      .chat-sidebar {
-        display: none; /* Can implement dynamic toggle later */
+      .back-to-list-btn {
+        display: inline-flex;
       }
-      .chat-sidebar.show-sidebar {
+      .chat-layout:not(.has-active-chat) .chat-sidebar {
+        display: flex;
+      }
+      .chat-layout:not(.has-active-chat) .conversation-pane {
+        display: none;
+      }
+      .chat-layout.has-active-chat .chat-sidebar {
+        display: none;
+      }
+      .chat-layout.has-active-chat .conversation-pane {
         display: flex;
       }
     }
@@ -719,11 +745,18 @@
       // Update sidebar highlight
       loadConversations();
       
+      // Toggle layout class for mobile view
+      const layout = document.querySelector('.chat-layout');
+      if (layout) {
+        layout.classList.add('has-active-chat');
+      }
+      
       // Draw conversation pane skeleton
       const pane = document.getElementById("conversationPane");
       pane.innerHTML = `
         <div class="pane-header">
           <div class="active-user-details">
+            <button class="back-to-list-btn" onclick="backToConversationsList()"><i class="fas fa-arrow-left"></i></button>
             <img src="${avatar}" class="active-user-avatar" onerror="this.src='https://via.placeholder.com/44'">
             <div class="active-user-info">
               <h4>${username}</h4>
@@ -753,6 +786,29 @@
 
       // Refresh chat logs every 3 seconds
       refreshInterval = setInterval(loadMessages, 3000);
+    };
+
+    window.backToConversationsList = function() {
+      activeChatUser = null;
+      if (refreshInterval) clearInterval(refreshInterval);
+      
+      const layout = document.querySelector('.chat-layout');
+      if (layout) {
+        layout.classList.remove('has-active-chat');
+      }
+      
+      const pane = document.getElementById("conversationPane");
+      if (pane) {
+        pane.innerHTML = `
+          <div class="pane-placeholder">
+            <i class="fas fa-comments"></i>
+            <h2>Your Messaging Hub</h2>
+            <p>Select a connection from the list on the left to start collaborating on projects!</p>
+          </div>
+        `;
+      }
+      
+      loadConversations();
     };
 
     // ==========================================
