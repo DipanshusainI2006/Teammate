@@ -4,10 +4,11 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const Profile = require("../models/Profile");
+const { validateSignup, validateLogin } = require("../middleware/validationMiddleware");
 
 
 // ================= SIGNUP =================
-router.post("/signup", async (req, res) => {
+router.post("/signup", validateSignup, async (req, res) => {
   try {
     const {
       username,
@@ -50,8 +51,8 @@ if (typeof skills === "string") {
 
     const token = jwt.sign(
       { user: { id: user._id } },
-      process.env.JWT_SECRET || "secret123",
-      { expiresIn: "7d" }
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" }
     );
 
     res.json({ 
@@ -72,7 +73,7 @@ if (typeof skills === "string") {
 
 
 // ================= LOGIN =================
-router.post("/login", async (req, res) => {
+router.post("/login", validateLogin, async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -88,8 +89,8 @@ router.post("/login", async (req, res) => {
 
     const token = jwt.sign(
       { user: { id: user._id } },
-      process.env.JWT_SECRET || "secret123",
-      { expiresIn: "7d" }
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" }
     );
 
     res.json({
