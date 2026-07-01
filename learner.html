@@ -3,17 +3,31 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>E‑Learner — Skill Roadmaps & Free Certs</title>
+  <title>E‑Learner — Interactive Skill Roadmaps & Free Certs</title>
+  <!-- FontAwesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Canvas Confetti for rewards -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
   <style>
     :root {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --muted: #94a3b8;
-      --accent: #22d3ee;
-      --accent-dark: #0e7490;
-      --glass: rgba(255, 255, 255, 0.05);
-      --text: #e2e8f0;
-      --border: rgba(255, 255, 255, 0.1);
+      --primary: #2995b0;
+      --secondary: #fec55b;
+      --accent: #ec9e00;
+      --light: #f8f9fa;
+      --dark: #0f172a;
+      --success: #10b981;
+      --danger: #ef4444;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --text-dark: #1a2a3a;
+      --text-light: #94a3b8;
+      --text-white: #ffffff;
+      --border: rgba(255, 255, 255, 0.08);
+      --glass: rgba(255, 255, 255, 0.03);
+      --glass-hover: rgba(255, 255, 255, 0.07);
     }
     
     * {
@@ -23,465 +37,2210 @@
     }
     
     body {
-      font-family: 'Inter', ui-sans-serif, system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background-color: var(--bg);
+      font-family: 'Poppins', 'Inter', ui-sans-serif, system-ui, sans-serif;
+      background-color: var(--dark);
       background-image: url(f.jpg);
       background-size: cover;
-      color: var(--text);
+      background-attachment: fixed;
+      color: var(--text-white);
       min-height: 100vh;
       line-height: 1.6;
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem 1.5rem;
-    }
-    
-    header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 3rem;
-      text-align: center;
-      flex-direction: column;
-    }
-    
-    header .logo {
-      width: 50px;
-      height: 50px;
-      background: linear-gradient(135deg, var(--accent), #6366f1);
-      border-radius: 0.75rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      color: var(--bg);
-      font-size: 1.5rem;
-      flex-shrink: 0;
+      overflow-x: hidden;
     }
 
-    h1 {
-      margin: 0;
-      font-size: 2.25rem;
+    /* Background overlay */
+    .bg-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.85) 100%);
+      z-index: -1;
+    }
+
+    /* Container */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    /* Header Styles */
+    header {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      color: white;
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      color: white;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+    }
+
+    .logo i {
+      margin-right: 10px;
+      color: var(--secondary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 25px;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      position: relative;
+      padding: 5px 0;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: var(--secondary);
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover::after, .nav-links a.active::after {
+      width: 100%;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--secondary);
+    }
+
+    .auth-buttons {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: #35aeb7;
+      color: white;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    /* Profile Dropdown Styles */
+    .profile-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .profile-icon {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 8px 15px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      transition: var(--transition);
+    }
+
+    .profile-icon:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .profile-icon i {
+      font-size: 1.2rem;
+      color: var(--secondary);
+    }
+
+    .profile-img {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid var(--secondary);
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: #1e293b;
+      min-width: 200px;
+      box-shadow: 0px 10px 30px rgba(0,0,0,0.5);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      z-index: 101;
+      margin-top: 8px;
+    }
+
+    .dropdown-content.show {
+      display: block;
+    }
+
+    .dropdown-content a {
+      color: #e2e8f0;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      font-size: 0.95rem;
+      transition: var(--transition);
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+
+    .dropdown-content a:last-child {
+      border-bottom: none;
+    }
+
+    .dropdown-content a:hover {
+      background-color: rgba(255,255,255,0.08);
+      color: var(--secondary);
+      padding-left: 22px;
+    }
+
+    .dropdown-content a i {
+      margin-right: 10px;
+      width: 15px;
+      text-align: center;
+    }
+
+    /* Page Intro */
+    .page-intro {
+      text-align: center;
+      padding: 4rem 0 2rem;
+    }
+
+    .page-intro h1 {
+      font-size: 3rem;
       font-weight: 800;
       letter-spacing: -0.05em;
-      background: linear-gradient(135deg, #4cc9f0, #fec55b);
-      margin: 50px 110px 2px;
-      border-radius:1rem ;
-      color: rgb(1, 20, 46);
+      background: linear-gradient(135deg, #35aeb7, var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 15px;
     }
-    
-    p.lead {
-      margin: 0;
-      color: rgb(1, 20, 46);
-      font-size: 1.1rem;
-      max-width: 600px;
+
+    .page-intro p {
+      color: var(--text-light);
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Daily Booster Challenge Widget */
+    .daily-challenge {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.9) 100%);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 4rem;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .daily-challenge::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--secondary), #35aeb7);
+    }
+
+    .challenge-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .challenge-badge {
+      background: rgba(254, 197, 91, 0.15);
+      color: var(--secondary);
+      border: 1px solid rgba(254, 197, 91, 0.3);
+      padding: 5px 15px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .challenge-reload-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-light);
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: var(--transition);
+    }
+
+    .challenge-reload-btn:hover {
+      color: var(--secondary);
+    }
+
+    .challenge-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: var(--text-white);
+    }
+
+    .challenge-options {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .challenge-options {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .challenge-option {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.95rem;
+      user-select: none;
+    }
+
+    .challenge-option:hover {
+      background: var(--glass-hover);
+      border-color: rgba(255,255,255,0.15);
+      transform: translateY(-1px);
+    }
+
+    .challenge-option input {
+      display: none;
+    }
+
+    .challenge-radio {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--text-light);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: var(--transition);
+    }
+
+    .challenge-option.selected {
+      background: rgba(41, 149, 176, 0.1);
+      border-color: var(--primary);
+    }
+
+    .challenge-option.selected .challenge-radio {
+      border-color: var(--primary);
+      background: var(--primary);
+      box-shadow: inset 0 0 0 3px #1e293b;
+    }
+
+    .challenge-option.correct {
+      background: rgba(16, 185, 129, 0.15) !important;
+      border-color: var(--success) !important;
+      color: #a7f3d0;
+    }
+
+    .challenge-option.correct .challenge-radio {
+      border-color: var(--success) !important;
+      background: var(--success) !important;
+      box-shadow: inset 0 0 0 3px #1e293b;
+    }
+
+    .challenge-option.incorrect {
+      background: rgba(239, 68, 108, 0.15) !important;
+      border-color: var(--danger) !important;
+      color: #fca5a5;
+    }
+
+    .challenge-option.incorrect .challenge-radio {
+      border-color: var(--danger) !important;
+      background: var(--danger) !important;
+      box-shadow: inset 0 0 0 3px #1e293b;
+    }
+
+    .challenge-btn {
+      background: linear-gradient(135deg, #35aeb7, var(--secondary));
+      color: #0f172a;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-size: 1rem;
+    }
+
+    .challenge-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(53, 174, 183, 0.3);
+    }
+
+    .challenge-btn:disabled {
+      background: rgba(255,255,255,0.05);
+      color: var(--text-light);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .challenge-explanation {
       margin-top: 20px;
+      padding: 20px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      display: none;
+      animation: fadeIn 0.4s ease forwards;
     }
-    
+
+    /* Sections */
     .section {
-        margin-bottom: 4rem;
+      margin-bottom: 4rem;
     }
 
     .section-title {
-        font-size: 1.75rem;
-        font-weight: 700;
-        margin-bottom: 1.5rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid var(--border);
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        color:rgb(1, 20, 46);
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-white);
+    }
+
+    .section-title i {
+      color: var(--secondary);
     }
 
     /* Roadmaps Grid */
     .roadmap-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 20px;
     }
-    
+
     .card {
-      background: var(--card);
-      padding: 1.5rem;
-      border-radius: 0.75rem;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
       border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 25px;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      gap: 20px;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
     }
-    
+
     .card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 0 15px var(--accent-dark);
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
     }
-    
+
+    .card::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .card:hover::after {
+      opacity: 1;
+    }
+
+    .card-header-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
     .skill-title {
-      font-weight: 600;
-      font-size: 1.25rem;
-      margin-bottom: 0.25rem;
+      font-weight: 700;
+      font-size: 1.35rem;
+      color: var(--text-white);
     }
-    
+
+    .roadmap-card-icon {
+      width: 45px;
+      height: 45px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      border: 1px solid var(--border);
+      color: var(--secondary);
+      flex-shrink: 0;
+    }
+
     .skill-summary {
-        color: var(--muted);
-        font-size: 0.95rem;
-        flex-grow: 1;
+      color: var(--text-light);
+      font-size: 0.95rem;
+      min-height: 50px;
+    }
+
+    /* Card Certification Badge */
+    .card-cert-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(254, 197, 91, 0.15);
+      border: 1px solid rgba(254, 197, 91, 0.3);
+      color: var(--secondary);
+      border-radius: 50px;
+      padding: 4px 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      align-self: flex-start;
+    }
+
+    .card-cert-badge.verified {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.3);
+      color: var(--success);
+    }
+
+    /* Card Progress Section */
+    .card-progress-section {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 5px;
+    }
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    .progress-bar-bg {
+      height: 6px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #35aeb7, var(--secondary));
+      border-radius: 10px;
+      width: 0%;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .skill-tags {
       display: flex;
-      gap: 0.5rem;
+      gap: 8px;
       flex-wrap: wrap;
-      margin-top: 0.5rem;
     }
     
     .chip {
       font-size: 0.75rem;
-      padding: 0.25rem 0.75rem;
-      border-radius: 999px;
-      background: var(--glass);
-      color: var(--muted);
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-light);
       border: 1px solid var(--border);
       font-weight: 500;
     }
 
     .card-footer {
-        margin-top: auto;
-        padding-top: 1rem;
-        border-top: 1px solid var(--border);
+      margin-top: auto;
+      padding-top: 15px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
     }
-    
-    button, a.btn-primary {
-      display: inline-block;
-      text-decoration: none;
-      background: linear-gradient(135deg, #4cc9f0, #fec55b);
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 0.5rem;
-      color: var(--bg);
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-white);
+      border: 1px solid var(--border);
+      padding: 12px 20px;
+      border-radius: 10px;
       cursor: pointer;
-      font-size: 1rem;
       font-weight: 600;
-      transition: all 0.2s ease;
-      width: 100%;
+      transition: var(--transition);
       text-align: center;
+      width: 100%;
+      font-size: 0.95rem;
     }
-    
-    button:hover, a.btn-primary:hover {
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 4px 10px rgba(34, 211, 238, 0.3);
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-primary-card {
+      background: linear-gradient(135deg, #35aeb7, var(--secondary));
+      color: #0f172a;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: var(--transition);
+      text-align: center;
+      width: 100%;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(53, 174, 183, 0.35);
     }
 
     /* Certificates List */
     .cert-list {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+
+    @media (min-width: 768px) {
+      .cert-list {
+        grid-template-columns: 1fr 1fr;
+      }
     }
 
     .cert-item {
-        background: var(--card);
-        padding: 1.25rem;
-        border-radius: 0.75rem;
-        border: 1px solid var(--border);
-        display: flex;
-        align-items: center;
-        gap: 1.5rem;
-        transition: background-color 0.2s ease;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      transition: var(--transition);
     }
 
     .cert-item:hover {
-        background-color: #2a3a52;
+      background: var(--glass-hover);
+      border-color: rgba(255, 255, 255, 0.12);
+      transform: scale(1.01);
     }
 
-    .cert-item .logo {
-      width: 48px;
-      height: 48px;
-      background: var(--bg);
+    .cert-item .cert-logo-box {
+      width: 50px;
+      height: 50px;
+      background: rgba(255,255,255,0.04);
       border: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 0.5rem;
-      font-weight: bold;
-      font-size: 1.25rem;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 1.3rem;
       flex-shrink: 0;
-      color: var(--accent);
+      color: var(--secondary);
+    }
+
+    .cert-info {
+      flex-grow: 1;
     }
 
     .cert-info h4 {
       margin: 0;
       font-size: 1.1rem;
       font-weight: 600;
+      color: var(--text-white);
     }
     
     .cert-info p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.9rem;
+      margin: 5px 0 0;
+      color: var(--text-light);
+      font-size: 0.85rem;
     }
     
-    .cert-item a.btn-primary {
-      margin-left: auto;
-      width: auto;
-      padding: 0.6rem 1.2rem;
-      font-size: 0.9rem;
+    .cert-item .btn-get-link {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      padding: 10px 18px;
+      border-radius: 8px;
+      color: var(--text-white);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: var(--transition);
+      white-space: nowrap;
     }
     
-    footer {
-      margin-top: 4rem;
-      color: var(--muted);
-      font-size: 0.9rem;
-      text-align: center;
-      padding: 1.5rem;
-      border-top: 1px solid var(--border);
+    .cert-item .btn-get-link:hover {
+      background: var(--secondary);
+      color: #0f172a;
+      border-color: var(--secondary);
+      transform: translateY(-1px);
     }
 
-    @media (max-width: 600px) {
-        h1 { font-size: 1.75rem; }
-        p.lead { font-size: 1rem; }
-        .cert-item { flex-direction: column; align-items: flex-start; gap: 1rem; }
-        .cert-item a.btn-primary { margin-left: 0; width: 100%; }
+    /* ----------------------------------------------- */
+    /* Side Drawer Styles */
+    /* ----------------------------------------------- */
+    .drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: var(--transition);
+      display: flex;
+      justify-content: flex-end;
     }
 
-    /* Top Nav Styling */
-    .top-nav {
+    .drawer-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .drawer {
+      width: 100%;
+      max-width: 520px;
+      height: 100%;
+      background: #111b2e;
+      border-left: 1px solid var(--border);
+      box-shadow: -15px 0 35px rgba(0,0,0,0.6);
+      padding: 30px;
+      overflow-y: auto;
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .drawer-overlay.open .drawer {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1rem 0;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
       border-bottom: 1px solid var(--border);
-      margin-bottom: 2rem;
     }
-    .top-nav .logo-link {
+
+    .drawer-header-title {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      text-decoration: none;
-      color: var(--text);
-      font-weight: 700;
-      font-size: 1.25rem;
+      gap: 12px;
     }
-    .top-nav .logo-icon {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, var(--accent), #6366f1);
-      border-radius: 0.5rem;
+
+    .drawer-header-title h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-white);
+    }
+
+    .drawer-header-title i {
+      font-size: 1.4rem;
+      color: var(--secondary);
+    }
+
+    .drawer-close-btn {
+      background: rgba(255,255,255,0.05);
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--bg);
-      font-weight: 700;
+      cursor: pointer;
+      color: var(--text-light);
+      transition: var(--transition);
     }
-    .top-nav .nav-links {
+
+    .drawer-close-btn:hover {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--danger);
+      transform: rotate(90deg);
+    }
+
+    /* Drawer Progress Bar */
+    .drawer-progress-container {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 25px;
+    }
+
+    /* Drawer Timelines */
+    .timeline {
       display: flex;
-      gap: 1.5rem;
+      flex-direction: column;
+      gap: 25px;
+      flex-grow: 1;
+      padding-left: 10px;
+      position: relative;
     }
-    .top-nav .nav-links a {
-      color: var(--muted);
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 17px;
+      top: 15px;
+      width: 2px;
+      height: calc(100% - 30px);
+      background: rgba(255, 255, 255, 0.08);
+      z-index: 1;
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .timeline-node {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #111b2e;
+      border: 3px solid var(--text-light);
+      margin-top: 5px;
+      flex-shrink: 0;
+      transition: var(--transition);
+      position: relative;
+      left: 10px;
+    }
+
+    .timeline-item.completed .timeline-node {
+      border-color: var(--success);
+      background: var(--success);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+    }
+
+    .timeline-item.in-progress .timeline-node {
+      border-color: var(--secondary);
+      background: #111b2e;
+      box-shadow: 0 0 10px rgba(254, 197, 91, 0.5);
+    }
+
+    .timeline-content {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      flex-grow: 1;
+      transition: var(--transition);
+    }
+
+    .timeline-item.completed .timeline-content {
+      border-color: rgba(16, 185, 129, 0.2);
+      background: rgba(16, 185, 129, 0.02);
+    }
+
+    .timeline-content h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-white);
+      margin-bottom: 8px;
+    }
+
+    .timeline-content p {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    /* Subskills Checklist */
+    .subskills-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 15px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .subskill-checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .subskill-checkbox-item input {
+      display: none;
+    }
+
+    .subskill-custom-box {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 1.5px solid var(--text-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: transparent;
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+
+    .subskill-checkbox-item:hover .subskill-custom-box {
+      border-color: var(--secondary);
+    }
+
+    .subskill-checkbox-item input:checked + .subskill-custom-box {
+      background: var(--success);
+      border-color: var(--success);
+      color: #0f172a;
+    }
+
+    .subskill-checkbox-item input:checked ~ span {
+      text-decoration: line-through;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* Resources links */
+    .resource-links {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .resource-link {
+      font-size: 0.8rem;
+      color: #35aeb7;
       text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition);
     }
-    .top-nav .nav-links a:hover, .top-nav .nav-links a.active {
-      color: var(--accent);
+
+    .resource-link:hover {
+      color: var(--secondary);
+      padding-left: 3px;
+    }
+
+    /* Drawer Footer */
+    .drawer-footer {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* ----------------------------------------------- */
+    /* Certificate Modal Styles */
+    /* ----------------------------------------------- */
+    .cert-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.85);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .cert-modal-content {
+      background: white;
+      border-radius: 20px;
+      padding: 25px;
+      width: 100%;
+      max-width: 780px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+      position: relative;
+      animation: zoomIn 0.3s ease-out forwards;
+    }
+
+    .cert-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 1.8rem;
+      color: #64748b;
+      cursor: pointer;
+      transition: var(--transition);
+      z-index: 10;
+    }
+
+    .cert-close:hover {
+      color: var(--danger);
+    }
+
+    .certificate-wrapper {
+      border: 12px double var(--primary);
+      padding: 40px;
+      background: radial-gradient(circle, #fff 70%, #fafafa 100%);
+      text-align: center;
+      position: relative;
+      box-shadow: inset 0 0 40px rgba(41, 149, 176, 0.05);
+    }
+
+    .certificate-wrapper::after {
+      content: "";
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      right: 5px;
+      bottom: 5px;
+      border: 2px solid var(--secondary);
+      pointer-events: none;
+    }
+
+    .cert-badge-gold {
+      width: 75px;
+      height: 75px;
+      background: radial-gradient(circle, #ffe066 0%, #f59e0b 100%);
+      border-radius: 50%;
+      margin: 0 auto 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2rem;
+      border: 4px solid #fff;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+      position: relative;
+    }
+
+    .cert-badge-gold::after {
+      content: "";
+      position: absolute;
+      top: -6px;
+      left: -6px;
+      width: 83px;
+      height: 83px;
+      border: 1px dashed #f59e0b;
+      border-radius: 50%;
+    }
+
+    .cert-subtitle {
+      font-family: 'Georgia', serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: #64748b;
+      margin-bottom: 15px;
+    }
+
+    .cert-recipient {
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: var(--dark);
+      margin: 15px 0;
+      border-bottom: 2px solid #e2e8f0;
+      display: inline-block;
+      padding-bottom: 5px;
+      letter-spacing: 1px;
+    }
+
+    .cert-text {
+      font-size: 1.05rem;
+      color: #64748b;
+      line-height: 1.6;
+      margin-bottom: 25px;
+      max-width: 580px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cert-skill-highlight {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 1.25rem;
+      display: block;
+      margin-top: 8px;
+    }
+
+    .cert-footer-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 30px;
+      padding: 0 30px;
+    }
+
+    .cert-sign {
+      text-align: center;
+      width: 140px;
+    }
+
+    .cert-sign-line {
+      border-top: 1px solid #cbd5e1;
+      margin-top: 5px;
+      padding-top: 5px;
+      font-size: 0.75rem;
+      color: #64748b;
+      display: block;
+    }
+
+    .cert-sign-font {
+      font-family: 'Brush Script MT', cursive, sans-serif;
+      font-size: 1.8rem;
+      color: var(--primary);
+    }
+
+    .cert-date-val {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--dark);
+      text-align: left;
+    }
+
+    .cert-btn-container {
+      margin-top: 20px;
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    /* Print styles overrides */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .cert-modal, .cert-modal-content, #printArea, #printArea * {
+        visibility: visible;
+      }
+      .cert-modal {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: white;
+        padding: 0;
+      }
+      .cert-modal-content {
+        box-shadow: none;
+        padding: 0;
+        width: 100%;
+        max-width: 100%;
+      }
+      .cert-btn-container, .cert-close {
+        display: none;
+      }
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 5rem;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      text-align: center;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes zoomIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .page-intro h1 { font-size: 2.2rem; }
+      .page-intro p { font-size: 1rem; }
+      nav { flex-direction: column; gap: 15px; }
+      .nav-links { flex-wrap: wrap; justify-content: center; gap: 15px; }
+      .cert-footer-info { flex-direction: column; align-items: center; gap: 20px; padding: 0; }
+      .cert-date-val { text-align: center; }
+      .certificate-wrapper { padding: 20px; border-width: 6px; }
+      .cert-recipient { font-size: 1.6rem; }
+      .cert-text { font-size: 0.9rem; }
     }
   </style>
 </head>
 <body>
+  <div class="bg-overlay"></div>
+  
+  <!-- Navigation Header -->
+  <header>
+    <div class="container">
+      <nav>
+        <a href="FINAL.html" class="logo">
+          <i class="fas fa-users"></i>
+          <span>TEAMMATE</span>
+        </a>
+        <div class="nav-links">
+          <a href="FINAL.html">Home</a>
+          <a href="messages.html">Messages</a>
+          <a href="learner.html" class="active">E-Learn</a>
+          <a href="certification.html">Certifications</a>
+          <a href="talent hubb.html">Talent Hub</a>
+        </div>
+        <div class="auth-buttons" id="authButtons">
+          <!-- Dynamically populated -->
+        </div>
+      </nav>
+    </div>
+  </header>
+
   <div class="container">
-    <nav class="top-nav">
-      <a href="FINAL.html" class="logo-link">
-        <div class="logo-icon">T</div>
-        <span>TEAMMATE</span>
-      </a>
-      <div class="nav-links">
-        <a href="FINAL.html">Home</a>
-        <a href="messages.html">Messages</a>
-        <a href="learner.html" class="active">E-Learn</a>
-        <a href="certification.html">Certifications</a>
-        <a href="talent hubb.html">Talent Hub</a>
+    <!-- Intro -->
+    <div class="page-intro">
+      <h1>E‑Learner Space</h1>
+      <p>Supercharge your skills with interactive roadmaps, track your detailed progress, and link to professional certifications.</p>
+    </div>
+
+    <!-- Daily Skill Booster Widget -->
+    <div class="daily-challenge" id="dailyChallengeContainer">
+      <div class="challenge-header">
+        <div class="challenge-badge">
+          <i class="fas fa-bolt"></i> Skill Booster Quest
+        </div>
+        <button class="challenge-reload-btn" onclick="loadDailyQuest(true)">
+          <i class="fas fa-rotate"></i> Try Another Question
+        </button>
       </div>
-    </nav>
-    <header>
-      <div>
-        <h1>E‑Learner</h1>
-        <p class="lead">Your launchpad for mastering new skills. Explore curated learning roadmaps and find links to free certificates from top providers.</p>
+      <div id="questContent">
+        <!-- Rendered by JS -->
       </div>
-    </header>
+    </div>
 
     <!-- Skill Roadmaps Section -->
     <section class="section">
-        <h2 class="section-title">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-            Skill Roadmaps
-        </h2>
-        <div class="roadmap-grid">
-            <!-- Frontend Card -->
-            <div class="card">
-                <div>
-                    <div class="skill-title">Frontend Development</div>
-                    <div class="skill-summary">Learn to build beautiful and interactive user interfaces for the web.</div>
-                </div>
-                <div class="skill-tags">
-                    <div class="chip">HTML</div>
-                    <div class="chip">CSS</div>
-                    <div class="chip">JavaScript</div>
-                    <div class="chip">React</div>
-                </div>
-                <div class="card-footer">
-                    <button>View Roadmap</button>
-                </div>
-            </div>
-            <!-- Backend Card -->
-            <div class="card">
-                <div>
-                    <div class="skill-title">Backend Development</div>
-                    <div class="skill-summary">Master the server-side logic, databases, and APIs that power applications.</div>
-                </div>
-                <div class="skill-tags">
-                    <div class="chip">Python</div>
-                    <div class="chip">Node.js</div>
-                    <div class="chip">Databases</div>
-                    <div class="chip">APIs</div>
-                </div>
-                <div class="card-footer">
-                    <button>View Roadmap</button>
-                </div>
-            </div>
-            <!-- Data Science Card -->
-            <div class="card">
-                <div>
-                    <div class="skill-title">Data Science & ML</div>
-                    <div class="skill-summary">Analyze data, build predictive models, and uncover insights with machine learning.</div>
-                </div>
-                <div class="skill-tags">
-                    <div class="chip">Python</div>
-                    <div class="chip">Statistics</div>
-                    <div class="chip">Pandas</div>
-                    <div class="chip">Scikit-learn</div>
-                </div>
-                <div class="card-footer">
-                    <button>View Roadmap</button>
-                </div>
-            </div>
-            <!-- Cloud Foundations Card -->
-            <div class="card">
-                <div>
-                    <div class="skill-title">Cloud Foundations</div>
-                    <div class="skill-summary">Understand core cloud concepts and get hands-on experience with major providers.</div>
-                </div>
-                <div class="skill-tags">
-                    <div class="chip">AWS</div>
-                    <div class="chip">GCP</div>
-                    <div class="chip">Azure</div>
-                    <div class="chip">DevOps</div>
-                </div>
-                <div class="card-footer">
-                    <button>View Roadmap</button>
-                </div>
-            </div>
-            <!-- UX/UI Design Card -->
-            <div class="card">
-                <div>
-                    <div class="skill-title">UX/UI Design</div>
-                    <div class="skill-summary">Create user-friendly and visually appealing digital products through research and design.</div>
-                </div>
-                <div class="skill-tags">
-                    <div class="chip">Figma</div>
-                    <div class="chip">Prototyping</div>
-                    <div class="chip">User Research</div>
-                </div>
-                <div class="card-footer">
-                    <button>View Roadmap</button>
-                </div>
-            </div>
-             <!-- Project Management Card -->
-            <div class="card">
-                <div>
-                    <div class="skill-title">Project Management</div>
-                    <div class="skill-summary">Learn to plan, execute, and manage projects effectively using Agile methodologies.</div>
-                </div>
-                <div class="skill-tags">
-                    <div class="chip">Agile</div>
-                    <div class="chip">Scrum</div>
-                    <div class="chip">Leadership</div>
-                    <div class="chip">Jira</div>
-                </div>
-                <div class="card-footer">
-                    <button>View Roadmap</button>
-                </div>
-            </div>
-        </div>
+      <h2 class="section-title">
+        <i class="fas fa-map-signs"></i>
+        Interactive Skill Roadmaps
+      </h2>
+      <div class="roadmap-grid" id="roadmapGrid">
+        <!-- Roadmaps rendered dynamically by JS -->
+      </div>
     </section>
 
     <!-- Free Certificates Section -->
     <section class="section">
-        <h2 class="section-title">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-            Free Certificates
-        </h2>
-        <div class="cert-list">
-            <!-- Google -->
-            <div class="cert-item">
-                <div class="logo">G</div>
-                <div class="cert-info">
-                    <h4>Google</h4>
-                    <p>Grow with Google offers various career certificates and free courses.</p>
-                </div>
-                <a href="https://grow.google/intl/en_in/" target="_blank" class="btn-primary">Get Link</a>
-            </div>
-            <!-- IBM -->
-            <div class="cert-item">
-                <div class="logo">I</div>
-                <div class="cert-info">
-                    <h4>IBM</h4>
-                    <p>Access professional certificates in Data Science and AI, many auditable for free.</p>
-                </div>
-                <a href="https://www.coursera.org/ibm" target="_blank" class="btn-primary">Get Link</a>
-            </div>
-            <!-- Microsoft -->
-            <div class="cert-item">
-                <div class="logo">M</div>
-                <div class="cert-info">
-                    <h4>Microsoft Learn</h4>
-                    <p>Free, role-based learning paths for Azure, Power BI, and more.</p>
-                </div>
-                <a href="https://learn.microsoft.com/" target="_blank" class="btn-primary">Get Link</a>
-            </div>
-            <!-- freeCodeCamp -->
-            <div class="cert-item">
-                <div class="logo">F</div>
-                <div class="cert-info">
-                    <h4>freeCodeCamp</h4>
-                    <p>Comprehensive, project-based certifications for web development.</p>
-                </div>
-                <a href="https://www.freecodecamp.org/" target="_blank" class="btn-primary">Get Link</a>
-            </div>
-             <!-- Coursera -->
-            <div class="cert-item">
-                <div class="logo">C</div>
-                <div class="cert-info">
-                    <h4>Coursera</h4>
-                    <p>Audit thousands of courses from universities and companies for free.</p>
-                </div>
-                <a href="https://www.coursera.org/" target="_blank" class="btn-primary">Get Link</a>
-            </div>
-             <!-- Kaggle -->
-            <div class="cert-item">
-                <div class="logo">K</div>
-                <div class="cert-info">
-                    <h4>Kaggle Learn</h4>
-                    <p>Bite-sized micro-courses for data science and machine learning skills.</p>
-                </div>
-                <a href="https://www.kaggle.com/learn" target="_blank" class="btn-primary">Get Link</a>
-            </div>
+      <h2 class="section-title">
+        <i class="fas fa-graduation-cap"></i>
+        Top Free Certification Providers
+      </h2>
+      <div class="cert-list">
+        <!-- Google -->
+        <div class="cert-item">
+          <div class="cert-logo-box">G</div>
+          <div class="cert-info">
+            <h4>Google Careers</h4>
+            <p>Develop foundational competencies in Project Management, UX Design, IT, and Data Analytics.</p>
+          </div>
+          <a href="https://grow.google/intl/en_in/" target="_blank" class="btn-get-link">Get Link</a>
         </div>
+        <!-- IBM -->
+        <div class="cert-item">
+          <div class="cert-logo-box">I</div>
+          <div class="cert-info">
+            <h4>IBM Skills</h4>
+            <p>Access credential programs in Data Science, Cloud, DevOps, and Artificial Intelligence.</p>
+          </div>
+          <a href="https://www.coursera.org/ibm" target="_blank" class="btn-get-link">Get Link</a>
+        </div>
+        <!-- Microsoft Learn -->
+        <div class="cert-item">
+          <div class="cert-logo-box">M</div>
+          <div class="cert-info">
+            <h4>Microsoft Learn</h4>
+            <p>Explore free, interactive learning modules for Azure services, Power Apps, and modern systems.</p>
+          </div>
+          <a href="https://learn.microsoft.com/" target="_blank" class="btn-get-link">Get Link</a>
+        </div>
+        <!-- freeCodeCamp -->
+        <div class="cert-item">
+          <div class="cert-logo-box">F</div>
+          <div class="cert-info">
+            <h4>freeCodeCamp</h4>
+            <p>100% free curriculum covering responsive web styling, algorithms, frameworks, and APIs.</p>
+          </div>
+          <a href="https://www.freecodecamp.org/" target="_blank" class="btn-get-link">Get Link</a>
+        </div>
+        <!-- Coursera -->
+        <div class="cert-item">
+          <div class="cert-logo-box">C</div>
+          <div class="cert-info">
+            <h4>Coursera Free</h4>
+            <p>Audit courses from leading global universities and top-tier technology firms for free.</p>
+          </div>
+          <a href="https://www.coursera.org/" target="_blank" class="btn-get-link">Get Link</a>
+        </div>
+        <!-- Kaggle -->
+        <div class="cert-item">
+          <div class="cert-logo-box">K</div>
+          <div class="cert-info">
+            <h4>Kaggle Learn</h4>
+            <p>Practical micro-courses to master Python data manipulation, Pandas, visualization, and SQL.</p>
+          </div>
+          <a href="https://www.kaggle.com/learn" target="_blank" class="btn-get-link">Get Link</a>
+        </div>
+      </div>
     </section>
+
+    <!-- Footer -->
+    <footer>
+      <p>&copy; 2026 Teammate Platform. All rights reserved. Empowering developer teams globally.</p>
+    </footer>
   </div>
+
+  <!-- ----------------------------------------------- -->
+  <!-- Interactive Side Drawer -->
+  <!-- ----------------------------------------------- -->
+  <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer(event)">
+    <div class="drawer" id="roadmapDrawer">
+      <div class="drawer-header">
+        <div class="drawer-header-title">
+          <i id="drawerHeaderIcon" class="fas fa-map-signs"></i>
+          <h3 id="drawerHeaderTitle">Roadmap Title</h3>
+        </div>
+        <button class="drawer-close-btn" onclick="closeDrawer(null, true)">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <!-- Drawer progress tracker -->
+      <div class="drawer-progress-container">
+        <div class="progress-labels">
+          <span>Overall Roadmap Progress</span>
+          <span id="drawerProgressPercent">0%</span>
+        </div>
+        <div class="progress-bar-bg" style="margin-top: 8px;">
+          <div class="progress-bar-fill" id="drawerProgressBarFill"></div>
+        </div>
+      </div>
+
+      <!-- Steps Timeline -->
+      <div class="timeline" id="drawerTimeline">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Drawer Footer -->
+      <div class="drawer-footer" id="drawerFooterActions">
+        <!-- Certifications CTAs -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ----------------------------------------------- -->
+  <!-- Printable Certificate Modal -->
+  <!-- ----------------------------------------------- -->
+  <div class="cert-modal" id="certModal">
+    <div class="cert-modal-content">
+      <span class="cert-close" onclick="closeCertificateModal()">&times;</span>
+      <div class="certificate-wrapper" id="printArea">
+        <div class="cert-badge-gold">
+          <i class="fas fa-award"></i>
+        </div>
+        <h1 style="color: var(--primary); font-size: 2.3rem; margin-bottom: 5px; font-weight: 800; font-family:'Poppins', sans-serif;">CERTIFICATE OF COMPLETION</h1>
+        <div class="cert-subtitle">This document proudly certifies that</div>
+        <div class="cert-recipient" id="certRecipient">Teammate Member</div>
+        <div class="cert-text">
+          has successfully completed the online exam and proved their advanced core competency in the skill of:
+          <span class="cert-skill-highlight" id="certSkillName">Python Programming</span>
+        </div>
+        <div class="cert-footer-info">
+          <div style="text-align: left;">
+            <span class="cert-sign-line">DATE OF ISSUANCE</span>
+            <div class="cert-date-val" id="certDate">June 29, 2026</div>
+          </div>
+          <div class="cert-sign">
+            <div class="cert-sign-font">Teammate</div>
+            <span class="cert-sign-line">AUTHORIZED SIGNATURE</span>
+          </div>
+        </div>
+      </div>
+      <div class="cert-btn-container">
+        <button class="btn btn-primary" onclick="window.print()"><i class="fas fa-print"></i> Print Certificate</button>
+        <button class="btn btn-secondary" onclick="closeCertificateModal()" style="width: auto;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    // Config
+    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:5000'
+        : window.location.origin;
+
+    // Authentication Dropdown Support
+    function checkAuth() {
+      const token = localStorage.getItem('token');
+      const username = localStorage.getItem('username');
+      const userId = localStorage.getItem('userId');
+      const userProfile = localStorage.getItem('userProfile');
+      const authButtons = document.getElementById('authButtons');
+      
+      if (token && username) {
+        let profilePicHtml = '<i class="fa-solid fa-user"></i>';
+        
+        if (userProfile) {
+          try {
+            const profile = JSON.parse(userProfile);
+            if (profile.profilePic) {
+              profilePicHtml = `<img src="${profile.profilePic}" class="profile-img" alt="Profile">`;
+            }
+          } catch (e) {
+            console.error('Error parsing profile:', e);
+          }
+        }
+        
+        authButtons.innerHTML = `
+          <div class="profile-dropdown">
+            <div class="profile-icon" onclick="toggleDropdown()">
+              ${profilePicHtml}
+              <span class="username" style="color:white; font-weight:500; font-size:0.9rem;">${username}</span>
+            </div>
+            <div class="dropdown-content" id="profileDropdown">
+              <a href="profile.html?id=${userId}"><i class="fas fa-user"></i> View Profile</a>
+              <a href="complete-profile.html"><i class="fas fa-edit"></i> Edit Profile</a>
+              <a href="my-projects.html"><i class="fas fa-project-diagram"></i> My Projects</a>
+              <a href="messages.html"><i class="fas fa-comments"></i> Messages</a>
+              <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+          </div>
+        `;
+      } else {
+        authButtons.innerHTML = `
+          <a href="li.html" class="btn btn-primary" style="padding: 8px 18px; font-size: 0.9rem;">Login / Sign Up</a>
+        `;
+      }
+    }
+
+    function toggleDropdown() {
+      const dropdown = document.getElementById('profileDropdown');
+      if (dropdown) dropdown.classList.toggle('show');
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = 'FINAL.html';
+    }
+
+    document.addEventListener('click', function(event) {
+      if (!event.target.closest('.profile-dropdown')) {
+        const dropdown = document.getElementById('profileDropdown');
+        if (dropdown) dropdown.classList.remove('show');
+      }
+    });
+
+    // ----------------------------------------------------
+    // Static Roadmap Definition
+    // ----------------------------------------------------
+    const roadmapsData = {
+      frontend: {
+        title: "Frontend Development",
+        icon: "fa-laptop-code",
+        color: "#4ecdc4",
+        examId: "webdev",
+        summary: "Learn to design, structure, and program rich web application interfaces.",
+        tags: ["HTML5", "CSS3 Grid", "ES6 JS", "React Hooks"],
+        steps: [
+          {
+            title: "1. Web Foundations",
+            desc: "Understand network routing, clients, servers, domains, DNS requests, and basic HTTP protocol.",
+            resources: [
+              { name: "MDN: Getting Started with the Web", url: "https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web" },
+              { name: "Web Dev: How the Web works", url: "https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/How_the_Web_works" }
+            ],
+            subskills: ["HTTP Request & Response", "DNS Resolution", "Browser DevTools Basics"]
+          },
+          {
+            title: "2. Structuring & Styling",
+            desc: "Write semantic HTML5 tags and style layouts with Flexbox, CSS Grid, and custom media query breakpoints.",
+            resources: [
+              { name: "CSS-Tricks: Guide to Flexbox", url: "https://css-tricks.com/snippets/css/a-guide-to-flexbox/" },
+              { name: "freeCodeCamp Responsive Layouts", url: "https://www.freecodecamp.org/learn/2022/responsive-web-design/" }
+            ],
+            subskills: ["Semantic Tags", "Flexbox & Grid Alignment", "Responsive Breakpoints"]
+          },
+          {
+            title: "3. Interactive JavaScript",
+            desc: "Master asynchronous code execution, callbacks, Promises, Async/Await syntax, and direct browser DOM manipulation.",
+            resources: [
+              { name: "JavaScript.info Tutorial Guide", url: "https://javascript.info/" },
+              { name: "Eloquent JavaScript (Interactive)", url: "https://eloquentjavascript.net/" }
+            ],
+            subskills: ["DOM Selectors & Events", "JSON Parsing & Fetch API", "Scope & Closure Functions"]
+          },
+          {
+            title: "4. Collaborative Git Workflow",
+            desc: "Create local git repositories, add files, construct commits, and manage remote branches with pull requests.",
+            resources: [
+              { name: "Interactive Git Branching", url: "https://learngitbranching.js.org/" },
+              { name: "Git Immersion step-by-step", url: "https://gitimmersion.com/" }
+            ],
+            subskills: ["Commits & Reverting", "Branch Creation & Merges", "Solving Conflicts"]
+          },
+          {
+            title: "5. Build Tools & Packages",
+            desc: "Understand dependencies using npm commands, bundle modules with Vite, and apply lint configurations.",
+            resources: [
+              { name: "Vite Docs - Quick Start", url: "https://vitejs.dev/guide/" }
+            ],
+            subskills: ["NPM dependency installations", "Vite configurations", "ESLint and style linting"]
+          },
+          {
+            title: "6. Component Framework (React)",
+            desc: "Create component structures, maintain local hook states, route paths, and consume context states.",
+            resources: [
+              { name: "React Official Docs - Quick Start", url: "https://react.dev/" },
+              { name: "Learn React Course (Scrimba)", url: "https://scrimba.com/learn/learnreact" }
+            ],
+            subskills: ["Functional Components & JSX", "useState & useEffect hooks", "Context API states"]
+          }
+        ]
+      },
+      backend: {
+        title: "Backend Development",
+        icon: "fa-server",
+        color: "#2995b0",
+        examId: "python",
+        summary: "Build powerful server logic, rest APIs, and databases that handle client actions.",
+        tags: ["NodeJS / Python", "SQL & MongoDB", "REST APIs", "Auth Security"],
+        steps: [
+          {
+            title: "1. Server programming languages",
+            desc: "Learn scripting syntax, structures, and basic object methods in Node.js or Python.",
+            resources: [
+              { name: "Python for Beginners (YouTube)", url: "https://www.youtube.com/watch?v=rfscVS0vtbw" },
+              { name: "NodeJS Beginner Tutorial", url: "https://www.youtube.com/watch?v=Oe421EPjeBE" }
+            ],
+            subskills: ["Asynchronous structures", "Environment file configurations", "File system operations"]
+          },
+          {
+            title: "2. Datastores (SQL / NoSQL)",
+            desc: "Model relational database tables with foreign keys and structure NoSQL document collections.",
+            resources: [
+              { name: "W3Schools SQL Playground", url: "https://www.w3schools.com/sql/" },
+              { name: "MongoDB University courses", url: "https://learn.mongodb.com/" }
+            ],
+            subskills: ["SQL JOINs & constraints", "MongoDB Aggregation schemas", "Database indexing optimization"]
+          },
+          {
+            title: "3. Web Routing & API specifications",
+            desc: "Write controller functions for standard HTTP request routes and construct formatted JSON payloads.",
+            resources: [
+              { name: "HTTP status code principles", url: "https://restfulapi.net/" }
+            ],
+            subskills: ["Express / Django routes", "Handling POST requests & payloads", "Query parameter lookups"]
+          },
+          {
+            title: "4. Authentication and Encryption",
+            desc: "Protect resource directories with JSON Web Token signature verification and secure passwords with bcrypt.",
+            resources: [
+              { name: "JWT standard concepts", url: "https://jwt.io/introduction" },
+              { name: "OWASP vulnerability catalog", url: "https://owasp.org/www-project-top-ten/" }
+            ],
+            subskills: ["Bcrypt password hashing", "Custom auth header middlewares", "Cross-Origin Requests (CORS) settings"]
+          },
+          {
+            title: "5. Production Deployments",
+            desc: "Build cloud service setups on Render or AWS, manage environment locks, and inspect log outputs.",
+            resources: [
+              { name: "Render node deploy tutorial", url: "https://render.com/docs/deploy-node-express-app" }
+            ],
+            subskills: ["App configs & package files", "Logging stack traces", "Environment variables"]
+          }
+        ]
+      },
+      datascience: {
+        title: "Data Science & ML",
+        icon: "fa-brain",
+        color: "#ff6b6b",
+        examId: "ml",
+        summary: "Examine complex data, extract structural patterns, and train predictive models.",
+        tags: ["Pandas & NumPy", "SciKit-Learn", "Data Visualizations", "Modeling"],
+        steps: [
+          {
+            title: "1. Advanced Python Logic",
+            desc: "Master operations, generators, comprehension lists, and data manipulation patterns in Jupyter Notebooks.",
+            resources: [
+              { name: "Kaggle Learn: Python courses", url: "https://www.kaggle.com/learn/python" }
+            ],
+            subskills: ["Dictionaries & lists actions", "Lambda expressions", "Jupyter usage"]
+          },
+          {
+            title: "2. Math & Descriptive Analytics",
+            desc: "Define mathematical parameters for matrices, linear equations, probability functions, and sample variance.",
+            resources: [
+              { name: "StatQuest with Josh Starmer", url: "https://www.youtube.com/c/joshstarmer" }
+            ],
+            subskills: ["Matrix dot products", "Hypothesis testing & p-values", "Probability curves"]
+          },
+          {
+            title: "3. Dataset Processing (NumPy & Pandas)",
+            desc: "Import raw data configurations, impute missing values, filter arrays, and group statistics.",
+            resources: [
+              { name: "Pandas introductory tools", url: "https://pandas.pydata.org/docs/getting_started/index.html" }
+            ],
+            subskills: ["NumPy arrays operations", "Pandas grouping & merging", "Handling null objects"]
+          },
+          {
+            title: "4. Plotting & Insights Visuals",
+            desc: "Construct visual bar diagrams, multi-axis scatter plots, and correlation heatmaps.",
+            resources: [
+              { name: "Kaggle visuals instructions", url: "https://www.kaggle.com/learn/data-visualization" }
+            ],
+            subskills: ["Matplotlib charts styling", "Seaborn distributions charts", "Density and pair plots"]
+          },
+          {
+            title: "5. Supervised Algorithms (SciKit-Learn)",
+            desc: "Validate models via training/test folds, run regressions, and evaluate classification reports.",
+            resources: [
+              { name: "Andrew Ng ML course (Coursera)", url: "https://www.coursera.org/specializations/machine-learning-introduction" }
+            ],
+            subskills: ["Linear & Logistic regressions", "F1 & Precision classifications", "Cross-validation folds"]
+          }
+        ]
+      },
+      cloud: {
+        title: "Cloud Foundations",
+        icon: "fa-cloud",
+        color: "#45b7d1",
+        examId: null,
+        summary: "Design scalable cloud structures, networks, container configs, and deployments.",
+        tags: ["AWS VPCs", "Docker Configs", "K8s Pods", "CI/CD & IaC"],
+        steps: [
+          {
+            title: "1. Virtualization & Networks",
+            desc: "Understand routers, subnet IP masking, domain names, virtual systems, and firewalls.",
+            resources: [
+              { name: "AWS Network Core Concepts", url: "https://aws.amazon.com/blogs/apn/demystifying-vpc-networking/" }
+            ],
+            subskills: ["Virtual Private Cloud structures", "Subnets and gateway configurations", "Load balancers routing"]
+          },
+          {
+            title: "2. Storage & Hosting Systems",
+            desc: "Implement storage policies, configure compute servers, and set up user profiles.",
+            resources: [
+              { name: "AWS Cloud Practitioner guide", url: "https://explore.skillbuilder.aws/learn" }
+            ],
+            subskills: ["EC2 server configurations", "Object store files (S3 buckets)", "IAM policies & tokens"]
+          },
+          {
+            title: "3. Docker Containers",
+            desc: "Configure images using Dockerfiles, set port definitions, and mount directories.",
+            resources: [
+              { name: "Docker Tutorial Handbook", url: "https://www.freecodecamp.org/news/the-docker-handbook/" }
+            ],
+            subskills: ["Dockerfile writing instructions", "Port mappings configs", "Volume database integrations"]
+          },
+          {
+            title: "4. Orchestrating with Kubernetes",
+            desc: "Define replication, build deployments, expose services, and monitor container resources.",
+            resources: [
+              { name: "Kubernetes Quick Tutorial", url: "https://kubernetes.io/docs/tutorials/kubernetes-basics/" }
+            ],
+            subskills: ["K8s Pod definitions", "YAML file templates config", "Secrets & Environment bindings"]
+          }
+        ]
+      },
+      uiux: {
+        title: "UX/UI Design",
+        icon: "fa-palette",
+        color: "#f9c74f",
+        examId: "uiux",
+        summary: "Design beautiful visual prototypes and test interactive layouts.",
+        tags: ["Visual Guides", "User Surveys", "Figma Components", "Prototypes"],
+        steps: [
+          {
+            title: "1. Design Systems Theory",
+            desc: "Apply typography sizes, verify visual contrast ratios, align grids, and select color spaces.",
+            resources: [
+              { name: "Refactoring UI book tips", url: "https://www.refactoringui.com/" }
+            ],
+            subskills: ["Contrast accessibility scores", "Visual system spacing rules", "Symmetrical grids setup"]
+          },
+          {
+            title: "2. Interviews & Mapping Flow",
+            desc: "Draft user personas, conduct interviews, list pain points, and chart interface maps.",
+            resources: [
+              { name: "NN/g methods documentation", url: "https://www.nngroup.com/articles/ux-research-methods-study-guide/" }
+            ],
+            subskills: ["Persona card design", "User journey layout charts", "Wireframe map diagrams"]
+          },
+          {
+            title: "3. Figma Mockups & Variants",
+            desc: "Learn to build reusable component cards, write variants, and use Auto-Layout templates.",
+            resources: [
+              { name: "Figma official training videos", url: "https://help.figma.com/hc/en-us/categories/360002051613-Figma-Learn" }
+            ],
+            subskills: ["Auto-Layout behaviors", "Components & Variants creation", "Design systems setup"]
+          },
+          {
+            title: "4. Interactive Prototypes",
+            desc: "Link Figma frames, configure transition timers, define scroll triggers, and run tests.",
+            resources: [
+              { name: "Figma Prototyping guides", url: "https://help.figma.com/hc/en-us/articles/360040314193-Guide-to-prototyping-in-Figma" }
+            ],
+            subskills: ["Trigger behaviors settings", "Hover state interactions", "Design handoff styles"]
+          }
+        ]
+      },
+      pm: {
+        title: "Project Management",
+        icon: "fa-tasks",
+        color: "#fec55b",
+        examId: null,
+        summary: "Direct projects using agile processes, sprints, scopes, and tools.",
+        tags: ["Agile/Scrum", "Scope Timelines", "Risk Mitigation", "Jira Boards"],
+        steps: [
+          {
+            title: "1. Agile & Scrum Routines",
+            desc: "Manage product backlogs, map milestones, hold reviews, and coordinate Scrum processes.",
+            resources: [
+              { name: "Atlassian Coach tutorials", url: "https://www.atlassian.com/agile" }
+            ],
+            subskills: ["Sprint planning routines", "Backlog item formatting", "Burn-down chart analysis"]
+          },
+          {
+            title: "2. Milestones & Planning Timelines",
+            desc: "Document project scopes, identify paths, build estimations, and trace Gantt layouts.",
+            resources: [
+              { name: "Project Management Basics", url: "https://www.pmi.org/about/learn" }
+            ],
+            subskills: ["Scope validation definitions", "Timeline scheduling tools", "Estimations formulas"]
+          },
+          {
+            title: "3. Risk Registers & Communications",
+            desc: "Chart risk lists, structure mitigation responses, and communicate progress.",
+            resources: [
+              { name: "Stakeholders management guides", url: "https://www.projectmanager.com/blog/stakeholder-management" }
+            ],
+            subskills: ["Risk probability metrics", "Communication dashboards", "Escalation pathways"]
+          },
+          {
+            title: "4. Issue Tracking (Jira)",
+            desc: "Learn to build workflows, define custom columns, monitor velocities, and log status.",
+            resources: [
+              { name: "Atlassian Jira documentation", url: "https://www.atlassian.com/software/jira/guides" }
+            ],
+            subskills: ["Jira status workflows", "Log tasks & assign profiles", "Velocity chart metrics"]
+          }
+        ]
+      }
+    };
+
+    // ----------------------------------------------------
+    // Daily Quiz Questions Pool
+    // ----------------------------------------------------
+    const dailyQuizPool = [
+      {
+        topic: "Python",
+        question: "What is the output of print(type([])) in Python?",
+        options: ["<class 'list'>", "<class 'tuple'>", "<class 'array'>", "<class 'dict'>"],
+        answer: 0,
+        tip: "Square brackets [] define list datatypes in Python. Tuples use () and dictionaries use {}."
+      },
+      {
+        topic: "Web Development",
+        question: "Which of the following is NOT a semantic HTML5 structure element?",
+        options: ["<article>", "<section>", "<div>", "<nav>"],
+        answer: 2,
+        tip: "<div> is a generic layout wrapper. Elements like <article> and <section> explain content meanings."
+      },
+      {
+        topic: "Machine Learning",
+        question: "Which metric is commonly used to evaluate regression accuracy?",
+        options: ["F1-Score", "Mean Squared Error (MSE)", "Precision", "Recall"],
+        answer: 1,
+        tip: "MSE calculates average squared differences. F1, Precision, and Recall evaluate class classifications."
+      },
+      {
+        topic: "UI/UX Design",
+        question: "What is the recommended contrast ratio for normal text under WCAG AA rules?",
+        options: ["2.0:1", "3.0:1", "4.5:1", "7.0:1"],
+        answer: 2,
+        tip: "WCAG AA standards require at least 4.5:1 for normal text sizes and 3:1 for larger headings."
+      },
+      {
+        topic: "Web Development",
+        question: "Which HTTP status code represents a successful resource creation?",
+        options: ["200 OK", "201 Created", "204 No Content", "302 Found"],
+        answer: 1,
+        tip: "201 Created signifies that the request succeeded and a new resource was built as a result."
+      },
+      {
+        topic: "Machine Learning",
+        question: "What type of machine learning uses unlabeled data to find hidden grouping structures?",
+        options: ["Supervised Learning", "Unsupervised Learning", "Reinforcement Learning", "Deep Supervised Learning"],
+        answer: 1,
+        tip: "Unsupervised learning detects intrinsic structures in unlabeled datasets (e.g. clustering)."
+      }
+    ];
+
+    // Global States
+    let userCertificationsList = [];
+    let currentActiveRoadmapId = null;
+    let selectedDailyQuestIndex = 0;
+    let dailyQuestSubmitted = false;
+
+    // Fetch user certs from backend
+    async function fetchUserCertifications() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        renderRoadmaps();
+        return;
+      }
+      
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/exams`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          userCertificationsList = await res.json();
+        }
+      } catch (err) {
+        console.error('Failed to contact backend to load certifications', err);
+      }
+      renderRoadmaps();
+    }
+
+    // Save checkbox state to localStorage & recalculate progress
+    function updateProgressState(roadmapId, stepIndex, subIndex, checked) {
+      const key = `learner_roadmap_progress_${roadmapId}_${stepIndex}_${subIndex}`;
+      if (checked) {
+        localStorage.setItem(key, 'true');
+      } else {
+        localStorage.removeItem(key);
+      }
+
+      // Sync and update interface elements
+      updateDrawerProgressBar(roadmapId);
+      updateCardProgressBar(roadmapId);
+      updateTimelineNodes(roadmapId);
+    }
+
+    function getRoadmapProgressPercent(roadmapId) {
+      const roadmap = roadmapsData[roadmapId];
+      if (!roadmap) return 0;
+      let total = 0;
+      let completed = 0;
+
+      roadmap.steps.forEach((step, stepIndex) => {
+        step.subskills.forEach((_, subIndex) => {
+          total++;
+          const key = `learner_roadmap_progress_${roadmapId}_${stepIndex}_${subIndex}`;
+          if (localStorage.getItem(key) === 'true') {
+            completed++;
+          }
+        });
+      });
+
+      return total === 0 ? 0 : Math.round((completed / total) * 100);
+    }
+
+    // Render cards
+    function renderRoadmaps() {
+      const grid = document.getElementById('roadmapGrid');
+      grid.innerHTML = '';
+
+      Object.entries(roadmapsData).forEach(([id, roadmap]) => {
+        const progress = getRoadmapProgressPercent(id);
+        const cert = userCertificationsList.find(c => c.id === roadmap.examId || (c.name && c.name.toLowerCase().includes(id)));
+        
+        let badgeHtml = '';
+        if (cert && cert.certified) {
+          badgeHtml = `<div class="card-cert-badge verified"><i class="fas fa-medal"></i> Certified (${cert.score}%)</div>`;
+        }
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-header-info">
+            <div>
+              <div class="skill-title">${roadmap.title}</div>
+              ${badgeHtml}
+            </div>
+            <div class="roadmap-card-icon" style="color: ${roadmap.color}">
+              <i class="fas ${roadmap.icon}"></i>
+            </div>
+          </div>
+          <div class="skill-summary">${roadmap.summary}</div>
+          
+          <div class="card-progress-section">
+            <div class="progress-labels">
+              <span>Roadmap Progress</span>
+              <span id="progress-text-${id}">${progress}%</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="progress-bar-fill-${id}" style="width: ${progress}%; background: linear-gradient(90deg, #35aeb7, ${roadmap.color});"></div>
+            </div>
+          </div>
+
+          <div class="skill-tags">
+            ${roadmap.tags.map(t => `<div class="chip">${t}</div>`).join('')}
+          </div>
+
+          <div class="card-footer">
+            <button class="btn-secondary" onclick="openRoadmapDrawer('${id}')">View Roadmap</button>
+            ${
+              cert && cert.certified 
+                ? `<button class="btn-primary-card" style="background:linear-gradient(135deg, var(--secondary), #ffe066); color:#0f172a;" onclick="showEarnedCertificate('${cert.name || roadmap.title}', ${cert.score}, '${cert.passedAt}')"><i class="fas fa-award"></i> Certificate</button>`
+                : roadmap.examId 
+                  ? `<button class="btn-primary-card" onclick="window.location.href='certification.html'"><i class="fas fa-vial"></i> Assess</button>`
+                  : `<button class="btn-primary-card" style="opacity:0.5; cursor:not-allowed;" disabled>No Assess</button>`
+            }
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Sync progress values back to dashboard grid cards
+    function updateCardProgressBar(roadmapId) {
+      const progress = getRoadmapProgressPercent(roadmapId);
+      const textEl = document.getElementById(`progress-text-${roadmapId}`);
+      const barEl = document.getElementById(`progress-bar-fill-${roadmapId}`);
+      if (textEl) textEl.textContent = `${progress}%`;
+      if (barEl) barEl.style.width = `${progress}%`;
+    }
+
+    // Slide-out Drawer Operations
+    function openRoadmapDrawer(roadmapId) {
+      currentActiveRoadmapId = roadmapId;
+      const roadmap = roadmapsData[roadmapId];
+      if (!roadmap) return;
+
+      document.getElementById('drawerHeaderTitle').textContent = roadmap.title;
+      const iconEl = document.getElementById('drawerHeaderIcon');
+      iconEl.className = `fas ${roadmap.icon}`;
+      iconEl.style.color = roadmap.color;
+
+      // Render timeline list
+      const timeline = document.getElementById('drawerTimeline');
+      timeline.innerHTML = '';
+
+      roadmap.steps.forEach((step, stepIndex) => {
+        const stepItem = document.createElement('div');
+        stepItem.className = 'timeline-item';
+        stepItem.id = `timeline-step-${stepIndex}`;
+        
+        let subskillsHtml = '';
+        if (step.subskills && step.subskills.length > 0) {
+          subskillsHtml = `
+            <div class="subskills-list">
+              ${step.subskills.map((sub, subIndex) => {
+                const storageKey = `learner_roadmap_progress_${roadmapId}_${stepIndex}_${subIndex}`;
+                const checked = localStorage.getItem(storageKey) === 'true' ? 'checked' : '';
+                return `
+                  <label class="subskill-checkbox-item">
+                    <input type="checkbox" ${checked} onchange="updateProgressState('${roadmapId}', ${stepIndex}, ${subIndex}, this.checked)">
+                    <div class="subskill-custom-box"><i class="fas fa-check"></i></div>
+                    <span>${sub}</span>
+                  </label>
+                `;
+              }).join('')}
+            </div>
+          `;
+        }
+
+        let resourcesHtml = '';
+        if (step.resources && step.resources.length > 0) {
+          resourcesHtml = `
+            <div class="resource-links">
+              ${step.resources.map(res => `
+                <a href="${res.url}" target="_blank" class="resource-link">
+                  <i class="fab fa-youtube"></i> ${res.name} <i class="fas fa-external-link-alt" style="font-size: 0.7rem;"></i>
+                </a>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        stepItem.innerHTML = `
+          <div class="timeline-node"></div>
+          <div class="timeline-content">
+            <h4>${step.title}</h4>
+            <p>${step.desc}</p>
+            ${subskillsHtml}
+            ${resourcesHtml}
+          </div>
+        `;
+        timeline.appendChild(stepItem);
+      });
+
+      // Render Drawer Footer Action
+      const footerActions = document.getElementById('drawerFooterActions');
+      const cert = userCertificationsList.find(c => c.id === roadmap.examId || (c.name && c.name.toLowerCase().includes(roadmapId)));
+      
+      if (cert && cert.certified) {
+        footerActions.innerHTML = `
+          <button class="btn btn-primary" style="background:linear-gradient(135deg, var(--secondary), #ffe066); color:#0f172a;" onclick="showEarnedCertificate('${cert.name || roadmap.title}', ${cert.score}, '${cert.passedAt}')">
+            <i class="fas fa-award"></i> View Earned Certificate
+          </button>
+        `;
+      } else if (roadmap.examId) {
+        footerActions.innerHTML = `
+          <button class="btn btn-primary" onclick="window.location.href='certification.html'">
+            <i class="fas fa-graduation-cap"></i> Take Skill Exam & Get Certified
+          </button>
+        `;
+      } else {
+        footerActions.innerHTML = `
+          <button class="btn btn-secondary" style="opacity:0.6; cursor:not-allowed;" disabled>
+            <i class="fas fa-lock"></i> Certification Exam Coming Soon
+          </button>
+        `;
+      }
+
+      updateDrawerProgressBar(roadmapId);
+      updateTimelineNodes(roadmapId);
+
+      // Open drawer overlay
+      document.getElementById('drawerOverlay').classList.add('open');
+    }
+
+    function closeDrawer(event, force = false) {
+      if (force || event.target === document.getElementById('drawerOverlay')) {
+        document.getElementById('drawerOverlay').classList.remove('open');
+        currentActiveRoadmapId = null;
+      }
+    }
+
+    function updateDrawerProgressBar(roadmapId) {
+      const progress = getRoadmapProgressPercent(roadmapId);
+      const textEl = document.getElementById('drawerProgressPercent');
+      const fillEl = document.getElementById('drawerProgressBarFill');
+      if (textEl) textEl.textContent = `${progress}%`;
+      if (fillEl) fillEl.style.width = `${progress}%`;
+    }
+
+    function updateTimelineNodes(roadmapId) {
+      const roadmap = roadmapsData[roadmapId];
+      if (!roadmap) return;
+
+      roadmap.steps.forEach((step, stepIndex) => {
+        const stepItem = document.getElementById(`timeline-step-${stepIndex}`);
+        if (!stepItem) return;
+
+        let totalSub = step.subskills.length;
+        let checkedSub = 0;
+
+        step.subskills.forEach((_, subIndex) => {
+          const key = `learner_roadmap_progress_${roadmapId}_${stepIndex}_${subIndex}`;
+          if (localStorage.getItem(key) === 'true') {
+            checkedSub++;
+          }
+        });
+
+        stepItem.classList.remove('completed', 'in-progress');
+        if (totalSub > 0) {
+          if (checkedSub === totalSub) {
+            stepItem.classList.add('completed');
+          } else if (checkedSub > 0) {
+            stepItem.classList.add('in-progress');
+          }
+        }
+      });
+    }
+
+    // ----------------------------------------------------
+    // Daily Quest logic
+    // ----------------------------------------------------
+    function loadDailyQuest(forceNew = false) {
+      if (forceNew) {
+        selectedDailyQuestIndex = Math.floor(Math.random() * dailyQuizPool.length);
+        dailyQuestSubmitted = false;
+      }
+
+      const q = dailyQuizPool[selectedDailyQuestIndex];
+      const container = document.getElementById('questContent');
+
+      container.innerHTML = `
+        <div class="challenge-title">${q.question}</div>
+        <div class="challenge-options" id="boosterOptions">
+          ${q.options.map((opt, index) => `
+            <div class="challenge-option" id="opt-${index}" onclick="selectDailyQuestOption(${index})">
+              <div class="challenge-radio"></div>
+              <span>${opt}</span>
+            </div>
+          `).join('')}
+        </div>
+        <button class="challenge-btn" id="questSubmitBtn" disabled onclick="submitDailyQuestAnswer()">Submit Answer</button>
+        <div class="challenge-explanation" id="questTip">
+          <div style="font-weight: 700; color: var(--secondary); margin-bottom: 5px;"><i class="fas fa-lightbulb"></i> Explanation Tip:</div>
+          <p style="color: var(--text-light); font-size:0.9rem;">${q.tip}</p>
+        </div>
+      `;
+    }
+
+    let selectedOptionIndex = null;
+
+    function selectDailyQuestOption(index) {
+      if (dailyQuestSubmitted) return;
+
+      selectedOptionIndex = index;
+      
+      // Highlight selected
+      const options = document.querySelectorAll('.challenge-option');
+      options.forEach(opt => opt.classList.remove('selected'));
+      
+      const selectedEl = document.getElementById(`opt-${index}`);
+      if (selectedEl) selectedEl.classList.add('selected');
+
+      const submitBtn = document.getElementById('questSubmitBtn');
+      if (submitBtn) submitBtn.disabled = false;
+    }
+
+    function submitDailyQuestAnswer() {
+      if (selectedOptionIndex === null || dailyQuestSubmitted) return;
+      dailyQuestSubmitted = true;
+
+      const q = dailyQuizPool[selectedDailyQuestIndex];
+      const options = document.querySelectorAll('.challenge-option');
+      const submitBtn = document.getElementById('questSubmitBtn');
+      submitBtn.disabled = true;
+
+      // Highlight answers
+      options.forEach((opt, index) => {
+        opt.classList.remove('selected');
+        if (index === q.answer) {
+          opt.classList.add('correct');
+        } else if (index === selectedOptionIndex) {
+          opt.classList.add('incorrect');
+        }
+      });
+
+      // Show explain tip
+      document.getElementById('questTip').style.display = 'block';
+
+      if (selectedOptionIndex === q.answer) {
+        // Confetti!
+        confetti({
+          particleCount: 80,
+          spread: 60,
+          origin: { y: 0.8 }
+        });
+      }
+    }
+
+    // ----------------------------------------------------
+    // Certificate Modal Rendering
+    // ----------------------------------------------------
+    function showEarnedCertificate(skillName, score, dateStr) {
+      const username = localStorage.getItem('username') || 'Teammate Member';
+      document.getElementById('certRecipient').textContent = username;
+      document.getElementById('certSkillName').textContent = skillName;
+      
+      const date = new Date(dateStr);
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById('certDate').textContent = date.toLocaleDateString('en-US', options);
+      
+      document.getElementById('certModal').style.display = 'flex';
+      
+      // Explode Confetti!
+      confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.6 }
+      });
+    }
+
+    function closeCertificateModal() {
+      document.getElementById('certModal').style.display = 'none';
+    }
+
+    // Initialize Page
+    document.addEventListener('DOMContentLoaded', () => {
+      checkAuth();
+      fetchUserCertifications();
+      loadDailyQuest(true);
+    });
+  </script>
 </body>
 </html>
