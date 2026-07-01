@@ -666,87 +666,263 @@
       box-shadow: 0 4px 12px rgba(53, 174, 183, 0.35);
     }
 
-    /* Certificates List */
-    .cert-list {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 15px;
+    /* Certificates List & Grid Revamp */
+    .cert-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 30px;
     }
-
-    @media (min-width: 768px) {
-      .cert-list {
-        grid-template-columns: 1fr 1fr;
+    
+    @media (min-width: 992px) {
+      .cert-controls {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
       }
     }
-
-    .cert-item {
-      background: var(--card-bg);
-      backdrop-filter: blur(10px);
-      padding: 20px;
-      border-radius: 16px;
+    
+    .search-box-wrapper {
+      position: relative;
+      flex-grow: 1;
+      max-width: 500px;
+    }
+    
+    .search-box-wrapper .search-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
+      font-size: 1rem;
+    }
+    
+    .search-box-wrapper input {
+      width: 100%;
+      padding: 14px 20px 14px 45px;
+      border-radius: 50px;
+      background: rgba(30, 41, 59, 0.7);
       border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 20px;
+      color: var(--text-white);
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
       transition: var(--transition);
     }
-
-    .cert-item:hover {
-      background: var(--glass-hover);
-      border-color: rgba(255, 255, 255, 0.12);
-      transform: scale(1.01);
+    
+    .search-box-wrapper input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 15px rgba(41, 149, 176, 0.25);
+      background: rgba(30, 41, 59, 0.9);
     }
-
-    .cert-item .cert-logo-box {
-      width: 50px;
-      height: 50px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border);
+    
+    .filter-tabs {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 1.3rem;
-      flex-shrink: 0;
-      color: var(--secondary);
-    }
-
-    .cert-info {
-      flex-grow: 1;
-    }
-
-    .cert-info h4 {
-      margin: 0;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--text-white);
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+      scrollbar-width: none;
     }
     
-    .cert-info p {
-      margin: 5px 0 0;
-      color: var(--text-light);
-      font-size: 0.85rem;
+    .filter-tabs::-webkit-scrollbar {
+      display: none;
     }
     
-    .cert-item .btn-get-link {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border);
+    .filter-tab {
       padding: 10px 18px;
-      border-radius: 8px;
-      color: var(--text-white);
-      text-decoration: none;
-      font-size: 0.85rem;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      color: var(--text-light);
+      cursor: pointer;
       font-weight: 600;
+      font-size: 0.85rem;
       transition: var(--transition);
       white-space: nowrap;
     }
     
-    .cert-item .btn-get-link:hover {
-      background: var(--secondary);
+    .filter-tab:hover {
+      background: var(--glass-hover);
+      color: var(--text-white);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    
+    .filter-tab.active {
+      background: linear-gradient(135deg, #35aeb7, var(--secondary));
       color: #0f172a;
+      border-color: transparent;
+      box-shadow: 0 4px 12px rgba(53, 174, 183, 0.25);
+    }
+    
+    .cert-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 20px;
+      transition: var(--transition);
+    }
+    
+    .cert-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .cert-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    }
+    
+    .cert-card-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .cert-card-logo {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      flex-shrink: 0;
+    }
+    
+    .cert-card-header-text {
+      flex-grow: 1;
+      overflow: hidden;
+    }
+    
+    .cert-card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-white);
+      line-height: 1.3;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    
+    .cert-card-provider {
+      font-size: 0.82rem;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+    
+    .cert-card-meta {
+      display: flex;
+      gap: 12px;
+      font-size: 0.8rem;
+      color: var(--text-light);
+      border-bottom: 1px dashed var(--border);
+      padding-bottom: 12px;
+    }
+    
+    .cert-card-meta span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .cert-card-meta i {
+      color: var(--secondary);
+    }
+    
+    .cert-card-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    
+    .cert-card-skills .skill-chip {
+      font-size: 0.72rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-light);
+      border: 1px solid var(--border);
+      font-weight: 500;
+    }
+    
+    .cert-card-footer {
+      display: flex;
+      gap: 10px;
+      margin-top: auto;
+      border-top: 1px solid var(--border);
+      padding-top: 15px;
+    }
+    
+    .btn-cert-action {
+      flex-grow: 1;
+      padding: 10px 15px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: center;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    
+    .btn-cert-link {
+      background: linear-gradient(135deg, #35aeb7, var(--secondary));
+      color: #0f172a;
+      border: none;
+      font-weight: 700;
+    }
+    
+    .btn-cert-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(53, 174, 183, 0.35);
+    }
+    
+    .btn-cert-tip {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-white);
+      border: 1px solid var(--border);
+    }
+    
+    .btn-cert-tip:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .btn-cert-tip.active {
+      background: rgba(254, 197, 91, 0.15);
       border-color: var(--secondary);
-      transform: translateY(-1px);
+      color: var(--secondary);
+    }
+    
+    .cert-tip-box {
+      display: none;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(254, 197, 91, 0.25);
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 5px;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      color: var(--text-light);
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .cert-tip-box strong {
+      color: var(--secondary);
+      display: block;
+      margin-bottom: 4px;
     }
 
     /* ----------------------------------------------- */
@@ -1310,63 +1486,29 @@
     <section class="section">
       <h2 class="section-title">
         <i class="fas fa-graduation-cap"></i>
-        Top Free Certification Providers
+        Top Free Certification Directory
       </h2>
-      <div class="cert-list">
-        <!-- Google -->
-        <div class="cert-item">
-          <div class="cert-logo-box">G</div>
-          <div class="cert-info">
-            <h4>Google Careers</h4>
-            <p>Develop foundational competencies in Project Management, UX Design, IT, and Data Analytics.</p>
-          </div>
-          <a href="https://grow.google/intl/en_in/" target="_blank" class="btn-get-link">Get Link</a>
+      
+      <!-- Search & Filters Container -->
+      <div class="cert-controls">
+        <div class="search-box-wrapper">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" id="certSearchInput" placeholder="Search certificates by company, title, or skills..." oninput="handleCertSearchFilter()">
         </div>
-        <!-- IBM -->
-        <div class="cert-item">
-          <div class="cert-logo-box">I</div>
-          <div class="cert-info">
-            <h4>IBM Skills</h4>
-            <p>Access credential programs in Data Science, Cloud, DevOps, and Artificial Intelligence.</p>
-          </div>
-          <a href="https://www.coursera.org/ibm" target="_blank" class="btn-get-link">Get Link</a>
+        <div class="filter-tabs" id="certFilterTabs">
+          <button class="filter-tab active" onclick="setCertCategory('all', event)">All</button>
+          <button class="filter-tab" onclick="setCertCategory('Google', event)">Google</button>
+          <button class="filter-tab" onclick="setCertCategory('Meta', event)">Meta</button>
+          <button class="filter-tab" onclick="setCertCategory('Microsoft', event)">Microsoft</button>
+          <button class="filter-tab" onclick="setCertCategory('IBM', event)">IBM</button>
+          <button class="filter-tab" onclick="setCertCategory('AWS', event)">AWS</button>
+          <button class="filter-tab" onclick="setCertCategory('Others', event)">Others</button>
         </div>
-        <!-- Microsoft Learn -->
-        <div class="cert-item">
-          <div class="cert-logo-box">M</div>
-          <div class="cert-info">
-            <h4>Microsoft Learn</h4>
-            <p>Explore free, interactive learning modules for Azure services, Power Apps, and modern systems.</p>
-          </div>
-          <a href="https://learn.microsoft.com/" target="_blank" class="btn-get-link">Get Link</a>
-        </div>
-        <!-- freeCodeCamp -->
-        <div class="cert-item">
-          <div class="cert-logo-box">F</div>
-          <div class="cert-info">
-            <h4>freeCodeCamp</h4>
-            <p>100% free curriculum covering responsive web styling, algorithms, frameworks, and APIs.</p>
-          </div>
-          <a href="https://www.freecodecamp.org/" target="_blank" class="btn-get-link">Get Link</a>
-        </div>
-        <!-- Coursera -->
-        <div class="cert-item">
-          <div class="cert-logo-box">C</div>
-          <div class="cert-info">
-            <h4>Coursera Free</h4>
-            <p>Audit courses from leading global universities and top-tier technology firms for free.</p>
-          </div>
-          <a href="https://www.coursera.org/" target="_blank" class="btn-get-link">Get Link</a>
-        </div>
-        <!-- Kaggle -->
-        <div class="cert-item">
-          <div class="cert-logo-box">K</div>
-          <div class="cert-info">
-            <h4>Kaggle Learn</h4>
-            <p>Practical micro-courses to master Python data manipulation, Pandas, visualization, and SQL.</p>
-          </div>
-          <a href="https://www.kaggle.com/learn" target="_blank" class="btn-get-link">Get Link</a>
-        </div>
+      </div>
+
+      <!-- Dynamic Cards Grid -->
+      <div class="cert-grid" id="freeCertsGrid">
+        <!-- Rendered by JavaScript -->
       </div>
     </section>
 
@@ -2235,11 +2377,267 @@
       document.getElementById('certModal').style.display = 'none';
     }
 
+    // ----------------------------------------------------
+    // Dynamic Free Certifications Directory Data & Logic
+    // ----------------------------------------------------
+    const freeCertsPool = [
+      {
+        title: "Google IT Support Professional Certificate",
+        provider: "Google (via Coursera)",
+        logoLetter: "G",
+        logoColor: "#4285F4",
+        duration: "3-6 Months (10 hrs/w)",
+        difficulty: "Beginner",
+        category: "Google",
+        skills: ["Troubleshooting", "Customer Support", "Operating Systems", "Network Protocols"],
+        url: "https://www.coursera.org/professional-certificates/google-it-support",
+        tip: "You can learn and audit all courses in this certificate for free! On Coursera, select a course in the series, click 'Enroll' and choose 'Audit' to access all materials for free. Alternatively, apply for Coursera Financial Aid via the link next to the Enroll button to get a free verified certificate."
+      },
+      {
+        title: "Google Data Analytics Professional Certificate",
+        provider: "Google (via Coursera)",
+        logoLetter: "G",
+        logoColor: "#EA4335",
+        duration: "6 Months (10 hrs/w)",
+        difficulty: "Beginner",
+        category: "Google",
+        skills: ["Data Cleaning", "Data Analysis", "SQL", "Tableau", "R Programming"],
+        url: "https://www.coursera.org/professional-certificates/google-data-analytics",
+        tip: "Audit individual courses in this professional certificate for free, or click 'Financial Aid Available' next to the enroll button to apply for a free certified certificate. The application takes about 15 days to approve."
+      },
+      {
+        title: "Google UX Design Professional Certificate",
+        provider: "Google (via Coursera)",
+        logoLetter: "G",
+        logoColor: "#FBBC05",
+        duration: "6 Months (10 hrs/w)",
+        difficulty: "Beginner",
+        category: "Google",
+        skills: ["UX Research", "Wireframing", "Figma", "Prototyping", "User Testing"],
+        url: "https://www.coursera.org/professional-certificates/google-ux-design",
+        tip: "Access the entire curriculum for free by selecting individual courses in the program and clicking 'Audit'. To get a certificate of completion without paying, apply for Coursera Financial Aid."
+      },
+      {
+        title: "Meta Front-End Developer Professional Certificate",
+        provider: "Meta (via Coursera)",
+        logoLetter: "M",
+        logoColor: "#0064E0",
+        duration: "7 Months (6 hrs/w)",
+        difficulty: "Beginner",
+        category: "Meta",
+        skills: ["HTML & CSS", "JavaScript", "React", "Git Version Control"],
+        url: "https://www.coursera.org/professional-certificates/meta-front-end-developer",
+        tip: "Offered by Meta. Click on the courses tab under the certificate page, open the specific course, and select 'Audit' during registration to study free of charge. Financial aid is also available."
+      },
+      {
+        title: "Meta Back-End Developer Professional Certificate",
+        provider: "Meta (via Coursera)",
+        logoLetter: "M",
+        logoColor: "#0064E0",
+        duration: "8 Months (6 hrs/w)",
+        difficulty: "Beginner",
+        category: "Meta",
+        skills: ["Python", "Django", "SQL & Databases", "APIs", "Cloud Services"],
+        url: "https://www.coursera.org/professional-certificates/meta-back-end-developer",
+        tip: "Learn back-end systems engineered by Meta. Each of the 9 courses can be audited for free, giving you complete access to reading materials, lectures, and practice exercises."
+      },
+      {
+        title: "Azure Fundamentals (AZ-900)",
+        provider: "Microsoft Learn",
+        logoLetter: "Ms",
+        logoColor: "#00a4ef",
+        duration: "10-15 Hours",
+        difficulty: "Beginner",
+        category: "Microsoft",
+        skills: ["Cloud Concepts", "Azure Architecture", "Azure Security", "Azure Management"],
+        url: "https://learn.microsoft.com/en-us/credentials/certifications/azure-fundamentals/",
+        tip: "100% free learning path on Microsoft Learn. You can study interactive modules and sandbox exercises completely free. Microsoft also occasionally provides free exam vouchers through Virtual Training Days."
+      },
+      {
+        title: "Microsoft Power BI Data Analyst",
+        provider: "Microsoft Learn / Coursera",
+        logoLetter: "Ms",
+        logoColor: "#f2c811",
+        duration: "5 Months (5 hrs/w)",
+        difficulty: "Intermediate",
+        category: "Microsoft",
+        skills: ["Data Modeling", "Data Visualization", "DAX", "Power BI Service"],
+        url: "https://learn.microsoft.com/en-us/credentials/certifications/power-bi-data-analyst-associate/",
+        tip: "You can read the entire official Microsoft curriculum on Microsoft Learn for free. If you prefer Coursera, you can audit the preparatory courses for free or apply for financial aid."
+      },
+      {
+        title: "IBM Data Science Professional Certificate",
+        provider: "IBM (via Coursera)",
+        logoLetter: "I",
+        logoColor: "#052FAD",
+        duration: "3-5 Months (10 hrs/w)",
+        difficulty: "Beginner",
+        category: "IBM",
+        skills: ["Python", "SQL", "Data Analysis", "Machine Learning", "Data Visualization"],
+        url: "https://www.coursera.org/professional-certificates/ibm-data-science",
+        tip: "Click on any course in the series list, hit 'Enroll', and find the small 'Audit' option at the bottom of the pop-up to access course content, labs, and notebooks for free."
+      },
+      {
+        title: "AWS Cloud Practitioner Essentials",
+        provider: "AWS Skill Builder",
+        logoLetter: "A",
+        logoColor: "#FF9900",
+        duration: "6 Hours",
+        difficulty: "Beginner",
+        category: "AWS",
+        skills: ["AWS Cloud Concepts", "Security & Compliance", "AWS Core Services", "Billing & Pricing"],
+        url: "https://aws.amazon.com/training/digital/aws-cloud-practitioner-essentials/",
+        tip: "100% free digital learning course hosted on AWS Skill Builder. Complete the path to gain foundational knowledge and earn a digital sharing badge directly from Amazon AWS."
+      },
+      {
+        title: "Cisco Introduction to Cybersecurity",
+        provider: "Cisco Networking Academy",
+        logoLetter: "C",
+        logoColor: "#049FD9",
+        duration: "15 Hours",
+        difficulty: "Beginner",
+        category: "Others",
+        skills: ["Cybersecurity Principles", "Data Confidentiality", "Threat Defense", "Network Security"],
+        url: "https://www.netacad.com/courses/cybersecurity/introduction-cybersecurity",
+        tip: "This course is 100% free on Cisco NetAcad. It includes quizzes, activities, and awards you a verified digital badge and certificate of completion upon finishing."
+      },
+      {
+        title: "Harvard CS50's Introduction to Computer Science",
+        provider: "Harvard University (via edX)",
+        logoLetter: "H",
+        logoColor: "#A51C30",
+        duration: "12 Weeks (6-18 hrs/w)",
+        difficulty: "Beginner-Intermediate",
+        category: "Others",
+        skills: ["C", "Python", "SQL", "Algorithms", "Data Structures", "HTML/CSS/JS"],
+        url: "https://cs50.harvard.edu/x/",
+        tip: "Harvard's CS50 is completely free. Do NOT pay for edX certificates. Submit assignments through CS50's free Gradebook system to receive a free, official certificate from Harvard University itself!"
+      },
+      {
+        title: "Responsive Web Design Certification",
+        provider: "freeCodeCamp",
+        logoLetter: "F",
+        logoColor: "#0A0A23",
+        duration: "300 Hours",
+        difficulty: "Beginner",
+        category: "Others",
+        skills: ["HTML5", "CSS3 Layouts", "Flexbox & Grid", "Responsive Design", "Accessibility"],
+        url: "https://www.freecodecamp.org/learn/2022/responsive-web-design/",
+        tip: "100% free interactive programming curriculum. Write code directly in the browser and complete 5 projects to earn a fully verified, free developer certificate with no catch."
+      }
+    ];
+
+    let selectedCertCategory = "all";
+    let certSearchQuery = "";
+
+    function renderFreeCertificates() {
+      const grid = document.getElementById('freeCertsGrid');
+      if (!grid) return;
+
+      const filtered = freeCertsPool.filter(c => {
+        const matchesCategory = selectedCertCategory === 'all' || c.category.toLowerCase() === selectedCertCategory.toLowerCase();
+        const matchesSearch = c.title.toLowerCase().includes(certSearchQuery) || 
+                              c.provider.toLowerCase().includes(certSearchQuery) ||
+                              c.skills.some(s => s.toLowerCase().includes(certSearchQuery));
+        return matchesCategory && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-light);">
+            <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 15px; color: var(--border);"></i>
+            <p>No free certifications found matching your filters.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map((c, index) => {
+        const skillsHtml = c.skills.map(s => `<span class="skill-chip">${s}</span>`).join('');
+        return `
+          <div class="cert-card" style="border-left: 4px solid ${c.logoColor};">
+            <div class="cert-card-header">
+              <div class="cert-card-logo" style="background-color: ${c.logoColor};">
+                ${c.logoLetter}
+              </div>
+              <div class="cert-card-header-text">
+                <div class="cert-card-title" title="${c.title}">${c.title}</div>
+                <div class="cert-card-provider">${c.provider}</div>
+              </div>
+            </div>
+            
+            <div class="cert-card-meta">
+              <span><i class="far fa-clock"></i> ${c.duration}</span>
+              <span><i class="fas fa-signal"></i> ${c.difficulty}</span>
+            </div>
+            
+            <div class="cert-card-skills">
+              ${skillsHtml}
+            </div>
+            
+            <div class="cert-tip-box" id="cert-tip-${index}">
+              <strong><i class="fas fa-lightbulb"></i> How to Get It Free:</strong>
+              ${c.tip}
+            </div>
+
+            <div class="cert-card-footer">
+              <button class="btn-cert-action btn-cert-tip" id="btn-tip-${index}" onclick="toggleCertAccessTip(${index})">
+                <i class="fas fa-info-circle"></i> Free Access Tip
+              </button>
+              <a href="${c.url}" target="_blank" class="btn-cert-action btn-cert-link">
+                Access Course <i class="fas fa-external-link-alt" style="font-size:0.75rem; margin-left:4px;"></i>
+              </a>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleCertAccessTip(index) {
+      const tipBox = document.getElementById(`cert-tip-${index}`);
+      const tipBtn = document.getElementById(`btn-tip-${index}`);
+      if (!tipBox || !tipBtn) return;
+
+      const isOpen = tipBox.style.display === 'block';
+      
+      // Close all tips first for a cleaner experience
+      document.querySelectorAll('.cert-tip-box').forEach(box => box.style.display = 'none');
+      document.querySelectorAll('.btn-cert-tip').forEach(btn => btn.classList.remove('active'));
+
+      if (!isOpen) {
+        tipBox.style.display = 'block';
+        tipBtn.classList.add('active');
+      }
+    }
+
+    function setCertCategory(category, event) {
+      selectedCertCategory = category;
+      
+      // Update active state in tabs
+      const tabs = document.querySelectorAll('#certFilterTabs .filter-tab');
+      tabs.forEach(tab => tab.classList.remove('active'));
+      
+      if (event && event.target) {
+        event.target.classList.add('active');
+      }
+
+      renderFreeCertificates();
+    }
+
+    function handleCertSearchFilter() {
+      const input = document.getElementById('certSearchInput');
+      if (input) {
+        certSearchQuery = input.value.toLowerCase().trim();
+        renderFreeCertificates();
+      }
+    }
+
     // Initialize Page
     document.addEventListener('DOMContentLoaded', () => {
       checkAuth();
       fetchUserCertifications();
       loadDailyQuest(true);
+      renderFreeCertificates();
     });
   </script>
 </body>
