@@ -17,6 +17,7 @@ const app = express();
 
 // Hardened CORS policy supporting developer local servers
 const allowedOrigins = [
+  "https://teammate-abch.onrender.com",
   "http://localhost:5000",
   "http://127.0.0.1:5000",
   "http://localhost:5500",
@@ -30,7 +31,8 @@ const allowedOrigins = [
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
+    const isAllowed = allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.onrender.com');
+    if (!isAllowed) {
       return callback(new Error(`CORS Policy Error: Origin ${origin} is unauthorized.`), false);
     }
     return callback(null, true);
