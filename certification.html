@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Skill Certification & Assessment - Teammate</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Cinzel:wght@500;700;800&family=Great+Vibes&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         * {
@@ -699,7 +699,7 @@
             border-radius: 20px;
             padding: 20px;
             width: 100%;
-            max-width: 800px;
+            max-width: 840px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.3);
             position: relative;
         }
@@ -719,120 +719,213 @@
             color: var(--danger);
         }
 
-        /* Premium Certificate Layout */
-        .certificate-wrapper {
-            border: 15px double var(--primary);
-            padding: 40px;
-            background: radial-gradient(circle, #fff 70%, #fafafa 100%);
-            text-align: center;
-            position: relative;
-            box-shadow: inset 0 0 40px rgba(41, 149, 176, 0.05);
+        /* Certificate Container & Scaling */
+        .certificate-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 10px 0;
+            display: block;
         }
 
-        .certificate-wrapper::after {
-            content: "";
+        /* Premium Certificate Layout */
+        .certificate-wrapper {
+            position: relative;
+            width: 800px;
+            height: 565px;
+            margin: 0 auto;
+            padding: 30px 40px 30px 220px;
+            background: #ffffff;
+            box-sizing: border-box;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-align: left;
+            border: 8px solid transparent;
+            background-clip: padding-box, border-box;
+            background-origin: padding-box, border-box;
+            background-image: linear-gradient(#fff, #fff), linear-gradient(135deg, #dfb76c 0%, #fcf6ba 50%, #c29b53 75%, #8f6f30 100%);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.02);
+        }
+
+        .cert-bg-shapes {
             position: absolute;
-            top: 5px;
-            left: 5px;
-            right: 5px;
-            bottom: 5px;
-            border: 2px solid var(--secondary);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
             pointer-events: none;
         }
 
-        .cert-badge-gold {
-            width: 80px;
-            height: 80px;
-            background: radial-gradient(circle, #ffe066 0%, #f59e0b 100%);
-            border-radius: 50%;
-            margin: 0 auto 20px;
+        .cert-left-curves {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 220px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .cert-gold-badge {
+            position: absolute;
+            top: 65px;
+            left: 35px;
+            width: 130px;
+            height: 130px;
+            z-index: 3;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+            pointer-events: none;
+        }
+
+        .cert-logo-container {
+            position: absolute;
+            top: 35px;
+            right: 45px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 2.2rem;
-            border: 4px solid #fff;
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
-            position: relative;
+            gap: 10px;
+            z-index: 4;
         }
 
-        .cert-badge-gold::after {
-            content: "";
-            position: absolute;
-            width: 90px;
-            height: 90px;
-            border: 1px dashed #f59e0b;
-            border-radius: 50%;
-        }
-
-        .cert-subtitle {
-            font-family: 'Georgia', serif;
-            font-style: italic;
-            font-size: 1.2rem;
-            color: var(--text-light);
-            margin-bottom: 20px;
-        }
-
-        .cert-recipient {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: var(--text-dark);
-            margin: 20px 0;
-            border-bottom: 2px solid #eee;
-            display: inline-block;
-            padding-bottom: 5px;
-            letter-spacing: 1px;
-        }
-
-        .cert-text {
-            font-size: 1.1rem;
-            color: var(--text-light);
-            line-height: 1.6;
-            margin-bottom: 30px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .cert-skill-highlight {
-            color: var(--primary);
+        .cert-logo-text {
+            font-family: 'Cinzel', 'Playfair Display', serif;
             font-weight: 700;
-            font-size: 1.3rem;
-            display: block;
-            margin-top: 10px;
+            font-size: 1.15rem;
+            letter-spacing: 2px;
+            color: #1a2a3a;
         }
 
-        .cert-footer-info {
+        .cert-content-main {
+            position: relative;
+            z-index: 3;
+            margin-top: 50px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .cert-title-main {
+            font-family: 'Cinzel', 'Playfair Display', serif;
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: #1a1a1a;
+            margin: 0;
+            line-height: 1.1;
+        }
+
+        .cert-subtitle-sub {
+            font-family: 'Montserrat', 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            letter-spacing: 5px;
+            color: #333333;
+            margin: 0 0 25px 0;
+            text-transform: uppercase;
+        }
+
+        .cert-presentation-text {
+            font-family: 'Montserrat', 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            color: #000000;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .cert-recipient-name {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.4rem;
+            color: #c29b53;
+            margin: 5px 0;
+            line-height: 1;
+            display: inline-block;
+        }
+
+        .cert-gold-divider {
+            border: none;
+            height: 1.5px;
+            background: linear-gradient(to right, #dfb76c, #fcf6ba, #c29b53, transparent);
+            margin: 5px 0 15px 0;
+            width: 85%;
+        }
+
+        .cert-body-desc {
+            font-family: 'Montserrat', 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            color: #555555;
+            line-height: 1.6;
+            max-width: 480px;
+            margin: 0 0 10px 0;
+            font-weight: 400;
+        }
+
+        .cert-skill-name {
+            font-family: 'Montserrat', 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1.65rem;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .cert-footer-layout {
+            position: relative;
+            z-index: 3;
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            margin-top: 40px;
-            padding: 0 40px;
+            width: 100%;
+            margin-top: 15px;
         }
 
-        .cert-sign {
+        .cert-issue-date {
+            font-family: 'Montserrat', 'Poppins', sans-serif;
+            font-size: 0.82rem;
+            color: #555555;
+            font-weight: 400;
+            margin-bottom: 5px;
+        }
+
+        .cert-signature-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 180px;
+        }
+
+        .cert-signature-font {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.1rem;
+            color: #2c3e50;
+            line-height: 0.8;
+            margin-bottom: 2px;
+        }
+
+        .cert-signature-company {
+            border-top: 1px solid #c29b53;
+            width: 100%;
+            padding-top: 4px;
             text-align: center;
-            width: 150px;
         }
 
-        .cert-sign-line {
-            border-top: 1px solid #ccc;
-            margin-top: 5px;
-            padding-top: 5px;
-            font-size: 0.8rem;
-            color: var(--text-light);
+        .cert-signature-bold {
+            font-family: 'Montserrat', 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            color: #111111;
+            line-height: 1.2;
         }
 
-        .cert-sign-font {
-            font-family: 'Brush Script MT', cursive, sans-serif;
-            font-size: 1.8rem;
-            color: var(--primary);
-        }
-
-        .cert-date-val {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--text-dark);
+        .cert-signature-sub {
+            font-family: 'Montserrat', 'Poppins', sans-serif;
+            font-size: 0.65rem;
+            color: #666666;
+            line-height: 1.2;
         }
 
         .cert-btn-container {
@@ -840,6 +933,45 @@
             display: flex;
             gap: 15px;
             justify-content: center;
+        }
+
+        /* Print Media Styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printArea, #printArea * {
+                visibility: visible;
+            }
+            #printArea {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 800px !important;
+                height: 565px !important;
+                margin: 0 !important;
+                padding: 30px 40px 30px 220px !important;
+                border: 8px solid transparent !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .cert-modal {
+                position: absolute;
+                left: 0;
+                top: 0;
+                background: transparent !important;
+                padding: 0 !important;
+            }
+            .cert-modal-content {
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                background: transparent !important;
+                max-width: none !important;
+            }
+            .cert-close, .cert-btn-container {
+                display: none !important;
+            }
         }
 
         /* Responsive adjustments */
@@ -858,34 +990,6 @@
             }
             .auth-buttons {
                 justify-content: center;
-            }
-            .cert-footer-info {
-                flex-direction: column;
-                align-items: center;
-                gap: 25px;
-                padding: 0 10px;
-            }
-            .certificate-wrapper {
-                padding: 20px;
-                border-width: 8px;
-            }
-            .cert-recipient {
-                font-size: 1.6rem;
-                margin: 10px 0;
-            }
-            .cert-badge-gold {
-                width: 60px;
-                height: 60px;
-                font-size: 1.8rem;
-                margin-bottom: 10px;
-            }
-            .cert-badge-gold::after {
-                width: 70px;
-                height: 70px;
-            }
-            .cert-text {
-                font-size: 0.9rem;
-                margin-bottom: 15px;
             }
         }
 
@@ -906,22 +1010,6 @@
             }
             .quiz-footer {
                 padding: 15px 20px;
-            }
-            .certificate-wrapper {
-                padding: 15px;
-                border-width: 5px;
-            }
-            .cert-recipient {
-                font-size: 1.3rem;
-            }
-            .cert-subtitle {
-                font-size: 0.9rem;
-            }
-            .cert-text {
-                font-size: 0.8rem;
-            }
-            .cert-sign-font {
-                font-size: 1.4rem;
             }
             .results-container {
                 padding: 35px 20px;
@@ -1033,25 +1121,111 @@
     <div class="cert-modal" id="certModal">
         <div class="cert-modal-content">
             <span class="cert-close" onclick="closeCertificateModal()">&times;</span>
-            <div class="certificate-wrapper" id="printArea">
-                <div class="cert-badge-gold">
-                    <i class="fas fa-award"></i>
-                </div>
-                <h1 style="color: var(--primary); font-size: 2.5rem; margin-bottom: 5px;">CERTIFICATE OF COMPLETION</h1>
-                <div class="cert-subtitle">This document proudly certifies that</div>
-                <div class="cert-recipient" id="certRecipient">Jane Doe</div>
-                <div class="cert-text">
-                    has successfully completed the online exam and proved their advanced core competency in the skill of:
-                    <span class="cert-skill-highlight" id="certSkillName">Python Programming</span>
-                </div>
-                <div class="cert-footer-info">
-                    <div style="text-align: left;">
-                        <span class="cert-sign-line">DATE OF ISSUANCE</span>
-                        <div class="cert-date-val" id="certDate">June 29, 2026</div>
+            <div class="certificate-container">
+                <div class="certificate-wrapper" id="printArea">
+                    <!-- Faint background watermark chevron pattern -->
+                    <svg class="cert-bg-shapes" viewBox="0 0 800 565" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 800 0 L 640 282.5 L 800 565 Z" fill="#f5f7fa" />
+                        <path d="M 800 60 L 690 282.5 L 800 505 Z" fill="#ebf0f5" opacity="0.5" />
+                    </svg>
+
+                    <!-- S-Curves on the Left -->
+                    <svg class="cert-left-curves" viewBox="0 0 220 565" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#dfb76c" />
+                                <stop offset="30%" stop-color="#fcf6ba" />
+                                <stop offset="70%" stop-color="#c29b53" />
+                                <stop offset="100%" stop-color="#8f6f30" />
+                            </linearGradient>
+                            <linearGradient id="blackGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#0a0a0a" />
+                                <stop offset="100%" stop-color="#242424" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Shadow -->
+                        <path d="M 0 0 L 140 0 C 120 180, 50 300, 175 565 L 0 565 Z" fill="#000" opacity="0.15" />
+                        <!-- Gold curve -->
+                        <path d="M 0 0 L 130 0 C 110 180, 40 300, 160 565 L 0 565 Z" fill="url(#goldGrad)" />
+                        <!-- Black curve -->
+                        <path d="M 0 0 L 105 0 C 85 180, 20 300, 130 565 L 0 565 Z" fill="url(#blackGrad)" />
+                    </svg>
+
+                    <!-- Rosette Seal on top-left curve -->
+                    <svg class="cert-gold-badge" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <radialGradient id="goldRadial" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#fff9d6" />
+                                <stop offset="40%" stop-color="#f5d061" />
+                                <stop offset="85%" stop-color="#c29b53" />
+                                <stop offset="100%" stop-color="#8f6f30" />
+                            </radialGradient>
+                        </defs>
+                        <!-- Ribbon Tails -->
+                        <path d="M 45 70 L 25 115 L 45 105 L 60 85 Z" fill="url(#goldGrad)" />
+                        <path d="M 45 70 L 20 115 L 45 105 Z" fill="#8f6f30" opacity="0.5" />
+                        <path d="M 75 70 L 95 115 L 75 105 L 60 85 Z" fill="url(#goldGrad)" />
+                        <path d="M 75 70 L 100 115 L 75 105 Z" fill="#8f6f30" opacity="0.5" />
+                        
+                        <!-- Overlapping rotated squares for Rosetta effect -->
+                        <g fill="url(#goldGrad)">
+                            <rect x="25" y="25" width="70" height="70" rx="6" transform="rotate(0 60 60)" />
+                            <rect x="25" y="25" width="70" height="70" rx="6" transform="rotate(15 60 60)" />
+                            <rect x="25" y="25" width="70" height="70" rx="6" transform="rotate(30 60 60)" />
+                            <rect x="25" y="25" width="70" height="70" rx="6" transform="rotate(45 60 60)" />
+                            <rect x="25" y="25" width="70" height="70" rx="6" transform="rotate(60 60 60)" />
+                            <rect x="25" y="25" width="70" height="70" rx="6" transform="rotate(75 60 60)" />
+                        </g>
+                        <!-- Inner gold radial gradient circle -->
+                        <circle cx="60" cy="60" r="30" fill="url(#goldRadial)" stroke="#fff" stroke-width="1.5" />
+                        <circle cx="60" cy="60" r="25" fill="none" stroke="#fff" stroke-width="0.75" stroke-dasharray="2 1" />
+                    </svg>
+
+                    <!-- Top Right Logo -->
+                    <div class="cert-logo-container">
+                        <svg width="36" height="36" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="42" fill="none" stroke="#eee" stroke-width="2" />
+                            <circle cx="50" cy="22" r="8" fill="#ff6b6b" />
+                            <path d="M 38 42 C 42 32, 58 32, 62 42 Z" fill="#ff6b6b" />
+                            <circle cx="78" cy="50" r="8" fill="#2995b0" />
+                            <path d="M 68 38 C 78 42, 78 58, 68 62 Z" fill="#2995b0" />
+                            <circle cx="50" cy="78" r="8" fill="#10b981" />
+                            <path d="M 38 58 C 42 68, 58 68, 62 58 Z" fill="#10b981" />
+                            <circle cx="22" cy="50" r="8" fill="#fec55b" />
+                            <path d="M 32 38 C 22 42, 22 58, 32 62 Z" fill="#fec55b" />
+                            <circle cx="50" cy="50" r="14" fill="#ffffff" />
+                        </svg>
+                        <span class="cert-logo-text">TEAMMATE</span>
                     </div>
-                    <div class="cert-sign">
-                        <div class="cert-sign-font">Teammate</div>
-                        <span class="cert-sign-line">AUTHORIZED SIGNATURE</span>
+
+                    <!-- Certificate Texts -->
+                    <div class="cert-content-main">
+                        <h1 class="cert-title-main">CERTIFICATE</h1>
+                        <h2 class="cert-subtitle-sub">OF ACHIEVEMENT</h2>
+                        
+                        <div class="cert-presentation-text">THIS CERTIFICATE IS PRESENTED TO</div>
+                        <div class="cert-recipient-name" id="certRecipient">Jane Doe</div>
+                        
+                        <hr class="cert-gold-divider">
+                        
+                        <p class="cert-body-desc">
+                            I have successfully completed the online certification assessment and demonstrated professional competency in
+                        </p>
+                        <div class="cert-skill-name" id="certSkillName">Python Programming</div>
+                    </div>
+
+                    <!-- Footer: Issue Date & Signature -->
+                    <div class="cert-footer-layout">
+                        <div class="cert-issue-date">
+                            Date of Issue: <span id="certDate">June 29, 2026</span>
+                        </div>
+                        <div class="cert-signature-area">
+                            <div class="cert-signature-font">Teammate</div>
+                            <div class="cert-signature-company">
+                                <div class="cert-signature-bold">TEAMMATE</div>
+                                <div class="cert-signature-sub">Teammate Company</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
