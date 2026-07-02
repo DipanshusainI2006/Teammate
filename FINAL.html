@@ -1318,6 +1318,64 @@
                 width: 100%;
             }
         }
+
+        /* Premium Scroll Entrance Animations */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .scroll-reveal.reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .reveal-left.reveal {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .reveal-right.reveal {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .scale-reveal {
+            opacity: 0;
+            transform: scale(0.92);
+            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .scale-reveal.reveal {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Staggered Delay classes */
+        .delay-100 { transition-delay: 0.1s; }
+        .delay-200 { transition-delay: 0.2s; }
+        .delay-300 { transition-delay: 0.3s; }
+        .delay-400 { transition-delay: 0.4s; }
+        .delay-500 { transition-delay: 0.5s; }
+
+        /* Pulse animation for empty state calendar icon */
+        .empty-icon-pulse i {
+            animation: iconPulse 2s infinite ease-in-out alternate;
+            display: inline-block;
+        }
+        @keyframes iconPulse {
+            from { transform: scale(1) rotate(0deg); filter: drop-shadow(0 2px 5px rgba(41,149,176,0.1)); }
+            to { transform: scale(1.1) rotate(5deg); filter: drop-shadow(0 4px 12px rgba(41,149,176,0.25)); }
+        }
     </style>
 </head>
 <body>
@@ -1354,13 +1412,13 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <h1>Find Project/Internship Teams</h1>
-            <p>
+            <h1 class="scroll-reveal">Find Project/Internship Teams</h1>
+            <p class="scroll-reveal delay-100">
                 A skill-matching platform for students to collaborate on innovative
                 projects
             </p>
 
-            <div class="skill-search">
+            <div class="skill-search scroll-reveal delay-200">
                 <div class="search-container">
                     <input
                         type="text"
@@ -1390,7 +1448,7 @@
 
     <!-- Projects Section -->
     <section class="projects">
-        <div class="container">
+        <div class="container scroll-reveal">
             <div class="section-title">
                 <h2>Featured Projects</h2>
                 <p>
@@ -1468,171 +1526,36 @@
         </div>
     </section>
 
-    <section class="events">
-        <div class="container">
+    <section class="events" id="Events">
+        <div class="container scroll-reveal">
             <div class="section-title">
                 <h2 id="events">Upcoming Events</h2>
                 <p>Join our events to learn, network, and find potential teammates</p>
             </div>
-
-            <div class="event-categories" id="Events">
-                <button class="category-btn active">All Events</button>
-                <button class="category-btn">Workshops</button>
-                <button class="category-btn">Hackathons</button>
-                <button class="category-btn">Networking</button>
-                <button class="category-btn">Webinars</button>
-            </div>
-
-            <div class="event-slider">
-                <div class="event-slides">
-                    <!-- Event 1 -->
-                    <div class="event-slide">
-                        <div class="event-image">
-                            <img
-                                src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80"
-                                alt="Hackathon Event"
-                            />
-                            <div class="event-date">
-                                <div class="day">29-30</div>
-                                <div class="month">sep</div>
-                            </div>
-                        </div>
-                        <div class="event-content">
-                            <h3>Smart India Hackathon</h3>
-                            <p>
-                                SIH (Smart India Hackathon): A nationwide initiative
-                                encouraging students to develop innovative solutions for
-                                real-life challenges.
-                            </p>
-                            <div class="event-meta">
-                                <span><i class="fas fa-clock"></i> 10:00 AM - 4:00 PM</span>
-                                <span><i class="fas fa-map-marker-alt"></i> JECRC University</span>
-                                <span><i class="fas fa-users"></i> 100 Registered</span>
-                            </div>
-                            <a href="https://www.sih.gov.in/" class="event-btn"
-                                >Register Now <i class="fas fa-arrow-right"></i
-                            ></a>
-                        </div>
-                    </div>
-
-                    <!-- Event 2 -->
-                    <div class="event-slide">
-                        <div class="event-image">
-                            <img
-                                src="https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80"
-                                alt="Web Development Workshop"
-                            />
-                            <div class="event-date">
-                                <div class="day">10</div>
-                                <div class="month">Oct</div>
-                            </div>
-                        </div>
-                        <div class="event-content">
-                            <h3>INNOV8</h3>
-                            <p>
-                                INNOV8: An innovation platform fostering creativity,
-                                collaboration, and technology-driven solutions to address
-                                real-world challenges.
-                            </p>
-                            <div class="event-meta">
-                                <span><i class="fas fa-clock"></i> 2:00 PM - 5:00 PM</span>
-                                <span><i class="fas fa-map-marker-alt"></i> jECRC University</span>
-                                <span><i class="fas fa-users"></i> 50 Registered</span>
-                            </div>
-                            <a href="https://www.hackquest.io/hackathons/JU-INNOV8" class="event-btn"
-                                >Register Now <i class="fas fa-arrow-right"></i
-                            ></a>
-                        </div>
-                    </div>
-
-                    <!-- Event 3 -->
-                    <div class="event-slide">
-                        <div class="event-image">
-                            <img
-                                src="https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80"
-                                alt="AI Conference"
-                            />
-                            <div class="event-date">
-                                <div class="day">30</div>
-                                <div class="month">Jun</div>
-                            </div>
-                        </div>
-                        <div class="event-content">
-                            <h3>Coming Soon...</h3>
-                            <p>
-                                Coming Soon Event: An exciting upcoming program designed to
-                                engage participants, showcase creativity, inspire innovation,
-                                and deliver valuable learning experiences.
-                            </p>
-                            <div class="event-meta">
-                                <span><i class="fas fa-clock"></i> Coming Soon...</span>
-                                <span><i class="fas fa-map-marker-alt"></i> Coming Soon...</span>
-                                <span><i class="fas fa-users"></i> Coming Soon...</span>
-                            </div>
-                            <a href="#" class="event-btn"
-                                >Register Now <i class="fas fa-arrow-right"></i
-                            ></a>
-                        </div>
-                    </div>
-
-                    <!-- Event 4 -->
-                    <div class="event-slide">
-                        <div class="event-image">
-                            <img
-                                src="https://images.unsplash.com/photo-1511578314322-379afb476865?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80"
-                                alt="Networking Event"
-                            />
-                            <div class="event-date">
-                                <div class="day">05</div>
-                                <div class="month">Jul</div>
-                            </div>
-                        </div>
-                        <div class="event-content">
-                            <h3>Coming Soon...</h3>
-                            <p>
-                                Coming Soon Event: An exciting upcoming program designed
-                                to engage participants, showcase creativity, inspire
-                                innovation, and deliver valuable learning experiences.
-                            </p>
-                            <div class="event-meta">
-                                <span><i class="fas fa-clock"></i> Coming Soon...</span>
-                                <span><i class="fas fa-map-marker-alt"></i> Coming Soon...</span>
-                                <span><i class="fas fa-users"></i> Coming Soon...</span>
-                            </div>
-                            <a href="#" class="event-btn"
-                                >Register Now <i class="fas fa-arrow-right"></i
-                            ></a>
-                        </div>
-                    </div>
+            
+            <div class="empty-events-state scroll-reveal delay-200" style="text-align: center; padding: 60px 30px; background: rgba(255, 255, 255, 0.95); border: 2px dashed rgba(41, 149, 176, 0.3); border-radius: 24px; max-width: 600px; margin: 40px auto 0; box-shadow: 0 10px 35px rgba(0,0,0,0.05); transition: var(--transition);">
+                <div class="empty-icon-pulse" style="font-size: 3.8rem; color: var(--primary); margin-bottom: 25px;">
+                    <i class="far fa-calendar-times"></i>
                 </div>
-
-                <div class="slider-arrows">
-                    <div class="arrow prev">
-                        <i class="fas fa-chevron-left"></i>
-                    </div>
-                    <div class="arrow next">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                </div>
-            </div>
-
-            <div class="slider-controls">
-                <div class="slider-dot active"></div>
-                <div class="slider-dot"></div>
-                <div class="slider-dot"></div>
-                <div class="slider-dot"></div>
+                <h3 style="font-family: 'Poppins', sans-serif; font-size: 1.45rem; color: var(--text-dark); margin-bottom: 12px; font-weight: 700;">No Events Scheduled</h3>
+                <p style="color: var(--text-light); font-size: 0.95rem; line-height: 1.6; margin: 0 auto 30px; max-width: 420px;">
+                    We are currently cooking up the next batch of student hackathons, online web development workshops, and collaboration webinars. Sign up for alerts to be the first to know!
+                </p>
+                <button class="btn-primary btn" onclick="alert('Subscription successful! We will notify you of upcoming events.')" style="border: none; padding: 14px 35px; border-radius: 50px; font-weight: 600; cursor: pointer; background: var(--primary); color: white; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 8px 16px rgba(41, 149, 176, 0.25); transition: var(--transition);">
+                    <i class="far fa-bell"></i> Notify Me
+                </button>
             </div>
         </div>
     </section>
 
     <section class="how-it-works" id="htw">
-        <div class="container">
+        <div class="container scroll-reveal">
             <div class="section-title">
                 <h2>How It Works</h2>
                 <p>Getting started with Teammate is simple and straightforward</p>
             </div>
             <div class="steps">
-                <div class="step">
+                <div class="step scroll-reveal">
                     <div class="step-number">1</div>
                     <h3>Create Profile</h3>
                     <p>
@@ -1640,7 +1563,7 @@
                         ideas.
                     </p>
                 </div>
-                <div class="step">
+                <div class="step scroll-reveal delay-100">
                     <div class="step-number">2</div>
                     <h3>Find Projects</h3>
                     <p>
@@ -1648,12 +1571,12 @@
                         opportunities.
                     </p>
                 </div>
-                <div class="step">
+                <div class="step scroll-reveal delay-200">
                     <div class="step-number">3</div>
                     <h3>Connect</h3>
                     <p>Message potential teammates and form your ideal project team.</p>
                 </div>
-                <div class="step">
+                <div class="step scroll-reveal delay-300">
                     <div class="step-number">4</div>
                     <h3>Collaborate</h3>
                     <p>
@@ -1665,7 +1588,7 @@
     </section>
 
     <section class="about" id="about">
-        <div class="container">
+        <div class="container scroll-reveal">
             <div class="section-title">
                 <h2>About Teammate</h2>
                 <p>
@@ -1677,7 +1600,7 @@
 
             <div class="about-content">
                 <!-- Left: Text -->
-                <div class="about-text">
+                <div class="about-text reveal-left delay-100">
                     <h3>What is Teammate?</h3>
                     <p>
                         Teammate is a skill-matching platform built for students to easily
@@ -1712,7 +1635,7 @@
                 </div>
 
                 <!-- Right: Image -->
-                <div class="about-image">
+                <div class="about-image reveal-right delay-200">
                     <img
                         src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
                         alt="Team collaboration"
@@ -2074,7 +1997,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const skillsBadges = proj.skills.map(skill => `<span class="project-skill">${escapeHtml(skill)}</span>`).join("");
             
             return `
-                <div class="project-card" style="opacity: 1; transform: translateY(0);">
+                <div class="project-card scroll-reveal">
                     <div class="project-img">
                         <i class="fas ${escapeHtml(proj.icon || 'fa-project-diagram')}"></i>
                     </div>
@@ -2102,6 +2025,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             }
         });
+
+        // Trigger animation observer for newly rendered cards
+        if (typeof observeAnimations === "function") {
+            observeAnimations();
+        }
     }
 
     async function loadProjects() {
@@ -2227,22 +2155,24 @@ document.addEventListener("DOMContentLoaded", function () {
         threshold: 0.1,
     };
 
-    const observer = new IntersectionObserver((entries) => {
+    const observer = new IntersectionObserver((entries, observer) => {
         entries.forEach((entry) => {
             if (entry.isIntersecting) {
-                entry.target.style.opacity = 1;
-                entry.target.style.transform = "translateY(0)";
+                entry.target.classList.add("reveal");
+                observer.unobserve(entry.target); // Stop observing once animated
             }
         });
     }, observerOptions);
 
-    // Observe project cards and steps
-    document.querySelectorAll(".project-card, .step").forEach((el) => {
-        el.style.opacity = 0;
-        el.style.transform = "translateY(20px)";
-        el.style.transition = "opacity 0.5s ease, transform 0.5s ease";
-        observer.observe(el);
-    });
+    // Function to search and observe animated elements
+    window.observeAnimations = function() {
+        document.querySelectorAll(".scroll-reveal, .reveal-left, .reveal-right, .scale-reveal").forEach((el) => {
+            observer.observe(el);
+        });
+    };
+
+    // Run on initial load
+    observeAnimations();
 });
 </script>
     <!-- Create Project Modal -->
