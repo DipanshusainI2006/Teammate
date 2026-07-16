@@ -433,6 +433,29 @@ const API_BASE_URL = window.location.hostname === 'localhost' || window.location
     ? 'http://localhost:5000'
     : window.location.origin;
 
+// 🌐 SOCIAL LOGIN IMPLEMENTATION
+const googleBtn = document.querySelector(".social-btn.google");
+const githubBtn = document.querySelector(".social-btn.github");
+const linkedinBtn = document.querySelector(".social-btn.linkedin");
+
+const targetRedirect = window.location.origin + window.location.pathname.replace("signup.html", "li.html");
+
+if (googleBtn) {
+    googleBtn.addEventListener("click", function() {
+        window.location.href = `${API_BASE_URL}/api/auth/google?redirect_to=${encodeURIComponent(targetRedirect)}`;
+    });
+}
+if (githubBtn) {
+    githubBtn.addEventListener("click", function() {
+        window.location.href = `${API_BASE_URL}/api/auth/github?redirect_to=${encodeURIComponent(targetRedirect)}`;
+    });
+}
+if (linkedinBtn) {
+    linkedinBtn.addEventListener("click", function() {
+        window.location.href = `${API_BASE_URL}/api/auth/linkedin?redirect_to=${encodeURIComponent(targetRedirect)}`;
+    });
+}
+
 document.getElementById("signupForm").addEventListener("submit", async function(e) {
     e.preventDefault();
 

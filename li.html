@@ -470,6 +470,76 @@ document.addEventListener("DOMContentLoaded", function () {
         ? 'http://localhost:5000'
         : window.location.origin;
 
+    // 🌐 SOCIAL LOGIN IMPLEMENTATION
+    const googleBtn = document.querySelector(".social-btn.google");
+    const githubBtn = document.querySelector(".social-btn.github");
+    const linkedinBtn = document.querySelector(".social-btn.linkedin");
+
+    const currentOrigin = window.location.origin + window.location.pathname;
+
+    if (googleBtn) {
+        googleBtn.addEventListener("click", function() {
+            window.location.href = `${API_BASE_URL}/api/auth/google?redirect_to=${encodeURIComponent(currentOrigin)}`;
+        });
+    }
+    if (githubBtn) {
+        githubBtn.addEventListener("click", function() {
+            window.location.href = `${API_BASE_URL}/api/auth/github?redirect_to=${encodeURIComponent(currentOrigin)}`;
+        });
+    }
+    if (linkedinBtn) {
+        linkedinBtn.addEventListener("click", function() {
+            window.location.href = `${API_BASE_URL}/api/auth/linkedin?redirect_to=${encodeURIComponent(currentOrigin)}`;
+        });
+    }
+
+    // 🕵️ Check for incoming OAuth parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const tokenParam = urlParams.get("token");
+    const userIdParam = urlParams.get("userId");
+    const usernameParam = urlParams.get("username");
+    const emailParam = urlParams.get("email");
+    const avatarParam = urlParams.get("avatar");
+    const isNewUserParam = urlParams.get("isNewUser");
+    const errorParam = urlParams.get("error");
+
+    if (errorParam) {
+        showError(decodeURIComponent(errorParam));
+        window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (tokenParam && userIdParam && usernameParam) {
+        localStorage.setItem("token", tokenParam);
+        localStorage.setItem("userId", userIdParam);
+        localStorage.setItem("username", usernameParam);
+        if (emailParam) localStorage.setItem("email", emailParam);
+        if (avatarParam) {
+            localStorage.setItem("profilePic", avatarParam);
+            const profile = {
+                fullName: usernameParam,
+                profilePic: avatarParam,
+                headline: "",
+                location: "",
+                bio: "",
+                skills: [],
+                socialLinks: { github: "", linkedin: "", portfolio: "" }
+            };
+            localStorage.setItem("userProfile", JSON.stringify(profile));
+        }
+
+        showSuccess("Social login successful!");
+
+        window.history.replaceState({}, document.title, window.location.pathname);
+
+        setTimeout(() => {
+            if (isNewUserParam === "true") {
+                localStorage.setItem("profileCompleted", "false");
+                window.location.href = "complete-profile.html";
+            } else {
+                localStorage.setItem("profileCompleted", "true");
+                window.location.href = "FINAL.html";
+            }
+        }, 1000);
+    }
+
     // 🚀 LOGIN
     form.addEventListener("submit", async function (e) {
         e.preventDefault();
@@ -532,7 +602,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }, 1000);
 
             } else {
-                showError(data.msg || "Invalid email or password");
+                showError(data.msg || data.message || "Invalid email or password");
                 btn.innerHTML = "Sign in";
                 btn.disabled = false;
             }

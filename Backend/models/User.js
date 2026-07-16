@@ -3,7 +3,11 @@ const mongoose = require("mongoose");
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  password: { type: String, required: false },
+  googleId: { type: String, unique: true, sparse: true },
+  githubId: { type: String, unique: true, sparse: true },
+  linkedinId: { type: String, unique: true, sparse: true },
+  authProvider: { type: String, enum: ["local", "google", "github", "linkedin"], default: "local" },
 
   // Talent Hub fields
   skills: { type: [String], default: [] },
